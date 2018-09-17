@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
 require "bundler/setup"
+
+require 'coveralls'
+Coveralls.wear!
+
 require "miteru"
 
 require "vcr"
 require "webrick"
 
-require 'coveralls'
-Coveralls.wear!
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
