@@ -10,25 +10,15 @@ RSpec.describe Miteru::Crawler, :vcr do
       expect(results.length).to eq(100)
     end
   end
-  describe "#has_kit?" do
-    context "when giving a url which contains a phishint kit" do
-      before do
-        path = File.expand_path("./fixtures/index.html", __dir__)
-        data = File.read(path)
-
-        allow_any_instance_of(Miteru::Crawler).to receive(:get).and_return(data)
-      end
-      it "should return true" do
-        expect(subject.has_kit?("http://localhost")).to eq(true)
-      end
-    end
-  end
-  context "when giving a url which doesn't contain a phishint kit" do
+  describe "#execute" do
     before do
-      allow_any_instance_of(Miteru::Crawler).to receive(:get).and_return("None")
+      allow_any_instance_of(Miteru::Crawler).to receive(:suspicous_urls).and_return(%w(http://localhost))
+      allow_any_instance_of(Miteru::Website).to receive(:has_kit?).and_return(true)
     end
-    it "should return false" do
-      expect(subject.has_kit?("http://localhost")).to eq(false)
+    it "should return an Array" do
+      results = subject.execute
+      expect(results).to be_an(Array)
+      expect(results.length).to eq(1)
     end
   end
 end

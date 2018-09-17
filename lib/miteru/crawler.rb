@@ -16,23 +16,15 @@ module Miteru
       res["results"].map { |result| result.dig("task", "url") }
     end
 
-    def has_kit?(url)
-      begin
-        res = get(url)
-      rescue HTTPResponseError => _
-        false
-      end
-
-      rules = ["Index of", ".zip"]
-      rules.all? { |rule| res.include? rule }
-    end
-
     def execute
       pool = Thread.pool(threads)
       results = []
 
       suspicous_urls.each do |url|
-        pool.process { results << url if has_kit?(url) }
+        pool.process do
+          doc = Website.new(url)
+          results << url if doc.has_kit?
+        end
       end
       pool.shutdown
 
