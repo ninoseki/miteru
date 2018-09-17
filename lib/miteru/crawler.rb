@@ -24,6 +24,8 @@ module Miteru
         pool.process do
           doc = Website.new(url)
           results << url if doc.has_kit?
+        rescue HTTPResponseError => _
+          next
         end
       end
       pool.shutdown
