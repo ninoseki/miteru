@@ -16,25 +16,24 @@ module Miteru
       res["results"].map { |result| result.dig("task", "url") }
     end
 
-    def execute
+    def execute(verbose = false)
       pool = Thread.pool(threads)
-      results = []
+      websites = []
 
       suspicous_urls.each do |url|
         pool.process do
-          doc = Website.new(url)
-          results << url if doc.has_kit?
-        rescue HTTPResponseError => _
-          next
+          website = Website.new(url)
+          puts "#{website.url}: it doesn't contain a phishing kit." if verbose && !website.has_kit?
+          websites << website
         end
       end
       pool.shutdown
 
-      results
+      websites
     end
 
-    def self.execute
-      new.execute
+    def self.execute(verbose = false)
+      new.execute(verbose)
     end
 
     private
