@@ -2,4 +2,5 @@
 
 module Miteru
   class HTTPResponseError < StandardError; end
+  class DownloadError < StandardError; end
 end

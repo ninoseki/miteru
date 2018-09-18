@@ -6,20 +6,40 @@ require "thor"
 
 module Miteru
   class CLI < Thor
-    method_option :verbose, type: :boolean, default: true
+    method_option :auto_download, type: :boolean, default: false
+    method_option :download_to, type: :string, default: "/tmp"
     method_option :post_to_slack, type: :boolean, default: false
+    method_option :verbose, type: :boolean, default: true
     desc "execute", "Execute the crawler"
     def execute
       websites = Crawler.execute(options[:verbose])
       websites.each do |website|
-        if website.has_kit?
-          puts "#{website.url}: it might contain a phishing kit (#{website.zip_files.join(',')}).".colorize(:light_red)
-          post_to_slack(message) if options[:post_to_slack] && valid_slack_setting?
+        next unless website.has_kit?
+
+        puts "#{website.url}: it might contain a phishing kit (#{website.zip_files.join(',')}).".colorize(:light_red)
+        post_to_slack(message) if options[:post_to_slack] && valid_slack_setting?
+        begin
+          download_zip_files(website.url, website.zip_files, options[:download_to]) if options[:auto_download]
+        rescue DownloadError => e
+          puts e.to_s
         end
       end
     end
 
     no_commands do
+      def download_zip_files(url, zip_files, base_dir)
+        failed_urls = []
+        zip_files.each do |path|
+          target_url = "#{url}/#{path}"
+          begin
+            Downloader.download target_url, base_dir
+          rescue Down::Error => _
+            failed_urls << target_url
+          end
+        end
+        raise DownloadError, "Failed to download: #{failed_urls}.join(',')" unless failed_urls.empty?
+      end
+
       def valid_slack_setting?
         ENV["SLACK_WEBHOOK_URL"] != nil
       end

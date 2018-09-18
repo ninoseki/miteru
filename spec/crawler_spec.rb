@@ -1,4 +1,3 @@
-
 # frozen_string_literal: true
 
 RSpec.describe Miteru::Crawler, :vcr do
