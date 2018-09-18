@@ -25,3 +25,25 @@ Commands:
   miteru execute         # Execute the crawler
   miteru help [COMMAND]  # Describe available commands or one specific command
 ```
+
+```sh
+$ miteru help execute
+Usage:
+  miteru execute
+
+Options:
+  [--verbose], [--no-verbose]
+                                           # Default: true
+  [--post-to-slack], [--no-post-to-slack]
+
+Execute the crawler
+```
+
+```sh
+$ miteru execute
+...
+https://dummy1.com: it doesn't contain a phishing kit.
+https://dummy2.com: it doesn't contain a phishing kit.
+https://dummy3.com: it doesn't contain a phishing kit.
+https://dummy4.com: it might contain a phishing kit (dummy.zip).
+```
