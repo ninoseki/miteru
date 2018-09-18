@@ -5,6 +5,7 @@ require "bundler/setup"
 require 'coveralls'
 Coveralls.wear!
 
+require "fileutils"
 require "glint"
 require "miteru"
 require "vcr"
@@ -52,6 +53,16 @@ def server
       res.body = body
     end
 
+    http.mount_proc("/has_kit/test.zip") do |_, res|
+      path = File.expand_path("./fixtures/test.zip", __dir__)
+      body = File.read(path)
+
+      res.status = 200
+      res.content_length = body.size
+      res.content_type = 'application/zip'
+      res.body = body
+    end
+
     http.mount_proc("/no_kit") do |_, res|
       body = "None"
 
@@ -81,6 +92,18 @@ RSpec.shared_context "http_server" do
 
   let(:host) { "0.0.0.0" }
   let(:port) { @server.port }
+end
+
+RSpec.shared_context "download_zip_files" do
+  before(:each) do
+    @path = File.expand_path("../tmp", __dir__)
+    FileUtils.mkdir_p(@path)
+  end
+  after(:each) do
+    FileUtils.remove_dir(@path)
+  end
+
+  let(:base_dir) { @path }
 end
 
 VCR.configure do |config|
