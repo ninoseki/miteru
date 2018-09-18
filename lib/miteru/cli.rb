@@ -1,18 +1,21 @@
 # frozen_string_literal: true
 
+require "colorize"
 require "http"
 require "thor"
 
 module Miteru
   class CLI < Thor
+    method_option :verbose, type: :boolean, default: true
     method_option :post_to_slack, type: :boolean, default: false
     desc "execute", "Execute the crawler"
     def execute
-      results = Crawler.execute
-      results.each do |result|
-        message = "#{result} might contain a phishing kit."
-        puts message
-        post_to_slack(message) if options[:post_to_slack] && valid_slack_setting?
+      websites = Crawler.execute(options[:verbose])
+      websites.each do |website|
+        if website.has_kit?
+          puts "#{website.url}: it might contain a phishing kit (#{website.zip_files.join(',')}).".colorize(:light_red)
+          post_to_slack(message) if options[:post_to_slack] && valid_slack_setting?
+        end
       end
     end
 

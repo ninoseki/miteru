@@ -8,6 +8,7 @@ module Miteru
     attr_reader :url
     def initialize(url)
       @url = url
+      build
     end
 
     def title
@@ -21,6 +22,10 @@ module Miteru
       end.compact
     end
 
+    def ok?
+      response.code == 200
+    end
+
     def index?
       title == "Index of /"
     end
@@ -30,20 +35,27 @@ module Miteru
     end
 
     def has_kit?
-      index? && zip_files?
+      ok? && index? && zip_files?
+    end
+
+    def build
+      doc
     end
 
     private
 
-    def get
-      res = HTTP.get(url)
-      raise HTTPResponseError if res.code != 200
+    def response
+      @response ||= get
+    end
 
-      res.body.to_s
+    def get
+      ctx = OpenSSL::SSL::SSLContext.new
+      ctx.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      HTTP.get(url, ssl_context: ctx)
     end
 
     def doc
-      @doc ||= Oga.parse_html(get)
+      @doc ||= Oga.parse_html(response.body.to_s)
     end
   end
 end

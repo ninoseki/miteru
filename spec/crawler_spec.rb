@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Miteru::Crawler, :vcr do
+  include_context "http_server"
   subject { Miteru::Crawler.new }
   describe "#suspicous_urls" do
     it "should return an Array" do
@@ -12,8 +13,7 @@ RSpec.describe Miteru::Crawler, :vcr do
   end
   describe "#execute" do
     before do
-      allow_any_instance_of(Miteru::Crawler).to receive(:suspicous_urls).and_return(%w(http://localhost))
-      allow_any_instance_of(Miteru::Website).to receive(:has_kit?).and_return(true)
+      allow_any_instance_of(Miteru::Crawler).to receive(:suspicous_urls).and_return(["http://#{host}:#{port}/has_kit"])
     end
     it "should return an Array" do
       results = subject.execute
