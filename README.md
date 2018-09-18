@@ -32,9 +32,12 @@ Usage:
   miteru execute
 
 Options:
+  [--auto-download], [--no-auto-download]
+  [--download-to=DOWNLOAD_TO]
+                                           # Default: /tmp
+  [--post-to-slack], [--no-post-to-slack]
   [--verbose], [--no-verbose]
                                            # Default: true
-  [--post-to-slack], [--no-post-to-slack]
 
 Execute the crawler
 ```
