@@ -21,4 +21,3 @@ RSpec.describe Miteru::Crawler, :vcr do
     end
   end
 end
-

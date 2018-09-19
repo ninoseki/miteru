@@ -12,4 +12,3 @@ RSpec.describe Miteru::Downloader do
     end
   end
 end
-

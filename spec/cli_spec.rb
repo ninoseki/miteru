@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 RSpec.describe Miteru::CLI do
   include_context "http_server"
