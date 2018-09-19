@@ -18,26 +18,21 @@ module Miteru
 
         puts "#{website.url}: it might contain a phishing kit (#{website.zip_files.join(',')}).".colorize(:light_red)
         post_to_slack(message) if options[:post_to_slack] && valid_slack_setting?
-        begin
-          download_zip_files(website.url, website.zip_files, options[:download_to]) if options[:auto_download]
-        rescue DownloadError => e
-          puts e.to_s
-        end
+        download_zip_files(website.url, website.zip_files, options[:download_to]) if options[:auto_download]
       end
     end
 
     no_commands do
       def download_zip_files(url, zip_files, base_dir)
-        failed_urls = []
         zip_files.each do |path|
           target_url = "#{url}/#{path}"
           begin
-            Downloader.download target_url, base_dir
-          rescue Down::Error => _
-            failed_urls << target_url
+            destination = Downloader.download(target_url, base_dir)
+            puts "Download #{target_url} as #{destination}"
+          rescue Down::Error => e
+            puts "Failed to download: #{target_url} (#{e})"
           end
         end
-        raise DownloadError, "Failed to download: #{failed_urls}.join(',')" unless failed_urls.empty?
       end
 
       def valid_slack_setting?
