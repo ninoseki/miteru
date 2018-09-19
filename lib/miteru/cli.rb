@@ -6,9 +6,9 @@ require "thor"
 
 module Miteru
   class CLI < Thor
-    method_option :auto_download, type: :boolean, default: false
-    method_option :download_to, type: :string, default: "/tmp"
-    method_option :post_to_slack, type: :boolean, default: false
+    method_option :auto_download, type: :boolean, default: false, desc: "Enable or disable auto-download of *.zip file(s)"
+    method_option :download_to, type: :string, default: "/tmp", desc: "Directory to download file(s)"
+    method_option :post_to_slack, type: :boolean, default: false, desc: "Post a message to Slack if it detects a phishing kit"
     method_option :verbose, type: :boolean, default: true
     desc "execute", "Execute the crawler"
     def execute
