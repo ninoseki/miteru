@@ -2,10 +2,10 @@
 
 RSpec.describe Miteru::Crawler, :vcr do
   include_context "http_server"
-  subject { Miteru::Crawler.new }
+  subject { Miteru::Crawler }
   describe "#suspicous_urls" do
     it "should return an Array" do
-      results = subject.suspicous_urls
+      results = subject.new.suspicous_urls
       expect(results).to be_an(Array)
       expect(results.length).to eq(100)
     end
