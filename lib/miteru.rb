@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "miteru/error"
-require "miteru/downloader"
+require "miteru/http_client"
 require "miteru/website"
 require "miteru/crawler"
 require "miteru/cli"

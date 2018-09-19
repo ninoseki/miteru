@@ -5,7 +5,10 @@ RSpec.describe Miteru::CLI do
   include_context "download_zip_files"
   subject { Miteru::CLI.new }
   before(:each) { ENV.clear }
+
   describe "#download_zip_files" do
+    before { WebMock.disable! }
+    after { WebMock.enable! }
     it "should download file(s)" do
       url = "http://#{host}:#{port}/has_kit"
       zip_files = ["test.zip"]

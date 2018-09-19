@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "http"
 require "oga"
 
 module Miteru
@@ -49,9 +48,7 @@ module Miteru
     end
 
     def get
-      ctx = OpenSSL::SSL::SSLContext.new
-      ctx.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      HTTP.get(url, ssl_context: ctx)
+      HTTPClient.get url
     end
 
     def doc
