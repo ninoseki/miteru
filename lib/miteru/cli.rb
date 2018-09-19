@@ -27,7 +27,7 @@ module Miteru
         zip_files.each do |path|
           target_url = "#{url}/#{path}"
           begin
-            destination = Downloader.download(target_url, base_dir)
+            destination = HTTPClient.download(target_url, base_dir)
             puts "Download #{target_url} as #{destination}"
           rescue Down::Error => e
             puts "Failed to download: #{target_url} (#{e})"
