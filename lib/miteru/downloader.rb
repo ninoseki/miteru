@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "down"
-require "uri"
+require "securerandom"
 
 module Miteru
   class Downloader
@@ -11,17 +11,17 @@ module Miteru
       @base_dir = base_dir
     end
 
-    def filename
-      uri = URI.parse(url)
-      File.basename(uri.path)
+    def save_filename
+      "#{SecureRandom.alphanumeric}.zip"
     end
 
     def destination
-      @destination ||= "#{base_dir}/#{filename}"
+      @destination ||= "#{base_dir}/#{save_filename}"
     end
 
     def download
       Down.download(url, destination: destination)
+      destination
     end
 
     def self.download(url, base_dir = "/tmp")
