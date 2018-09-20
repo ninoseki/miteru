@@ -4,7 +4,7 @@ RSpec.describe Miteru::CLI do
   include_context "http_server"
   include_context "download_zip_files"
   subject { Miteru::CLI.new }
-  before(:each) { ENV.clear }
+  before(:each) { ENV.delete "SLACK_WEBHOOK_URL" }
 
   describe "#download_zip_files" do
     before { WebMock.disable! }
