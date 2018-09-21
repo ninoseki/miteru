@@ -26,7 +26,7 @@ module Miteru
     end
 
     def get(url)
-      HTTP.headers(default_headers).get(url, default_options)
+      HTTP.timeout(write: 2, connect: 5, read: 10).headers(default_headers).get(url, default_options)
     end
 
     def self.get(url)
