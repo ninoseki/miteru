@@ -17,7 +17,8 @@ module Miteru
       websites.each do |website|
         next unless website.has_kit?
 
-        puts "#{website.url}: it might contain a phishing kit (#{website.zip_files.join(',')}).".colorize(:light_red)
+        message = "#{website.url}: it might contain a phishing kit (#{website.zip_files.join(',')})."
+        puts message.colorize(:light_red)
         post_to_slack(message) if options[:post_to_slack] && valid_slack_setting?
         download_zip_files(website.url, website.zip_files, options[:download_to]) if options[:auto_download]
       end
