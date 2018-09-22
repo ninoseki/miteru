@@ -5,7 +5,7 @@ RSpec.describe Miteru::HTTPClient do
   include_context "download_zip_files"
   subject { Miteru::HTTPClient }
 
-  describe "#download" do
+  describe ".download" do
     before { WebMock.disable! }
     after { WebMock.enable! }
     it "should download a file" do

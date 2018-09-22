@@ -26,7 +26,7 @@ RSpec.describe Miteru::Crawler, :vcr do
       end
     end
   end
-  describe "#execute" do
+  describe ".execute" do
     before do
       allow_any_instance_of(Miteru::Crawler).to receive(:suspicous_urls).and_return(["http://#{host}:#{port}/has_kit"])
     end

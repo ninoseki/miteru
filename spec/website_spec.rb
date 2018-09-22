@@ -2,7 +2,6 @@
 
 RSpec.describe Miteru::Website do
   include_context "http_server"
-  include_context "download_zip_files"
 
   subject { Miteru::Website }
   describe "#title" do
