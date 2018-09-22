@@ -4,10 +4,26 @@ RSpec.describe Miteru::Crawler, :vcr do
   include_context "http_server"
   subject { Miteru::Crawler }
   describe "#suspicous_urls" do
-    it "should return an Array" do
-      results = subject.new.suspicous_urls
-      expect(results).to be_an(Array)
-      expect(results.length).to eq(100)
+    context "without 'size' option" do
+      it "should return an Array" do
+        results = subject.new.suspicous_urls
+        expect(results).to be_an(Array)
+        expect(results.length).to eq(100)
+      end
+    end
+    context "with 'size' option" do
+      context "when size <= 100,000" do
+        it "should return an Array" do
+          results = subject.new(size: 200).suspicous_urls
+          expect(results).to be_an(Array)
+          expect(results.length).to eq(200)
+        end
+      end
+      context "when size > 100,000" do
+        it "should raise an ArugmentError" do
+          expect { subject.new(size: 100_001).suspicous_urls }.to raise_error(ArgumentError)
+        end
+      end
     end
   end
   describe "#execute" do

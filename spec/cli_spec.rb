@@ -6,6 +6,15 @@ RSpec.describe Miteru::CLI do
   subject { Miteru::CLI.new }
   before(:each) { ENV.delete "SLACK_WEBHOOK_URL" }
 
+  describe "#execute" do
+    before do
+      allow_any_instance_of(Miteru::Crawler).to receive(:suspicous_urls).and_return([])
+    end
+    it "should not raise any error" do
+      Miteru::CLI.start %w(execute)
+    end
+  end
+
   describe "#download_zip_files" do
     before { WebMock.disable! }
     after { WebMock.enable! }
@@ -14,7 +23,7 @@ RSpec.describe Miteru::CLI do
       zip_files = ["test.zip"]
 
       expect(Dir.glob("#{base_dir}/*.zip").empty?).to be(true)
-      subject.download_zip_files(url, zip_files, @path)
+      capture(:stdout) { subject.download_zip_files(url, zip_files, @path) }
       expect(Dir.glob("#{base_dir}/*.zip").empty?).to be(false)
     end
   end

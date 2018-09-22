@@ -36,6 +36,8 @@ Options:
   [--auto-download], [--no-auto-download]  # Enable or disable auto-download of *.zip file(s)
   [--download-to=DOWNLOAD_TO]              # Directory to download file(s)
                                            # Default: /tmp
+  [--size=N]                               # Number of urlscan.io's results. (Max: 100,000)
+                                           # Default: 100
   [--post-to-slack], [--no-post-to-slack]  # Post a message to Slack if it detects a phishing kit
   [--verbose], [--no-verbose]
                                            # Default: true

@@ -6,17 +6,23 @@ require "http"
 module Miteru
   class Crawler
     attr_reader :threads
-    def initialize
+    attr_reader :size
+    attr_reader :verbose
+
+    def initialize(size: 100, verbose: false)
       @threads = 10
+      @size = size
+      @verbose = verbose
+      raise ArgumentError, "size must be less than 100,000" if size > 100_000
     end
 
     def suspicous_urls
-      url = "https://urlscan.io/api/v1/search/?q=certstream-suspicious"
+      url = "https://urlscan.io/api/v1/search/?q=certstream-suspicious&size=#{size}"
       res = JSON.parse(get(url))
       res["results"].map { |result| result.dig("task", "url") }
     end
 
-    def execute(verbose = false)
+    def execute
       pool = Thread.pool(threads)
       websites = []
 
@@ -32,8 +38,8 @@ module Miteru
       websites
     end
 
-    def self.execute(verbose = false)
-      new.execute(verbose)
+    def self.execute(size: 100, verbose: false)
+      new(size: size, verbose: verbose).execute
     end
 
     private
