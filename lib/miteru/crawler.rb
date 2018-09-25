@@ -61,7 +61,10 @@ module Miteru
       suspicious_urls.each do |url|
         pool.process do
           website = Website.new(url)
-          puts "#{website.url}: it doesn't contain a phishing kit." if verbose && !website.has_kit?
+          unless website.has_kit?
+            puts "#{website.url}: it doesn't contain a phishing kit." if verbose
+            website.unbuild
+          end
           websites << website
         end
       end

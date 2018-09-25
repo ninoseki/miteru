@@ -43,6 +43,12 @@ module Miteru
       doc
     end
 
+    def unbuild
+      @doc = nil
+      @response = nil
+      @zip_files = nil
+    end
+
     private
 
     def response
