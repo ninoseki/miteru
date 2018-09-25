@@ -55,3 +55,10 @@ https://dummy2.com: it doesn't contain a phishing kit.
 https://dummy3.com: it doesn't contain a phishing kit.
 https://dummy4.com: it might contain a phishing kit (dummy.zip).
 ```
+
+## Note
+
+For using `--post-to-slack` feature, you should set the following environment variables:
+
+- `SLACK_WEBHOOK_URL`: Your Slack Webhook URL.
+- `SLACK_CHANNEL`: Slack channel to post a message (default: "#general").
