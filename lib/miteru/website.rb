@@ -18,7 +18,9 @@ module Miteru
       @zip_files ||= doc.css("a").map do |a|
         href = a.get("href")
         href&.end_with?(".zip") ? href : nil
-      end.compact
+      end.compact.map do |href|
+        href.start_with?("/") ? href[1..-1] : href
+      end
     end
 
     def ok?
