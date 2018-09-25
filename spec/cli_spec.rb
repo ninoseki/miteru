@@ -18,12 +18,29 @@ RSpec.describe Miteru::CLI do
   describe "#download_zip_files" do
     before { WebMock.disable! }
     after { WebMock.enable! }
-    it "should download file(s)" do
-      url = "http://#{host}:#{port}/has_kit"
-      zip_files = ["test.zip"]
-      expect(Dir.glob("#{base_dir}/*.zip").empty?).to be(true)
-      capture(:stdout) { subject.download_zip_files(url, zip_files, base_dir) }
-      expect(Dir.glob("#{base_dir}/*.zip").empty?).to be(false)
+    context "when it runs once" do
+      it "should download a file" do
+        url = "http://#{host}:#{port}/has_kit"
+        zip_files = ["test.zip"]
+        expect(Dir.glob("#{base_dir}/*.zip").empty?).to be(true)
+        capture(:stdout) { subject.download_zip_files(url, zip_files, base_dir) }
+        download_files = Dir.glob("#{base_dir}/*.zip")
+        expect(download_files.empty?).to be(false)
+        expect(download_files.length).to eq(1)
+      end
+    end
+    context "when it runs multiple times" do
+      it "should remove duplicated files" do
+        url = "http://#{host}:#{port}/has_kit"
+        zip_files = ["test.zip"]
+        expect(Dir.glob("#{base_dir}/*.zip").empty?).to be(true)
+        capture(:stdout) { subject.download_zip_files(url, zip_files, base_dir) }
+        capture(:stdout) { subject.download_zip_files(url, zip_files, base_dir) }
+        capture(:stdout) { subject.download_zip_files(url, zip_files, base_dir) }
+        download_files = Dir.glob("#{base_dir}/*.zip")
+        expect(download_files.empty?).to be(false)
+        expect(download_files.length).to eq(1)
+      end
     end
   end
   describe "#valid_slack_setting?" do
