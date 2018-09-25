@@ -10,12 +10,13 @@ module Miteru
   class CLI < Thor
     method_option :auto_download, type: :boolean, default: false, desc: "Enable or disable auto-download of *.zip file(s)"
     method_option :download_to, type: :string, default: "/tmp", desc: "Directory to download file(s)"
-    method_option :size, type: :numeric, default: 100, desc: "Number of urlscan.io's results. (Max: 100,000)"
     method_option :post_to_slack, type: :boolean, default: false, desc: "Post a message to Slack if it detects a phishing kit"
+    method_option :size, type: :numeric, default: 100, desc: "Number of urlscan.io's results. (Max: 100,000)"
+    method_option :threads, type: :numeric, default: 10, desc: "Number of threads to use"
     method_option :verbose, type: :boolean, default: true
     desc "execute", "Execute the crawler"
     def execute
-      websites = Crawler.execute(size: options[:size], verbose: options[:verbose])
+      websites = Crawler.execute(size: options[:size], threads: options[:threads], verbose: options[:verbose])
       websites.each do |website|
         next unless website.has_kit?
 

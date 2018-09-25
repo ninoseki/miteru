@@ -14,9 +14,9 @@ module Miteru
     URLSCAN_ENDPOINT = "https://urlscan.io/api/v1"
     OPENPHISH_ENDPOINT = "https://openphish.com"
 
-    def initialize(size: 100, verbose: false)
-      @threads = 10
+    def initialize(size: 100, threads: 10, verbose: false)
       @size = size
+      @threads = threads
       @verbose = verbose
       raise ArgumentError, "size must be less than 100,000" if size > 100_000
     end
@@ -70,8 +70,8 @@ module Miteru
       websites
     end
 
-    def self.execute(size: 100, verbose: false)
-      new(size: size, verbose: verbose).execute
+    def self.execute(size: 100, threads: 10, verbose: false)
+      new(size: size, threads: threads, verbose: verbose).execute
     end
 
     private
