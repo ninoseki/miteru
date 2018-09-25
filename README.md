@@ -9,8 +9,8 @@ Miteru is an experimental phishing kit detection tool.
 
 ## How it works
 
-- It collects phishing suspicious URLs from [urlscan.io](https://urlscan.io/search/#certstream-suspicious).
-- It checks a suspicious URL whether it contains a phishing kit (`*.zip` file) or not.
+- It collects phishing suspicious URLs from [urlscan.io](https://urlscan.io/search/#certstream-suspicious) and [OpenPhish community feed](https://openphish.com/feed.txt).
+- It checks a suspicious URL whether it has a directory listing and contains a phishing kit (`*.zip` file) or not.
 
 ## Installation
 
