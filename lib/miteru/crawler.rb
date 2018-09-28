@@ -7,14 +7,16 @@ require "uri"
 
 module Miteru
   class Crawler
-    attr_reader :threads
+    attr_reader :directory_traveling
     attr_reader :size
+    attr_reader :threads
     attr_reader :verbose
 
     URLSCAN_ENDPOINT = "https://urlscan.io/api/v1"
     OPENPHISH_ENDPOINT = "https://openphish.com"
 
-    def initialize(size: 100, threads: 10, verbose: false)
+    def initialize(directory_traveling: false, size: 100, threads: 10, verbose: false)
+      @directory_traveling = directory_traveling
       @size = size
       @threads = threads
       @verbose = verbose
@@ -39,14 +41,16 @@ module Miteru
         return []
       end
       base = "#{uri.scheme}://#{uri.hostname}"
-      [base]
-      # TODO: Should add a option for burute force directory
-      # segments = uri.path.split("/")
-      # if segments.length.zero?
-      #   [base]
-      # else
-      #   (0...segments.length).map { |idx| "#{base}#{segments[0..idx].join('/')}" }
-      # end
+      return [base] unless directory_traveling
+
+      segments = uri.path.split("/")
+      return [base] if segments.length.zero?
+
+      urls = (0...segments.length).map { |idx| "#{base}#{segments[0..idx].join('/')}" }
+      urls.reject do |breakdowned_url|
+        # Reject a url which ends with specific extension names
+        %w(.htm .html .php .asp .aspx).any? { |ext| breakdowned_url.end_with? ext }
+      end
     end
 
     def suspicious_urls
@@ -73,8 +77,8 @@ module Miteru
       websites
     end
 
-    def self.execute(size: 100, threads: 10, verbose: false)
-      new(size: size, threads: threads, verbose: verbose).execute
+    def self.execute(directory_traveling: false, size: 100, threads: 10, verbose: false)
+      new(directory_traveling: directory_traveling, size: size, threads: threads, verbose: verbose).execute
     end
 
     private
