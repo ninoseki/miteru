@@ -36,7 +36,7 @@ module Miteru
     end
 
     def has_kit?
-      ok? && index? && zip_files?
+      @has_kit ||= ok? && index? && zip_files?
     end
 
     def build

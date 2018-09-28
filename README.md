@@ -33,16 +33,17 @@ Usage:
   miteru execute
 
 Options:
-  [--auto-download], [--no-auto-download]  # Enable or disable auto-download of *.zip file(s)
-  [--download-to=DOWNLOAD_TO]              # Directory to download file(s)
-                                           # Default: /tmp
-  [--post-to-slack], [--no-post-to-slack]  # Post a message to Slack if it detects a phishing kit
-  [--size=N]                               # Number of urlscan.io's results. (Max: 100,000)
-                                           # Default: 100
-  [--threads=N]                            # Number of threads to use
-                                           # Default: 10
+  [--auto-download], [--no-auto-download]              # Enable or disable auto-download of *.zip file(s)
+  [--directory-traveling], [--no-directory-traveling]  # Enable or disable directory traveling
+  [--download-to=DOWNLOAD_TO]                          # Directory to download file(s)
+                                                       # Default: /tmp
+  [--post-to-slack], [--no-post-to-slack]              # Post a message to Slack if it detects a phishing kit
+  [--size=N]                                           # Number of urlscan.io's results. (Max: 100,000)
+                                                       # Default: 100
+  [--threads=N]                                        # Number of threads to use
+                                                       # Default: 10
   [--verbose], [--no-verbose]
-                                           # Default: true
+                                                       # Default: true
 
 Execute the crawler
 ```
