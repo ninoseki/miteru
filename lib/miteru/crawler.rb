@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "csv"
 require "http"
 require "json"
 require "thread/pool"
@@ -14,6 +15,7 @@ module Miteru
 
     URLSCAN_ENDPOINT = "https://urlscan.io/api/v1"
     OPENPHISH_ENDPOINT = "https://openphish.com"
+    PHISHTANK_ENDPOINT = "http://data.phishtank.com"
 
     def initialize(directory_traveling: false, size: 100, threads: 10, verbose: false)
       @directory_traveling = directory_traveling
@@ -32,6 +34,12 @@ module Miteru
     def openphish_feed
       res = get("#{OPENPHISH_ENDPOINT}/feed.txt")
       res.lines.map(&:chomp)
+    end
+
+    def phishtank_feed
+      res = get("#{PHISHTANK_ENDPOINT}/data/online-valid.csv")
+      table = CSV.parse(res, headers: true)
+      table.map { |row| row["url"] }
     end
 
     def breakdown(url)
@@ -54,7 +62,7 @@ module Miteru
     end
 
     def suspicious_urls
-      urls = urlscan_feed + openphish_feed
+      urls = (urlscan_feed + openphish_feed + phishtank_feed)
       urls.map { |url| breakdown(url) }.flatten.uniq.sort
     end
 
@@ -65,11 +73,12 @@ module Miteru
       suspicious_urls.each do |url|
         pool.process do
           website = Website.new(url)
-          unless website.has_kit?
+          if website.has_kit?
+            websites << website
+          else
             puts "#{website.url}: it doesn't contain a phishing kit." if verbose
             website.unbuild
           end
-          websites << website
         end
       end
       pool.shutdown
@@ -84,7 +93,7 @@ module Miteru
     private
 
     def get(url)
-      res = HTTP.get(url)
+      res = HTTP.follow(max_hops: 3).get(url)
       raise HTTPResponseError if res.code != 200
 
       res.body.to_s
