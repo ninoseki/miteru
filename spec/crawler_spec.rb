@@ -60,6 +60,12 @@ RSpec.describe Miteru::Crawler, :vcr do
       expect(results).to be_an(Array)
     end
   end
+  describe "#phishtank_feed" do
+    it "should return an Array" do
+      results = subject.new.phishtank_feed
+      expect(results).to be_an(Array)
+    end
+  end
   describe "#suspicious_urls" do
     it "should return an Array" do
       results = subject.new.suspicious_urls
