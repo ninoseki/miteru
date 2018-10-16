@@ -2,7 +2,7 @@
 
 RSpec.describe Miteru::CLI do
   include_context "http_server"
-  include_context "download_zip_files"
+  include_context "download_compressed_files"
   subject { Miteru::CLI.new }
   before(:each) { ENV.delete "SLACK_WEBHOOK_URL" }
 
@@ -15,15 +15,15 @@ RSpec.describe Miteru::CLI do
     end
   end
 
-  describe "#download_zip_files" do
+  describe "#download_compressed_files" do
     before { WebMock.disable! }
     after { WebMock.enable! }
     context "when it runs once" do
       it "should download a file" do
         url = "http://#{host}:#{port}/has_kit"
-        zip_files = ["test.zip"]
+        compressed_files = ["test.zip"]
         expect(Dir.glob("#{base_dir}/*.zip").empty?).to be(true)
-        capture(:stdout) { subject.download_zip_files(url, zip_files, base_dir) }
+        capture(:stdout) { subject.download_compressed_files(url, compressed_files, base_dir) }
         download_files = Dir.glob("#{base_dir}/*.zip")
         expect(download_files.empty?).to be(false)
         expect(download_files.length).to eq(1)
@@ -32,11 +32,11 @@ RSpec.describe Miteru::CLI do
     context "when it runs multiple times" do
       it "should remove duplicated files" do
         url = "http://#{host}:#{port}/has_kit"
-        zip_files = ["test.zip"]
+        compressed_files = ["test.zip"]
         expect(Dir.glob("#{base_dir}/*.zip").empty?).to be(true)
-        capture(:stdout) { subject.download_zip_files(url, zip_files, base_dir) }
-        capture(:stdout) { subject.download_zip_files(url, zip_files, base_dir) }
-        capture(:stdout) { subject.download_zip_files(url, zip_files, base_dir) }
+        capture(:stdout) { subject.download_compressed_files(url, compressed_files, base_dir) }
+        capture(:stdout) { subject.download_compressed_files(url, compressed_files, base_dir) }
+        capture(:stdout) { subject.download_compressed_files(url, compressed_files, base_dir) }
         download_files = Dir.glob("#{base_dir}/*.zip")
         expect(download_files.empty?).to be(false)
         expect(download_files.length).to eq(1)

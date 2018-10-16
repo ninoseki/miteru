@@ -29,17 +29,23 @@ module Miteru
       url = "#{URLSCAN_ENDPOINT}/search/?q=certstream-suspicious&size=#{size}"
       res = JSON.parse(get(url))
       res["results"].map { |result| result.dig("task", "url") }
+    rescue HTTPResponseError => _
+      []
     end
 
     def openphish_feed
       res = get("#{OPENPHISH_ENDPOINT}/feed.txt")
       res.lines.map(&:chomp)
+    rescue HTTPResponseError => _
+      []
     end
 
     def phishtank_feed
       res = get("#{PHISHTANK_ENDPOINT}/data/online-valid.csv")
       table = CSV.parse(res, headers: true)
       table.map { |row| row["url"] }
+    rescue HTTPResponseError => _
+      []
     end
 
     def breakdown(url)
@@ -62,11 +68,15 @@ module Miteru
     end
 
     def suspicious_urls
-      urls = (urlscan_feed + openphish_feed + phishtank_feed)
-      urls.map { |url| breakdown(url) }.flatten.uniq.sort
+      @suspicious_urls ||= [].tap do |arr|
+        urls = (urlscan_feed + openphish_feed + phishtank_feed)
+        urls.map { |url| breakdown(url) }.flatten.uniq.sort.each { |url| arr << url }
+      end
     end
 
     def execute
+      puts "Loaded #{suspicious_urls.length} URLs to crawl." if verbose
+
       pool = Thread.pool(threads)
       websites = []
 

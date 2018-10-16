@@ -2,7 +2,7 @@
 
 RSpec.describe Miteru::HTTPClient do
   include_context "http_server"
-  include_context "download_zip_files"
+  include_context "download_compressed_files"
   subject { Miteru::HTTPClient }
 
   describe ".download" do
