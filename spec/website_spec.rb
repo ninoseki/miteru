@@ -9,11 +9,11 @@ RSpec.describe Miteru::Website do
       expect(subject.new("http://#{host}:#{port}/has_kit").title).to be_a(String)
     end
   end
-  describe "#zip_files" do
+  describe "#compressed_files" do
     it "should return an Array" do
-      zip_files = subject.new("http://#{host}:#{port}/has_kit").zip_files
-      expect(zip_files).to be_an(Array)
-      expect(zip_files.length).to eq(1)
+      compressed_files = subject.new("http://#{host}:#{port}/has_kit").compressed_files
+      expect(compressed_files).to be_an(Array)
+      expect(compressed_files.length).to eq(2)
     end
   end
   describe "#has_kit?" do

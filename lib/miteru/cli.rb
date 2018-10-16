@@ -8,7 +8,7 @@ require "thor"
 
 module Miteru
   class CLI < Thor
-    method_option :auto_download, type: :boolean, default: false, desc: "Enable or disable auto-download of *.zip file(s)"
+    method_option :auto_download, type: :boolean, default: false, desc: "Enable or disable auto-download of compressed file(s)"
     method_option :directory_traveling, type: :boolean, default: false, desc: "Enable or disable directory traveling"
     method_option :download_to, type: :string, default: "/tmp", desc: "Directory to download file(s)"
     method_option :post_to_slack, type: :boolean, default: false, desc: "Post a message to Slack if it detects a phishing kit"
@@ -26,16 +26,16 @@ module Miteru
       websites.each do |website|
         next unless website.has_kit?
 
-        message = "#{website.url}: it might contain phishing kit(s) (#{website.zip_files.join(', ')})."
+        message = "#{website.url}: it might contain phishing kit(s) (#{website.compressed_files.join(', ')})."
         puts message.colorize(:light_red)
-        post_to_slack(message) if options[:post_to_slack] && valid_slack_setting?
-        download_zip_files(website.url, website.zip_files, options[:download_to]) if options[:auto_download]
+        post_to_slack(website.message) if options[:post_to_slack] && valid_slack_setting?
+        download_compressed_files(website.url, website.compressed_files, options[:download_to]) if options[:auto_download]
       end
     end
 
     no_commands do
-      def download_zip_files(url, zip_files, base_dir)
-        zip_files.each do |path|
+      def download_compressed_files(url, compressed_files, base_dir)
+        compressed_files.each do |path|
           target_url = "#{url}/#{path}"
           begin
             download_file_path = HTTPClient.download(target_url, base_dir)

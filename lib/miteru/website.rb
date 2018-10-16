@@ -14,10 +14,10 @@ module Miteru
       doc.at_css("title")&.text
     end
 
-    def zip_files
-      @zip_files ||= doc.css("a").map do |a|
+    def compressed_files
+      @compressed_files ||= doc.css("a").map do |a|
         href = a.get("href")
-        href&.end_with?(".zip") ? href : nil
+        [".zip", ".rar", ".7z", ".tar", ".gz"].any? { |ext| href&.end_with? ext } ? href : nil
       end.compact.map do |href|
         href.start_with?("/") ? href[1..-1] : href
       end
@@ -31,12 +31,12 @@ module Miteru
       title == "Index of /"
     end
 
-    def zip_files?
-      !zip_files.empty?
+    def compressed_files?
+      !compressed_files.empty?
     end
 
     def has_kit?
-      @has_kit ||= ok? && index? && zip_files?
+      @has_kit ||= ok? && index? && compressed_files?
     end
 
     def build
@@ -46,7 +46,7 @@ module Miteru
     def unbuild
       @doc = nil
       @response = nil
-      @zip_files = nil
+      @compressed_files = nil
     end
 
     private

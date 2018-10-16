@@ -22,12 +22,12 @@ RSpec.configure do |config|
   config.shared_context_metadata_behavior = :apply_to_host_groups
 end
 
-require_relative "./support/shared_contexts/download_zip_files_context"
+require_relative "./support/shared_contexts/download_compressed_files_context"
 require_relative "./support/shared_contexts/http_server_context"
 require_relative "./support/helpers/helpers"
 
 RSpec.configure do |config|
-  config.include_context "download_zip_files"
+  config.include_context "download_compressed_files"
   config.include_context "http_server"
   config.include Spec::Support::Helpers
 end
