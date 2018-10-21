@@ -19,9 +19,5 @@ module Miteru
     def execute
       Crawler.execute options.map { |k, v| [k.to_sym, v] }.to_h
     end
-
-    no_commands do
-
-    end
   end
 end
