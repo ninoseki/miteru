@@ -37,7 +37,7 @@ Usage:
   miteru execute
 
 Options:
-  [--auto-download], [--no-auto-download]              # Enable or disable auto-download of *.zip file(s)
+  [--auto-download], [--no-auto-download]              # Enable or disable auto-download of compressed file(s)
   [--directory-traveling], [--no-directory-traveling]  # Enable or disable directory traveling
   [--download-to=DOWNLOAD_TO]                          # Directory to download file(s)
                                                        # Default: /tmp
