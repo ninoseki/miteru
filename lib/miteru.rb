@@ -3,6 +3,7 @@
 require "miteru/error"
 require "miteru/http_client"
 require "miteru/website"
+require "miteru/downloader"
 require "miteru/crawler"
 require "miteru/cli"
 require "miteru/version"
