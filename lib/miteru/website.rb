@@ -7,7 +7,6 @@ module Miteru
     attr_reader :url
     def initialize(url)
       @url = url
-      build
     end
 
     def title
@@ -36,17 +35,9 @@ module Miteru
     end
 
     def has_kit?
-      @has_kit ||= ok? && index? && compressed_files?
-    end
-
-    def build
-      doc
-    end
-
-    def unbuild
-      @doc = nil
-      @response = nil
-      @compressed_files = nil
+      ok? && index? && compressed_files?
+    rescue StandardError => _
+      false
     end
 
     private
