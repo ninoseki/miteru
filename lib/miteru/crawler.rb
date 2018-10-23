@@ -35,14 +35,16 @@ module Miteru
       url = "#{URLSCAN_ENDPOINT}/search/?q=certstream-suspicious&size=#{size}"
       res = JSON.parse(get(url))
       res["results"].map { |result| result.dig("task", "url") }
-    rescue HTTPResponseError => _
+    rescue HTTPResponseError => e
+      puts "Failed to load urlscan.io feed (#{e})"
       []
     end
 
     def openphish_feed
       res = get("#{OPENPHISH_ENDPOINT}/feed.txt")
       res.lines.map(&:chomp)
-    rescue HTTPResponseError => _
+    rescue HTTPResponseError => e
+      puts "Failed to load OpenPhish feed (#{e})"
       []
     end
 
@@ -50,7 +52,8 @@ module Miteru
       res = get("#{PHISHTANK_ENDPOINT}/data/online-valid.csv")
       table = CSV.parse(res, headers: true)
       table.map { |row| row["url"] }
-    rescue HTTPResponseError => _
+    rescue HTTPResponseError => e
+      puts "Failed to load PhishTank feed (#{e})"
       []
     end
 
