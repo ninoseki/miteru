@@ -57,6 +57,13 @@ RSpec.describe Miteru::Crawler, :vcr do
           expect { subject.new(size: 100_001).urlscan_feed }.to raise_error(ArgumentError)
         end
       end
+      context "when an error is raised" do
+        before { allow_any_instance_of(Miteru::HTTPClient).to receive(:get).and_raise(Miteru::HTTPResponseError, "test") }
+        it "should output a message" do
+          message = capture(:stdout) { subject.new.urlscan_feed }
+          expect(message).to eq("Failed to load urlscan.io feed (test)\n")
+        end
+      end
     end
   end
 
@@ -65,12 +72,26 @@ RSpec.describe Miteru::Crawler, :vcr do
       results = subject.new.openphish_feed
       expect(results).to be_an(Array)
     end
+    context "when an error is raised" do
+      before { allow_any_instance_of(Miteru::HTTPClient).to receive(:get).and_raise(Miteru::HTTPResponseError, "test") }
+      it "should output a message" do
+        message = capture(:stdout) { subject.new.openphish_feed }
+        expect(message).to eq("Failed to load OpenPhish feed (test)\n")
+      end
+    end
   end
 
   describe "#phishtank_feed" do
     it "should return an Array" do
       results = subject.new.phishtank_feed
       expect(results).to be_an(Array)
+    end
+    context "when an error is raised" do
+      before { allow_any_instance_of(Miteru::HTTPClient).to receive(:get).and_raise(Miteru::HTTPResponseError, "test") }
+      it "should output a message" do
+        message = capture(:stdout) { subject.new.phishtank_feed }
+        expect(message).to eq("Failed to load PhishTank feed (test)\n")
+      end
     end
   end
 
