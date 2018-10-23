@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require "colorize"
-require "digest"
-require "fileutils"
-require "http"
 require "thor"
 
 module Miteru

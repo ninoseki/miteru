@@ -25,12 +25,21 @@ module Miteru
       new.download(url, base_dir)
     end
 
-    def get(url)
-      HTTP.timeout(write: 2, connect: 5, read: 10).headers(default_headers).get(url, default_options)
+    def get(url, options = {})
+      options = options.merge default_options
+      HTTP.follow.timeout(write: 2, connect: 5, read: 10).headers(default_headers).get(url, options)
     end
 
-    def self.get(url)
-      new.get url
+    def self.get(url, options = {})
+      new.get url, options
+    end
+
+    def post(url, options = {})
+      HTTP.post url, options
+    end
+
+    def self.post(url, options = {})
+      new.post url, options
     end
 
     private

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "colorize"
 require "csv"
 require "http"
 require "json"
@@ -115,7 +116,7 @@ module Miteru
       channel = ENV["SLACK_CHANNEL"] || "#general"
 
       payload = { text: message, channel: channel }
-      HTTP.post(webhook_url, json: payload)
+      HTTPClient.post(webhook_url, json: payload)
     end
 
     def post_to_slack?
@@ -133,7 +134,7 @@ module Miteru
     private
 
     def get(url)
-      res = HTTP.follow(max_hops: 3).get(url)
+      res = HTTPClient.get(url)
       raise HTTPResponseError if res.code != 200
 
       res.body.to_s

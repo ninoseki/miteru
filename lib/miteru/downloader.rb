@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require "digest"
+require "fileutils"
+
 module Miteru
   class Downloader
     attr_reader :base_dir
