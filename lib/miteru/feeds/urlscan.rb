@@ -10,7 +10,7 @@ module Miteru
       attr_reader :size
       def initialize(size = 100)
         @size = size
-        raise ArgumentError, "size must be less than 100,000" if size > 100_000
+        raise ArgumentError, "size must be less than 10,000" if size > 10_000
       end
 
       def urls
