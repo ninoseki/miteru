@@ -11,16 +11,16 @@ RSpec.describe Miteru::Feeds::UrlScan, :vcr do
     end
   end
   context "with 'size' option" do
-    context "when size <= 100,000" do
+    context "when size <= 10,000" do
       it "should return an Array" do
-        results = subject.new(size = 200).urls
+        results = subject.new(10_000).urls
         expect(results).to be_an(Array)
-        expect(results.length).to eq(200)
+        expect(results.length).to eq(10_000)
       end
     end
-    context "when size > 100,000" do
+    context "when size > 10,000" do
       it "should raise an ArugmentError" do
-        expect { subject.new(size = 100_001).urls }.to raise_error(ArgumentError)
+        expect { subject.new(10_001).urls }.to raise_error(ArgumentError)
       end
     end
     context "when an error is raised" do
