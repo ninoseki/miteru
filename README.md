@@ -42,7 +42,7 @@ Options:
   [--download-to=DOWNLOAD_TO]                          # Directory to download file(s)
                                                        # Default: /tmp
   [--post-to-slack], [--no-post-to-slack]              # Post a message to Slack if it detects a phishing kit
-  [--size=N]                                           # Number of urlscan.io's results. (Max: 100,000)
+  [--size=N]                                           # Number of urlscan.io's results. (Max: 10,000)
                                                        # Default: 100
   [--threads=N]                                        # Number of threads to use
                                                        # Default: 10
