@@ -10,11 +10,17 @@ Miteru is an experimental phishing kit detection tool.
 ## How it works
 
 - It collects phishing suspicious URLs from the following feeds:
-  - [urlscan.io](https://urlscan.io/search/#certstream-suspicious)
+  - [urlscan.io certstream-suspicious feed](https://urlscan.io/search/#certstream-suspicious)
   - [OpenPhish community feed](https://openphish.com/feed.txt)
   - [PhishTank feed](http://data.phishtank.com/data/online-valid.csv)
-- It checks a suspicious URL whether it has a directory listing and contains a phishing kit (compressed file) or not.
+- It checks a suspicious URL whether it enables directory listing and contains a phishing kit (compressed file) or not.
   - Note: compressed file = `*.zip`, `*.rar`, `*.7z`, `*.tar` and `*.gz`.
+
+## Features
+
+- [x] Phishing kit detection & collection.
+- [x] Slack integration. (Posting a message to Slack if the tool detects a phishing kit.)
+- [x] Threading.
 
 ## Installation
 
@@ -67,3 +73,8 @@ For using `--post-to-slack` feature, you should set the following environment va
 
 - `SLACK_WEBHOOK_URL`: Your Slack Webhook URL.
 - `SLACK_CHANNEL`: Slack channel to post a message (default: "#general").
+
+## Alternatives
+
+- [t4d/StalkPhish](https://github.com/t4d/StalkPhish): The Phishing kits stalker, harvesting phishing kits for investigations.
+- [duo-labs/phish-collect](https://github.com/duo-labs/phish-collect): Python script to hunt phishing kits.
