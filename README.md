@@ -67,6 +67,12 @@ https://dummy3.com: it doesn't contain a phishing kit.
 https://dummy4.com: it might contain a phishing kit (dummy.zip).
 ```
 
+## Aasciinema cast
+
+[![asciicast](https://asciinema.org/a/ga6ZbwuK1HOLOyELb23QrSvJP.svg)](https://asciinema.org/a/ga6ZbwuK1HOLOyELb23QrSvJP)
+
+Note: Stoped the process during the execution because it takes minutes to finish.
+
 ## Note
 
 For using `--post-to-slack` feature, you should set the following environment variables:
