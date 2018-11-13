@@ -75,7 +75,5 @@ module Miteru
     def valid_slack_setting?
       ENV["SLACK_WEBHOOK_URL"] != nil
     end
-
-
   end
 end

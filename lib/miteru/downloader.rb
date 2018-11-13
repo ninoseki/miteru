@@ -17,6 +17,7 @@ module Miteru
         target_url = "#{url}/#{path}"
         begin
           download_file_path = HTTPClient.download(target_url, base_dir)
+          puts download_file_path
           if duplicated?(download_file_path, base_dir)
             puts "Do not download #{target_url} because there is a same hash file in the directory (SHA256: #{sha256(download_file_path)})."
             FileUtils.rm download_file_path
@@ -38,7 +39,7 @@ module Miteru
 
     def duplicated?(file_path, base_dir)
       base = sha256(file_path)
-      sha256s = Dir.glob("#{base_dir}/*.zip").map { |path| sha256(path) }
+      sha256s = Dir.glob("#{base_dir}/*.{zip,rar,7z,tar,gz}").map { |path| sha256(path) }
       sha256s.select { |sha256| sha256 == base }.length > 1
     end
   end
