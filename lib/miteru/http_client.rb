@@ -55,7 +55,7 @@ module Miteru
     def filename_to_save(url)
       filename = url.split("/").last
       extname = File.extname(filename)
-      "#{SecureRandom.alphanumeric}.#{extname}"
+      "#{SecureRandom.alphanumeric}#{extname}"
     end
 
     def download_path(base_dir, filename)
