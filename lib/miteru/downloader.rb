@@ -17,7 +17,6 @@ module Miteru
         target_url = "#{url}/#{path}"
         begin
           download_file_path = HTTPClient.download(target_url, base_dir)
-          puts download_file_path
           if duplicated?(download_file_path, base_dir)
             puts "Do not download #{target_url} because there is a same hash file in the directory (SHA256: #{sha256(download_file_path)})."
             FileUtils.rm download_file_path
