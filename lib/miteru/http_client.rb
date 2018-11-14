@@ -14,8 +14,7 @@ module Miteru
       @ssl_context = ctx
     end
 
-    def download(url, base_dir)
-      destination = download_path(base_dir, filename_to_save(url))
+    def download(url, destination)
       down = Down::Http.new(default_options) { |client| client.headers(default_headers) }
       down.download(url, destination: destination)
       destination
@@ -50,16 +49,6 @@ module Miteru
 
     def default_options
       { ssl_context: ssl_context }
-    end
-
-    def filename_to_save(url)
-      filename = url.split("/").last
-      extname = File.extname(filename)
-      "#{SecureRandom.alphanumeric}#{extname}"
-    end
-
-    def download_path(base_dir, filename)
-      "#{base_dir}/#{filename}"
     end
   end
 end
