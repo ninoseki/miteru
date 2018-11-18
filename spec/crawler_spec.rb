@@ -4,13 +4,13 @@ RSpec.describe Miteru::Crawler do
   include_context "http_server"
   include_context "download_compressed_files"
 
-  before(:each) { ENV.delete "SLACK_WEBHOOK_URL" }
+  before { allow(ENV).to receive(:[]).with("SLACK_WEBHOOK_URL").and_return(nil) }
 
   subject { Miteru::Crawler }
 
   describe "#valid_slack_setting?" do
     context "when set ENV['SLACK_WEBHOOK_URL']" do
-      before { ENV["SLACK_WEBHOOK_URL"] = "test" }
+      before { allow(ENV).to receive(:[]).with("SLACK_WEBHOOK_URL").and_return("test") }
       it "should return true" do
         expect(subject.new.valid_slack_setting?).to be(true)
       end
