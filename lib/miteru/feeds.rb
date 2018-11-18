@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require_relative "./feeds/feed"
-require_relative "./feeds/openphish"
-require_relative "./feeds/phishtank"
 require_relative "./feeds/urlscan"
 
 module Miteru
@@ -11,15 +9,13 @@ module Miteru
     attr_reader :directory_traveling
 
     def initialize(urlscan_size = 100, directory_traveling: false)
-      @openphish = OpenPhish.new
-      @phishtank = PhishTank.new
       @urlscan = UrlScan.new(urlscan_size)
       @directory_traveling = directory_traveling
     end
 
     def suspicious_urls
       @suspicious_urls ||= [].tap do |arr|
-        urls = (openphish.urls + phishtank.urls + urlscan.urls).select { |url| url.start_with?("http://", "https://") }
+        urls = urlscan.urls.select { |url| url.start_with?("http://", "https://") }
         urls.map { |url| breakdown(url) }.flatten.uniq.sort.each { |url| arr << url }
       end
     end

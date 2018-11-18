@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 require "json"
+require "uri"
 
 module Miteru
   class Feeds
     class UrlScan < Feed
-      ENDPOINT = "https://urlscan.io/api/v1"
+      HOST = "urlscan.io"
+      VERSION = 1
+      URL = "https://#{HOST}/api/v#{VERSION}"
 
       attr_reader :size
       def initialize(size = 100)
@@ -14,12 +17,23 @@ module Miteru
       end
 
       def urls
-        url = "#{ENDPOINT}/search/?q=certstream-suspicious&size=#{size}"
+        url = url_for("/search/")
+        url.query = URI.encode_www_form(
+          q: "PhishTank OR OpenPhish OR CertStream-Suspicious",
+          size: size
+        )
+
         res = JSON.parse(get(url))
         res["results"].map { |result| result.dig("task", "url") }
       rescue HTTPResponseError => e
         puts "Failed to load urlscan.io feed (#{e})"
         []
+      end
+
+      private
+
+      def url_for(path)
+        URI(URL + path)
       end
     end
   end

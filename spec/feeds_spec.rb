@@ -36,8 +36,6 @@ RSpec.describe Miteru::Feeds do
 
   describe "#suspicious_urls" do
     before do
-      allow_any_instance_of(Miteru::Feeds::OpenPhish).to receive(:urls).and_return(["https://test.com"])
-      allow_any_instance_of(Miteru::Feeds::PhishTank).to receive(:urls).and_return(["https://test.com"])
       allow_any_instance_of(Miteru::Feeds::UrlScan).to receive(:urls).and_return(["https://test.com"])
     end
     it "should return an Array without duplicated" do
