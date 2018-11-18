@@ -33,7 +33,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "webmock", "~> 3.4"
 
   spec.add_dependency "colorize", "~> 0.8"
-  spec.add_dependency "down", "~> 4.6"
+  spec.add_dependency "down", "~> 4.7"
   spec.add_dependency "http", "~> 4.0"
   spec.add_dependency "oga", "~> 2.15"
   spec.add_dependency "parallel", "~> 1.12"
