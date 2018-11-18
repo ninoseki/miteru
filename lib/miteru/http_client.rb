@@ -1,12 +1,15 @@
 # frozen_string_literal: true
 
-require "http"
 require "down/http"
+require "http"
 require "securerandom"
+require "uri"
 
 module Miteru
   class HTTPClient
     DEFAULT_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36"
+    URLSCAN_UA = "miteru/#{Miteru::VERSION}"
+
     attr_reader :ssl_context
     def initialize
       ctx = OpenSSL::SSL::SSLContext.new
@@ -26,7 +29,11 @@ module Miteru
 
     def get(url, options = {})
       options = options.merge default_options
-      HTTP.follow.timeout(write: 2, connect: 5, read: 10).headers(default_headers).get(url, options)
+
+      HTTP.follow
+          .timeout(write: 2, connect: 5, read: 10)
+          .headers(urlscan_url?(url) ? urlscan_headers : default_headers)
+          .get(url, options)
     end
 
     def self.get(url, options = {})
@@ -49,6 +56,15 @@ module Miteru
 
     def default_options
       { ssl_context: ssl_context }
+    end
+
+    def urlscan_headers
+      { user_agent: URLSCAN_UA }
+    end
+
+    def urlscan_url?(url)
+      uri = URI(url)
+      uri.hostname == "urlscan.io"
     end
   end
 end
