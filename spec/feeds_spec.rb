@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Miteru::Feeds do
-
   subject { Miteru::Feeds }
 
   describe "#breakdown" do
