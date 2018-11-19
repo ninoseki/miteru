@@ -67,6 +67,17 @@ https://dummy3.com: it doesn't contain a phishing kit.
 https://dummy4.com: it might contain a phishing kit (dummy.zip).
 ```
 
+## Using Docker (alternative if you don't install Ruby)
+
+```sh
+$ git clone https://github.com/ninoseki/miteru.git
+$ cd miteru/docker
+$ docker build -t miteru .
+$ docker run miteru
+# ex. auto-download detected phishing kit(s) into host machines's /tmp directory
+$ docker run -v /tmp:/tmp miteru execute --auto-download
+```
+
 ## Aasciinema cast
 
 [![asciicast](https://asciinema.org/a/ga6ZbwuK1HOLOyELb23QrSvJP.svg)](https://asciinema.org/a/ga6ZbwuK1HOLOyELb23QrSvJP)
