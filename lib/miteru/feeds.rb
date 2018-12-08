@@ -1,21 +1,27 @@
 # frozen_string_literal: true
 
 require_relative "./feeds/feed"
+require_relative "./feeds/ayashige"
 require_relative "./feeds/urlscan"
 
 module Miteru
   class Feeds
-    attr_reader :openphish, :phishtank, :urlscan
     attr_reader :directory_traveling
 
     def initialize(urlscan_size = 100, directory_traveling: false)
-      @urlscan = UrlScan.new(urlscan_size)
+      @feeds = [
+        Ayashige.new,
+        UrlScan.new(urlscan_size)
+      ]
       @directory_traveling = directory_traveling
     end
 
     def suspicious_urls
       @suspicious_urls ||= [].tap do |arr|
-        urls = urlscan.urls.select { |url| url.start_with?("http://", "https://") }
+        urls = @feeds.map do |feed|
+          feed.urls.select { |url| url.start_with?("http://", "https://") }
+        end.flatten
+
         urls.map { |url| breakdown(url) }.flatten.uniq.sort.each { |url| arr << url }
       end
     end
