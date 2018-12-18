@@ -20,7 +20,7 @@ module Miteru
       @suspicious_urls ||= [].tap do |arr|
         urls = @feeds.map do |feed|
           feed.urls.select { |url| url.start_with?("http://", "https://") }
-        end.flatten
+        end.flatten.uniq
 
         urls.map { |url| breakdown(url) }.flatten.uniq.sort.each { |url| arr << url }
       end
