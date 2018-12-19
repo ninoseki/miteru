@@ -13,7 +13,7 @@ module Miteru
         url = url_for("/feed")
         res = JSON.parse(get(url))
 
-        domains = res.map { |item| item["domain"]}
+        domains = res.map { |item| item["domain"] }
         domains.map do |domain|
           [
             "https://#{domain}",
