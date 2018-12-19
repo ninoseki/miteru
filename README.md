@@ -9,12 +9,12 @@ Miteru is an experimental phishing kit detection tool.
 
 ## How it works
 
-- It collects phishing suspicious URLs from the following feeds:
+- It collects phishy URLs from the following feeds:
   - [urlscan.io certstream-suspicious feed](https://urlscan.io/search/#certstream-suspicious)
   - [OpenPhish feed via urlscan.io](https://urlscan.io/search/#OpenPhish)
   - [PhishTank feed via urlscan.io](https://urlscan.io/search/#PhishTank)
   - [Ayashige feed](https://github.com/ninoseki/ayashige)
-- It checks a suspicious URL whether it enables directory listing and contains a phishing kit (compressed file) or not.
+- It checks each phishy URL whether it enables directory listing and contains a phishing kit (compressed file) or not.
   - Note: compressed file = `*.zip`, `*.rar`, `*.7z`, `*.tar` and `*.gz`.
 
 ## Features
@@ -83,7 +83,7 @@ $ docker run -v /tmp:/tmp miteru execute --auto-download
 
 [![asciicast](https://asciinema.org/a/ga6ZbwuK1HOLOyELb23QrSvJP.svg)](https://asciinema.org/a/ga6ZbwuK1HOLOyELb23QrSvJP)
 
-Note: Stoped the process during the execution because it takes minutes to finish.
+Note: In this demo, I stopped the process during the execution because it takes minutes to finish.
 
 ## Note
 
@@ -96,3 +96,4 @@ For using `--post-to-slack` feature, you should set the following environment va
 
 - [t4d/StalkPhish](https://github.com/t4d/StalkPhish): The Phishing kits stalker, harvesting phishing kits for investigations.
 - [duo-labs/phish-collect](https://github.com/duo-labs/phish-collect): Python script to hunt phishing kits.
+- [leunammejii/analyst_arsenal](https://github.com/leunammejii/analyst_arsenal): A tool belt for analysts to continue fighting the good fight.
