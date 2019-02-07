@@ -2,6 +2,7 @@
 
 require "digest"
 require "fileutils"
+require "uri"
 
 module Miteru
   class Downloader
@@ -36,7 +37,9 @@ module Miteru
     def filename_to_save(url)
       filename = url.split("/").last
       extname = File.extname(filename)
-      "#{SecureRandom.alphanumeric}#{extname}"
+      domain = URI(url).hostname
+
+      "#{domain}_#{filename}_#{SecureRandom.alphanumeric(10)}#{extname}"
     end
 
     def filepath_to_download(filename)
