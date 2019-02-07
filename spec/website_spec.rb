@@ -17,12 +17,12 @@ RSpec.describe Miteru::Website do
     end
   end
   describe "#has_kit?" do
-    context "when giving a url which contains a phishint kit" do
+    context "when giving a url which contains a phishing kit" do
       it "should return true" do
         expect(subject.new("http://#{host}:#{port}/has_kit").has_kit?).to eq(true)
       end
     end
-    context "when giving a url which doesn't contain a phishint kit" do
+    context "when giving a url which doesn't contain a phishing kit" do
       it "should return false" do
         expect(subject.new("http://#{host}:#{port}/no_kit").has_kit?).to eq(false)
       end
