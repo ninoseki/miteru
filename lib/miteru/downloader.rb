@@ -16,12 +16,12 @@ module Miteru
     def download_compressed_files(url, compressed_files)
       compressed_files.each do |path|
         target_url = "#{url}/#{path}"
-        filename = filename_to_save(target_url)
+        filename = download_filename(target_url)
         destination = filepath_to_download(filename)
         begin
           download_filepath = HTTPClient.download(target_url, destination)
           if duplicated?(download_filepath)
-            puts "Do not download #{target_url} because there is a same hash file in the directory (SHA256: #{sha256(download_filepath)})."
+            puts "Do not download #{target_url} because there is a file that has a same hash value in the directory (SHA256: #{sha256(download_filepath)})."
             FileUtils.rm download_filepath
           else
             puts "Download #{target_url} as #{download_filepath}"
@@ -34,7 +34,7 @@ module Miteru
 
     private
 
-    def filename_to_save(url)
+    def download_filename(url)
       filename = url.split("/").last
       extname = File.extname(filename)
       domain = URI(url).hostname
