@@ -8,28 +8,6 @@ RSpec.describe Miteru::Crawler do
 
   subject { Miteru::Crawler }
 
-  describe "#valid_slack_setting?" do
-    context "when set ENV['SLACK_WEBHOOK_URL']" do
-      before { allow(ENV).to receive(:[]).with("SLACK_WEBHOOK_URL").and_return("test") }
-      it "should return true" do
-        expect(subject.new.valid_slack_setting?).to be(true)
-      end
-    end
-    context "when not set ENV['SLACK_WEBHOOK_URL']" do
-      it "should return false" do
-        expect(subject.new.valid_slack_setting?).to be(false)
-      end
-    end
-  end
-
-  describe "#post_a_message_to_slack" do
-    context "when not set ENV['SLACK_WEBHOOK_URL']" do
-      it "should return false" do
-        expect { subject.new.post_a_message_to_slack("test") }.to raise_error(ArgumentError)
-      end
-    end
-  end
-
   describe ".execute" do
     before do
       allow_any_instance_of(Miteru::Feeds).to receive(:suspicious_urls).and_return(["http://#{host}:#{port}/has_kit"])
