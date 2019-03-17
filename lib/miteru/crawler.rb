@@ -37,7 +37,7 @@ module Miteru
         else
           notify(website.url, website.compressed_files) if verbose
         end
-      rescue OpenSSL::SSL::SSLError, HTTP::Error, LL::ParserError => _
+      rescue OpenSSL::SSL::SSLError, HTTP::Error, LL::ParserError, Addressable::URI::InvalidURIError => _
         next
       end
     end
