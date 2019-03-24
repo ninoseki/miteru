@@ -13,6 +13,7 @@ def server
       Logger: WEBrick::Log.new(File.open(File::NULL, "w")),
       AccessLog: []
     )
+
     http.mount_proc("/has_kit") do |_, res|
       path = File.expand_path("../../fixtures/index.html", __dir__)
       body = File.read(path)

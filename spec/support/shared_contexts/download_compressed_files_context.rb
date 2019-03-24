@@ -7,6 +7,7 @@ RSpec.shared_context "download_compressed_files" do
     @path = File.expand_path("../../../tmp", __dir__)
     FileUtils.mkdir_p(@path)
   end
+
   after do
     FileUtils.remove_dir(@path) if Dir.exist?(@path)
   end
