@@ -5,8 +5,9 @@ RSpec.describe Miteru::CLI do
 
   describe "#execute" do
     before do
-      allow_any_instance_of(Miteru::Feeds).to receive(:suspicious_urls).and_return(["http://#{host}:#{port}/has_kit"])
+      allow(Miteru::Feeds).to receive_message_chain(:new, :suspicious_urls).and_return(["http://#{host}:#{port}/has_kit"])
     end
+
     it "should not raise any error" do
       capture(:stdout) { Miteru::CLI.start %w(execute) }
     end

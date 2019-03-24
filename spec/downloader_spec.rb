@@ -9,6 +9,7 @@ RSpec.describe Miteru::Downloader do
 
     before { WebMock.disable! }
     after { WebMock.enable! }
+
     context "when it runs once" do
       it "should download a file" do
         url = "http://#{host}:#{port}/has_kit"
@@ -30,6 +31,7 @@ RSpec.describe Miteru::Downloader do
         expect(download_files.length).to eq(1)
       end
     end
+
     context "when it runs multiple times" do
       it "should remove duplicated files" do
         url = "http://#{host}:#{port}/has_kit"
