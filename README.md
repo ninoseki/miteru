@@ -10,7 +10,7 @@ Miteru is an experimental phishing kit detection tool.
 ## How it works
 
 - It collects phishy URLs from the following feeds:
-  - [urlscan.io certstream-suspicious feed](https://urlscan.io/search/#certstream-suspicious)
+  - [CertStream-Suspicious feed via urlscan.io](https://urlscan.io/search/#certstream-suspicious)
   - [OpenPhish feed via urlscan.io](https://urlscan.io/search/#OpenPhish)
   - [PhishTank feed via urlscan.io](https://urlscan.io/search/#PhishTank)
   - [Ayashige feed](https://github.com/ninoseki/ayashige)
@@ -20,7 +20,7 @@ Miteru is an experimental phishing kit detection tool.
 ## Features
 
 - [x] Phishing kit detection & collection.
-- [x] Slack integration. (Posting a message to Slack if the tool detects a phishing kit.)
+- [x] Slack notification.
 - [x] Threading.
 
 ## Installation
