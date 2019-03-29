@@ -2,9 +2,9 @@
 
 RSpec.describe Miteru::Downloader do
   include_context "http_server"
-  include_context "download_compressed_files"
+  include_context "download_kits"
 
-  describe "#download_compressed_files" do
+  describe "#download_kits" do
     subject { Miteru::Downloader.new(base_dir) }
 
     before { WebMock.disable! }
@@ -12,11 +12,13 @@ RSpec.describe Miteru::Downloader do
 
     context "when it runs once" do
       it "should download a file" do
-        url = "http://#{host}:#{port}/has_kit"
-        compressed_files = ["test.zip", "test.tar"]
+        kits = [
+          Miteru::Kit.new(base_url: "http://#{host}:#{port}/has_kit", link: "test.zip"),
+          Miteru::Kit.new(base_url: "http://#{host}:#{port}/has_kit", link: "test.tar")
+        ]
         expect(Dir.glob("#{base_dir}/*.zip").empty?).to be(true)
 
-        out = capture(:stdout) { subject.download_compressed_files(url, compressed_files) }
+        out = capture(:stdout) { subject.download_kits(kits) }
         lines = out.split("\n")
         expect(lines.length).to eq(2)
         expect(lines.first.end_with?(".zip")).to be(true)
@@ -34,13 +36,14 @@ RSpec.describe Miteru::Downloader do
 
     context "when it runs multiple times" do
       it "should remove duplicated files" do
-        url = "http://#{host}:#{port}/has_kit"
-        compressed_files = ["test.zip"]
+        kits = [
+          Miteru::Kit.new(base_url: "http://#{host}:#{port}/has_kit", link: "test.zip")
+        ]
         expect(Dir.glob("#{base_dir}/*.zip").empty?).to be(true)
 
-        capture(:stdout) { subject.download_compressed_files(url, compressed_files) }
-        capture(:stdout) { subject.download_compressed_files(url, compressed_files) }
-        out = capture(:stdout) { subject.download_compressed_files(url, compressed_files) }
+        capture(:stdout) { subject.download_kits(kits) }
+        capture(:stdout) { subject.download_kits(kits) }
+        out = capture(:stdout) { subject.download_kits(kits) }
         expect(out.start_with?("Do not download")).to be(true)
 
         download_files = Dir.glob("#{base_dir}/*.zip")

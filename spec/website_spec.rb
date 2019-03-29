@@ -11,24 +11,24 @@ RSpec.describe Miteru::Website do
     end
   end
 
-  describe "#compressed_files" do
+  describe "#kits" do
     it "should return an Array" do
-      compressed_files = subject.new("http://#{host}:#{port}/has_kit").compressed_files
-      expect(compressed_files).to be_an(Array)
-      expect(compressed_files.length).to eq(2)
+      kits = subject.new("http://#{host}:#{port}/has_kit").kits
+      expect(kits).to be_an(Array)
+      expect(kits.length).to eq(2)
     end
   end
 
-  describe "#has_kit?" do
+  describe "#has_kits?" do
     context "when giving a url which contains a phishing kit" do
       it "should return true" do
-        expect(subject.new("http://#{host}:#{port}/has_kit").has_kit?).to eq(true)
+        expect(subject.new("http://#{host}:#{port}/has_kit").has_kits?).to eq(true)
       end
     end
 
     context "when giving a url which doesn't contain a phishing kit" do
       it "should return false" do
-        expect(subject.new("http://#{host}:#{port}/no_kit").has_kit?).to eq(false)
+        expect(subject.new("http://#{host}:#{port}/no_kit").has_kits?).to eq(false)
       end
     end
   end

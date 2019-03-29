@@ -9,11 +9,10 @@ module Miteru
       @post_to_slack = post_to_slack
     end
 
-    def notify(url, compressed_files)
-      message = compressed_files.empty? ? "it doesn't contain a phishing kit." : "it might contain phishing kit(s): (#{compressed_files.join(', ')})."
+    def notify(url:, kits:, message:)
       attachement = Attachement.new(url)
 
-      if post_to_slack? && !compressed_files.empty?
+      if post_to_slack? && !kits.empty?
         slack = Slack::Incoming::Webhooks.new(slack_webhook_url, channel: slack_channel)
         slack.post(
           url,
@@ -24,7 +23,7 @@ module Miteru
         )
       end
 
-      message = message.colorize(:light_red) unless compressed_files.empty?
+      message = message.colorize(:light_red) unless kits.empty?
       puts "#{url}: #{message}"
     end
 

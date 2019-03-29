@@ -31,12 +31,8 @@ module Miteru
 
       Parallel.each(feeds.suspicious_urls, in_threads: threads) do |url|
         website = Website.new(url)
-        if website.has_kit?
-          downloader.download_compressed_files(website.url, website.compressed_files) if auto_download?
-          notify(website.url, website.compressed_files)
-        else
-          notify(website.url, website.compressed_files) if verbose
-        end
+        downloader.download_kits(website.kits) if website.has_kits? && auto_download?
+        notify(website) if verbose || website.has_kits?
       rescue OpenSSL::SSL::SSLError, HTTP::Error, LL::ParserError, Addressable::URI::InvalidURIError => _
         next
       end
@@ -54,8 +50,8 @@ module Miteru
       ).execute
     end
 
-    def notify(url, message)
-      @notifier.notify(url, message)
+    def notify(website)
+      @notifier.notify(url: website.url, kits: website.kits, message: website.message)
     end
 
     def auto_download?

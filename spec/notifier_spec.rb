@@ -7,7 +7,7 @@ RSpec.describe Miteru::Notifier do
     context "when not given SLACK setting via ENV" do
       it "should output a message to STDOUT" do
         out = capture(:stdout) {
-          subject.notify("http://test.com", ["test.zip"])
+          subject.notify(url: "http://test.com", kits: [], message: "test")
         }
         expect(out).to include("test.com")
       end

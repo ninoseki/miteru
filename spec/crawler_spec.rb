@@ -2,7 +2,7 @@
 
 RSpec.describe Miteru::Crawler do
   include_context "http_server"
-  include_context "download_compressed_files"
+  include_context "download_kits"
 
   before { allow(ENV).to receive(:[]).with("SLACK_WEBHOOK_URL").and_return(nil) }
 
