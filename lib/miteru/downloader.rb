@@ -13,33 +13,30 @@ module Miteru
       raise ArgumentError, "#{base_dir} is not existing." unless Dir.exist?(base_dir)
     end
 
-    def download_compressed_files(url, compressed_files)
-      compressed_files.each do |path|
-        target_url = "#{url}/#{path}"
-        filename = download_filename(target_url)
+    def download_kits(kits)
+      kits.each do |kit|
+        filename = download_filename(kit)
         destination = filepath_to_download(filename)
         begin
-          download_filepath = HTTPClient.download(target_url, destination)
-          if duplicated?(download_filepath)
-            puts "Do not download #{target_url} because there is a file that has a same hash value in the directory (SHA256: #{sha256(download_filepath)})."
-            FileUtils.rm download_filepath
+          downloaded_filepath = HTTPClient.download(kit.url, destination)
+          if duplicated?(downloaded_filepath)
+            puts "Do not download #{kit.url} because there is a file that has a same hash value in the directory (SHA256: #{sha256(downloaded_filepath)})."
+            FileUtils.rm downloaded_filepath
           else
-            puts "Download #{target_url} as #{download_filepath}"
+            puts "Download #{kit.url} as #{downloaded_filepath}"
           end
         rescue Down::Error => e
-          puts "Failed to download: #{target_url} (#{e})"
+          puts "Failed to download: #{kit.url} (#{e})"
         end
       end
     end
 
     private
 
-    def download_filename(url)
-      filename = url.split("/").last
-      extname = File.extname(filename)
-      domain = URI(url).hostname
+    def download_filename(kit)
+      domain = URI(kit.base_url).hostname
 
-      "#{domain}_#{filename}_#{SecureRandom.alphanumeric(10)}#{extname}"
+      "#{domain}_#{kit.basename}_#{SecureRandom.alphanumeric(10)}#{kit.extname}"
     end
 
     def filepath_to_download(filename)

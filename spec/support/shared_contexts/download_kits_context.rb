@@ -2,7 +2,7 @@
 
 require "fileutils"
 
-RSpec.shared_context "download_compressed_files" do
+RSpec.shared_context "download_kits" do
   before do
     @path = File.expand_path("../../../tmp", __dir__)
     FileUtils.mkdir_p(@path)

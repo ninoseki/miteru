@@ -13,13 +13,12 @@ module Miteru
       doc.at_css("title")&.text
     end
 
-    def compressed_files
-      @compressed_files ||= doc.css("a").map do |a|
-        href = a.get("href")
-        [".zip", ".rar", ".7z", ".tar", ".gz"].any? { |ext| href&.end_with? ext } ? href : nil
-      end.compact.map do |href|
-        href.start_with?("/") ? href[1..-1] : href
-      end
+    def kits
+      @kits ||= doc.css("a").map do |a|
+        link = a.get("href")
+        kit = Kit.new(base_url: url, link: link.to_s)
+        kit.valid? ? kit : nil
+      end.compact
     end
 
     def ok?
@@ -30,14 +29,19 @@ module Miteru
       title == "Index of /"
     end
 
-    def compressed_files?
-      !compressed_files.empty?
+    def kits?
+      !kits.empty?
     end
 
-    def has_kit?
-      ok? && index? && compressed_files?
-    rescue StandardError => _
+    def has_kits?
+      ok? && index? && kits?
+    rescue OpenSSL::SSL::SSLError, HTTP::Error, LL::ParserError, Addressable::URI::InvalidURIError => _
       false
+    end
+
+    def message
+      kit_names = kits.map(&:basename).join(", ")
+      kits? ? "it might contain phishing kit(s): (#{kit_names})." : "it doesn't contain a phishing kit."
     end
 
     private

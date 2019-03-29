@@ -4,6 +4,7 @@ require "miteru/version"
 
 require "miteru/error"
 require "miteru/http_client"
+require "miteru/kit"
 require "miteru/website"
 require "miteru/downloader"
 require "miteru/feeds"

@@ -4,7 +4,7 @@ require "thor"
 
 module Miteru
   class CLI < Thor
-    method_option :auto_download, type: :boolean, default: false, desc: "Enable or disable auto-download of compressed file(s)"
+    method_option :auto_download, type: :boolean, default: false, desc: "Enable or disable auto-download of phishing kits"
     method_option :directory_traveling, type: :boolean, default: false, desc: "Enable or disable directory traveling"
     method_option :download_to, type: :string, default: "/tmp", desc: "Directory to download file(s)"
     method_option :post_to_slack, type: :boolean, default: false, desc: "Post a message to Slack if it detects a phishing kit"
