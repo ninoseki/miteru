@@ -44,7 +44,7 @@ Usage:
   miteru execute
 
 Options:
-  [--auto-download], [--no-auto-download]              # Enable or disable auto-download of compressed file(s)
+  [--auto-download], [--no-auto-download]              # Enable or disable auto-download of phishing kits
   [--directory-traveling], [--no-directory-traveling]  # Enable or disable directory traveling
   [--download-to=DOWNLOAD_TO]                          # Directory to download file(s)
                                                        # Default: /tmp
@@ -81,9 +81,7 @@ $ docker run -v /tmp:/tmp miteru execute --auto-download
 
 ## Aasciinema cast
 
-[![asciicast](https://asciinema.org/a/ga6ZbwuK1HOLOyELb23QrSvJP.svg)](https://asciinema.org/a/ga6ZbwuK1HOLOyELb23QrSvJP)
-
-Note: In this demo, I stopped the process during the execution because it takes minutes to finish.
+[![asciicast](https://asciinema.org/a/hHpkHhMLiiv17gmdRhVMtZWwM.svg)](https://asciinema.org/a/hHpkHhMLiiv17gmdRhVMtZWwM)
 
 ## Note
 
