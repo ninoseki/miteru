@@ -65,4 +65,5 @@ RSpec.shared_context "http_server" do
 
   let(:host) { HOST }
   let(:port) { @server.port }
+  let(:base_url) { "http://#{host}:#{port}" }
 end

@@ -34,9 +34,11 @@ RSpec.describe Miteru::Feeds do
   end
 
   describe "#suspicious_urls" do
+    let(:url) { "http://sameurl.com" }
+
     before do
-      allow(Miteru::Feeds::UrlScan).to receive_message_chain(:new, :urls).and_return(["https://test.com"])
-      allow(Miteru::Feeds::Ayashige).to receive_message_chain(:new, :urls).and_return(["https://test.com"])
+      allow(Miteru::Feeds::UrlScan).to receive_message_chain(:new, :urls).and_return([url])
+      allow(Miteru::Feeds::Ayashige).to receive_message_chain(:new, :urls).and_return([url])
     end
 
     it "returns an Array without duplicated" do

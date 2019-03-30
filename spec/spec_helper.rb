@@ -13,6 +13,10 @@ Coveralls.wear!
 require "miteru"
 require "vcr"
 
+require_relative "./support/shared_contexts/download_kits_context"
+require_relative "./support/shared_contexts/http_server_context"
+require_relative "./support/helpers/helpers"
+
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"
@@ -25,16 +29,11 @@ RSpec.configure do |config|
   end
 
   config.shared_context_metadata_behavior = :apply_to_host_groups
-end
 
-require_relative "./support/shared_contexts/download_kits_context"
-require_relative "./support/shared_contexts/http_server_context"
-require_relative "./support/helpers/helpers"
+  config.include Spec::Support::Helpers
 
-RSpec.configure do |config|
   config.include_context "download_kits"
   config.include_context "http_server"
-  config.include Spec::Support::Helpers
 end
 
 VCR.configure do |config|
