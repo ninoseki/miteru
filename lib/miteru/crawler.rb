@@ -33,7 +33,7 @@ module Miteru
         website = Website.new(url)
         downloader.download_kits(website.kits) if website.has_kits? && auto_download?
         notify(website) if verbose || website.has_kits?
-      rescue OpenSSL::SSL::SSLError, HTTP::Error, LL::ParserError, Addressable::URI::InvalidURIError => _
+      rescue OpenSSL::SSL::SSLError, HTTP::Error, Addressable::URI::InvalidURIError => _
         next
       end
     end
