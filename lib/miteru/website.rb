@@ -54,11 +54,13 @@ module Miteru
     end
 
     def doc
-      @doc ||= [].tap do |out|
-        out << Oga.parse_html(response.body.to_s)
-               rescue LL::ParserError => _
-                 out << nil
-      end.first
+      @doc ||= parse_html(response.body.to_s)
+    end
+
+    def parse_html(html)
+      Oga.parse_html(html)
+    rescue ArgumentError, LL::ParserError => _
+      nil
     end
 
     def links
