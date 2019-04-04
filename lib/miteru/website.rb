@@ -59,7 +59,7 @@ module Miteru
 
     def parse_html(html)
       Oga.parse_html(html)
-    rescue ArgumentError, LL::ParserError => _
+    rescue ArgumentError, Encoding::CompatibilityError, LL::ParserError => _
       nil
     end
 
