@@ -60,6 +60,7 @@ RSpec.shared_context "http_server" do
     @server = server
     @server.start
   }
+
   after(:all) { @server.stop }
 
   let(:host) { HOST }

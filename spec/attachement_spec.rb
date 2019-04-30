@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Miteru::Attachement do
-  subject { Miteru::Attachement.new("https://github.com") }
+  subject { described_class.new("https://github.com") }
 
   describe "#to_h" do
-    it "should return a hash" do
+    it "returns a hash" do
       hash = subject.to_h
       expect(hash).to be_a(Hash)
       expect(hash.dig(:title)).to eq("github.com")
