@@ -5,13 +5,14 @@ RSpec.describe Miteru::Downloader do
   include_context "download_kits"
 
   describe "#download_kits" do
-    subject { Miteru::Downloader.new(base_dir) }
+    subject { described_class.new(base_dir) }
 
     before { WebMock.disable! }
+
     after { WebMock.enable! }
 
     context "when it runs once" do
-      it "should download a file" do
+      it "downloads a file" do
         kits = [
           Miteru::Kit.new(base_url: "http://#{host}:#{port}/has_kit", link: "test.zip"),
           Miteru::Kit.new(base_url: "http://#{host}:#{port}/has_kit", link: "test.tar")
@@ -35,7 +36,7 @@ RSpec.describe Miteru::Downloader do
     end
 
     context "when it runs multiple times" do
-      it "should remove duplicated files" do
+      it "removes duplicated files" do
         kits = [
           Miteru::Kit.new(base_url: "http://#{host}:#{port}/has_kit", link: "test.zip")
         ]

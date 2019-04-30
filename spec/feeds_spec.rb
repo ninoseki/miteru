@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe Miteru::Feeds do
-  subject { Miteru::Feeds }
+  subject { described_class }
 
   describe "#breakdown" do
     context "when given an url without path" do
-      it "should return an Array (length == 1)" do
+      it "returns an Array (length == 1)" do
         results = subject.new.breakdown("http://test.com")
         expect(results).to be_an(Array)
         expect(results.length).to eq(1)
@@ -14,7 +14,7 @@ RSpec.describe Miteru::Feeds do
 
     context "when given an url with path" do
       context "when disabling directory_traveling" do
-        it "should return an Array (length == 1)" do
+        it "returns an Array (length == 1)" do
           results = subject.new.breakdown("http://test.com/test/test/index.html")
           expect(results).to be_an(Array)
           expect(results.length).to eq(1)
@@ -23,7 +23,7 @@ RSpec.describe Miteru::Feeds do
       end
 
       context "when enabling directory_traveling" do
-        it "should return an Array (length == 3)" do
+        it "returns an Array (length == 3)" do
           results = subject.new(directory_traveling: true).breakdown("http://test.com/test/test/index.html")
           expect(results).to be_an(Array)
           expect(results.length).to eq(3)
@@ -39,7 +39,7 @@ RSpec.describe Miteru::Feeds do
       allow(Miteru::Feeds::Ayashige).to receive_message_chain(:new, :urls).and_return(["https://test.com"])
     end
 
-    it "should return an Array without duplicated" do
+    it "returns an Array without duplicated" do
       results = subject.new.suspicious_urls
       expect(results).to be_an(Array)
       expect(results.length).to eq(1)
