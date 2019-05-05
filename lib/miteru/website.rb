@@ -34,13 +34,16 @@ module Miteru
 
     def has_kits?
       ok? && index? && kits?
-    rescue OpenSSL::SSL::SSLError, HTTP::Error, Addressable::URI::InvalidURIError => _
+    rescue OpenSSL::SSL::SSLError, HTTP::Error, Addressable::URI::InvalidURIError => _e
       false
     end
 
     def message
+      return "It doesn't contain a phishing kit." unless kits?
+
       kit_names = kits.map(&:basename).join(", ")
-      kits? ? "it might contain phishing kit(s): (#{kit_names})." : "it doesn't contain a phishing kit."
+      noun = kits.length == 1 ? "kit" : "kits"
+      "It might contain phishing #{noun}: (#{kit_names})."
     end
 
     private
@@ -59,7 +62,7 @@ module Miteru
 
     def parse_html(html)
       Oga.parse_html(html)
-    rescue ArgumentError, Encoding::CompatibilityError, LL::ParserError => _
+    rescue ArgumentError, Encoding::CompatibilityError, LL::ParserError => _e
       nil
     end
 

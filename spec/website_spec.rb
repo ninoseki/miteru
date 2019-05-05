@@ -3,32 +3,48 @@
 RSpec.describe Miteru::Website do
   include_context "http_server"
 
-  subject { described_class }
+  let(:website_has_kit) { described_class.new "http://#{host}:#{port}/has_kit" }
+  let(:website_no_kit) { described_class.new "http://#{host}:#{port}/no_kit" }
 
   describe "#title" do
-    it "returns a String" do
-      expect(subject.new("http://#{host}:#{port}/has_kit").title).to be_a(String)
+    it do
+      expect(website_has_kit.title).to be_a(String)
     end
   end
 
   describe "#kits" do
-    it "returns an Array" do
-      kits = subject.new("http://#{host}:#{port}/has_kit").kits
-      expect(kits).to be_an(Array)
-      expect(kits.length).to eq(2)
+    it do
+      expect(website_has_kit.kits).to be_an(Array)
+    end
+    it do
+      expect(website_has_kit.kits.length).to eq(2)
     end
   end
 
-  describe "#has_kits?" do
-    context "when giving a url which contains a phishing kit" do
-      it "returns true" do
-        expect(subject.new("http://#{host}:#{port}/has_kit").has_kits?).to eq(true)
+  context "when giving a url which contains a phishing kit" do
+    describe "#has_kits?" do
+      it do
+        expect(website_has_kit.has_kits?).to be(true)
       end
     end
 
-    context "when giving a url which doesn't contain a phishing kit" do
-      it "returns false" do
-        expect(subject.new("http://#{host}:#{port}/no_kit").has_kits?).to eq(false)
+    describe "#message" do
+      it do
+        expect(website_has_kit.message).to start_with("It might contain phishing kits")
+      end
+    end
+  end
+
+  context "when giving a url which doesn't contain a phishing kit" do
+    describe "#has_kits?" do
+      it do
+        expect(website_no_kit.has_kits?).to be(false)
+      end
+    end
+
+    describe "#message" do
+      it do
+        expect(website_no_kit.message).to eq("It doesn't contain a phishing kit.")
       end
     end
   end
