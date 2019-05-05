@@ -6,7 +6,6 @@ require "uri"
 
 module Miteru
   class Crawler
-    attr_reader :auto_download
     attr_reader :directory_traveling
     attr_reader :downloader
     attr_reader :feeds
@@ -14,7 +13,7 @@ module Miteru
     attr_reader :threads
     attr_reader :verbose
 
-    def initialize(auto_download: false, directory_traveling: false, download_to: "/tmp", post_to_slack: false, size: 100, threads: 10, verbose: false)
+    def initialize(auto_download: false, directory_traveling: false, download_to: "/tmp", post_to_slack: false, size: 100, threads: Parallel.processor_count, verbose: false)
       @auto_download = auto_download
       @directory_traveling = directory_traveling
       @downloader = Downloader.new(download_to)
@@ -27,18 +26,18 @@ module Miteru
     end
 
     def execute
-      puts "Loaded #{feeds.suspicious_urls.length} URLs to crawl." if verbose
+      puts "Loaded #{feeds.suspicious_urls.length} URLs to crawl. (crawling in #{threads} threads)" if verbose
 
       Parallel.each(feeds.suspicious_urls, in_threads: threads) do |url|
         website = Website.new(url)
         downloader.download_kits(website.kits) if website.has_kits? && auto_download?
         notify(website) if verbose || website.has_kits?
-      rescue OpenSSL::SSL::SSLError, HTTP::Error, Addressable::URI::InvalidURIError => _
+      rescue OpenSSL::SSL::SSLError, HTTP::Error, Addressable::URI::InvalidURIError => _e
         next
       end
     end
 
-    def self.execute(auto_download: false, directory_traveling: false, download_to: "/tmp", post_to_slack: false, size: 100, threads: 10, verbose: false)
+    def self.execute(auto_download: false, directory_traveling: false, download_to: "/tmp", post_to_slack: false, size: 100, threads: Parallel.processor_count, verbose: false)
       new(
         auto_download: auto_download,
         directory_traveling: directory_traveling,
