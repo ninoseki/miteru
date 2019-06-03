@@ -17,7 +17,7 @@ RSpec.describe Miteru::Downloader do
       it "downloads a file" do
         kits = [
           Miteru::Kit.new(base_url: url, link: "test.zip"),
-          Miteru::Kit.new(base_url: url, link: "test.tar")
+          Miteru::Kit.new(base_url: url, link: "test.tar.gz")
         ]
         expect(Dir.glob("#{base_dir}/*.zip").empty?).to be(true)
 
@@ -25,13 +25,13 @@ RSpec.describe Miteru::Downloader do
         lines = out.split("\n")
         expect(lines.length).to eq(2)
         expect(lines.first.end_with?(".zip")).to be(true)
-        expect(lines.last.end_with?(".tar")).to be(true)
+        expect(lines.last.end_with?(".tar.gz")).to be(true)
 
         download_files = Dir.glob("#{base_dir}/*.zip")
         expect(download_files.empty?).to be(false)
         expect(download_files.length).to eq(1)
 
-        download_files = Dir.glob("#{base_dir}/*.tar")
+        download_files = Dir.glob("#{base_dir}/*.tar.gz")
         expect(download_files.empty?).to be(false)
         expect(download_files.length).to eq(1)
       end
