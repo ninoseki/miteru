@@ -16,6 +16,8 @@ module Miteru
     end
 
     def extname
+      return ".tar.gz" if link.end_with?("tar.gz")
+
       File.extname(link)
     end
 
