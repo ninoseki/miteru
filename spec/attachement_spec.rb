@@ -3,12 +3,13 @@
 RSpec.describe Miteru::Attachement do
   subject { described_class.new("https://github.com") }
 
-  describe "#to_h" do
-    it "returns a hash" do
-      hash = subject.to_h
-      expect(hash).to be_a(Hash)
-      expect(hash.dig(:title)).to eq("github.com")
-      expect(hash.dig(:title_link)).to eq("https://urlscan.io/domain/github.com")
+  describe "#to_a" do
+    it do
+      array = subject.to_a
+      array.each do |a|
+        expect(a.key?(:text)).to eq(true)
+        expect(a.key?(:actions)).to eq(true)
+      end
     end
   end
 end

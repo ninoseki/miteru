@@ -15,11 +15,8 @@ module Miteru
       if post_to_slack? && !kits.empty?
         slack = Slack::Incoming::Webhooks.new(slack_webhook_url, channel: slack_channel)
         slack.post(
-          url,
-          attachments: [
-            { text: message },
-            attachement.to_h
-          ]
+          message,
+          attachments: attachement.to_a
         )
       end
 

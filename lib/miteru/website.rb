@@ -43,7 +43,7 @@ module Miteru
 
       kit_names = kits.map(&:basename).join(", ")
       noun = kits.length == 1 ? "kit" : "kits"
-      "It might contain phishing #{noun}: (#{kit_names})."
+      "It might contain phishing #{noun}: #{kit_names}."
     end
 
     private

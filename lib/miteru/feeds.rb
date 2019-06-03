@@ -29,7 +29,7 @@ module Miteru
     def breakdown(url)
       begin
         uri = URI.parse(url)
-      rescue URI::InvalidURIError => _
+      rescue URI::InvalidURIError => _e
         return []
       end
 
