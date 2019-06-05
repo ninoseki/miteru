@@ -10,28 +10,30 @@ module Miteru
 
     def initialize(base_dir = "/tmp")
       @base_dir = base_dir
-      raise ArgumentError, "#{base_dir} is not existing." unless Dir.exist?(base_dir)
+      raise ArgumentError, "#{base_dir} is not exist." unless Dir.exist?(base_dir)
     end
 
     def download_kits(kits)
-      kits.each do |kit|
-        filename = download_filename(kit)
-        destination = filepath_to_download(filename)
-        begin
-          downloaded_filepath = HTTPClient.download(kit.url, destination)
-          if duplicated?(downloaded_filepath)
-            puts "Do not download #{kit.url} because there is a file that has a same hash value in the directory (SHA256: #{sha256(downloaded_filepath)})."
-            FileUtils.rm downloaded_filepath
-          else
-            puts "Download #{kit.url} as #{downloaded_filepath}"
-          end
-        rescue Down::Error => e
-          puts "Failed to download: #{kit.url} (#{e})"
-        end
-      end
+      kits.each { |kit| download_kit kit }
     end
 
     private
+
+    def download_kit(kit)
+      filename = download_filename(kit)
+      destination = filepath_to_download(filename)
+      begin
+        downloaded_filepath = HTTPClient.download(kit.url, destination)
+        if duplicated?(downloaded_filepath)
+          puts "Do not download #{kit.url} because there is a duplicate file in the directory (SHA256: #{sha256(downloaded_filepath)})."
+          FileUtils.rm downloaded_filepath
+        else
+          puts "Download #{kit.url} as #{downloaded_filepath}"
+        end
+      rescue Down::Error => e
+        puts "Failed to download: #{kit.url} (#{e})"
+      end
+    end
 
     def download_filename(kit)
       domain = URI(kit.base_url).hostname
