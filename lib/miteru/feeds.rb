@@ -6,14 +6,16 @@ require_relative "./feeds/urlscan"
 
 module Miteru
   class Feeds
-    attr_reader :directory_traveling
-
-    def initialize(urlscan_size = 100, directory_traveling: false)
+    def initialize(size: 100, directory_traveling: false)
       @feeds = [
         Ayashige.new,
-        UrlScan.new(urlscan_size)
+        UrlScan.new(size)
       ]
       @directory_traveling = directory_traveling
+    end
+
+    def directory_traveling?
+      @directory_traveling
     end
 
     def suspicious_urls
@@ -34,7 +36,7 @@ module Miteru
       end
 
       base = "#{uri.scheme}://#{uri.hostname}"
-      return [base] unless directory_traveling
+      return [base] unless directory_traveling?
 
       segments = uri.path.split("/")
       return [base] if segments.length.zero?
