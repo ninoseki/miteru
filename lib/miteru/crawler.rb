@@ -21,7 +21,7 @@ module Miteru
       @threads = threads
       @verbose = verbose
 
-      @feeds = Feeds.new(size, directory_traveling: directory_traveling)
+      @feeds = Feeds.new(size: size, directory_traveling: directory_traveling)
       @notifier = Notifier.new(post_to_slack)
     end
 
