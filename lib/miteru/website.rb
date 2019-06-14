@@ -34,7 +34,7 @@ module Miteru
 
     def has_kits?
       ok? && index? && kits?
-    rescue OpenSSL::SSL::SSLError, HTTP::Error, Addressable::URI::InvalidURIError, Encoding::CompatibilityError, LL::ParserError => _e
+    rescue Addressable::URI::InvalidURIError, ArgumentError, Encoding::CompatibilityError, HTTP::Error, LL::ParserError, OpenSSL::SSL::SSLError => _e
       false
     end
 
