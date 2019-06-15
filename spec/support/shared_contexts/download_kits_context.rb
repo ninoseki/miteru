@@ -3,14 +3,13 @@
 require "fileutils"
 
 RSpec.shared_context "download_kits" do
+  let(:base_dir) { File.expand_path("../../../tmp", __dir__) }
+
   before do
-    @path = File.expand_path("../../../tmp", __dir__)
-    FileUtils.mkdir_p(@path)
+    FileUtils.mkdir_p base_dir
   end
 
   after do
-    FileUtils.remove_dir(@path) if Dir.exist?(@path)
+    FileUtils.remove_dir(base_dir) if Dir.exist?(base_dir)
   end
-
-  let(:base_dir) { @path }
 end
