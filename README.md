@@ -79,16 +79,22 @@ $ docker run miteru
 $ docker run -v /tmp:/tmp miteru execute --auto-download
 ```
 
-## Aasciinema cast
-
-[![asciicast](https://asciinema.org/a/hHpkHhMLiiv17gmdRhVMtZWwM.svg)](https://asciinema.org/a/hHpkHhMLiiv17gmdRhVMtZWwM)
-
-## Note
+## Configuration
 
 For using `--post-to-slack` feature, you should set the following environment variables:
 
 - `SLACK_WEBHOOK_URL`: Your Slack Webhook URL.
 - `SLACK_CHANNEL`: Slack channel to post a message (default: "#general").
+
+## Examples
+
+### Aasciinema cast
+
+[![asciicast](https://asciinema.org/a/hHpkHhMLiiv17gmdRhVMtZWwM.svg)](https://asciinema.org/a/hHpkHhMLiiv17gmdRhVMtZWwM)
+
+### Slack notification
+
+![img](./screenshots/slack.png)
 
 ## Alternatives
 
