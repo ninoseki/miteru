@@ -25,20 +25,20 @@ Miteru is an experimental phishing kit detection tool.
 
 ## Installation
 
-```sh
-$ gem install miteru
+```bash
+gem install miteru
 ```
 
 ## Usage
 
-```sh
+```bash
 $ miteru
 Commands:
   miteru execute         # Execute the crawler
   miteru help [COMMAND]  # Describe available commands or one specific command
 ```
 
-```sh
+```bash
 $ miteru help execute
 Usage:
   miteru execute
@@ -59,7 +59,7 @@ Options:
 Execute the crawler
 ```
 
-```sh
+```bash
 $ miteru execute
 ...
 https://dummy1.com: it doesn't contain a phishing kit.
@@ -70,7 +70,7 @@ https://dummy4.com: it might contain a phishing kit (dummy.zip).
 
 ## Using Docker (alternative if you don't install Ruby)
 
-```sh
+```bash
 $ git clone https://github.com/ninoseki/miteru.git
 $ cd miteru/docker
 $ docker build -t miteru .
