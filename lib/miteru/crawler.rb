@@ -6,6 +6,7 @@ require "uri"
 
 module Miteru
   class Crawler
+    attr_reader :ayashige
     attr_reader :directory_traveling
     attr_reader :downloader
     attr_reader :feeds
@@ -13,15 +14,16 @@ module Miteru
     attr_reader :threads
     attr_reader :verbose
 
-    def initialize(auto_download: false, directory_traveling: false, download_to: "/tmp", post_to_slack: false, size: 100, threads: Parallel.processor_count, verbose: false)
+    def initialize(auto_download: false, ayashige: false, directory_traveling: false, download_to: "/tmp", post_to_slack: false, size: 100, threads: Parallel.processor_count, verbose: false)
       @auto_download = auto_download
+      @ayashige = ayashige
       @directory_traveling = directory_traveling
       @downloader = Downloader.new(download_to)
       @size = size
       @threads = threads
       @verbose = verbose
 
-      @feeds = Feeds.new(size: size, directory_traveling: directory_traveling)
+      @feeds = Feeds.new(size: size, ayashige: ayashige, directory_traveling: directory_traveling)
       @notifier = Notifier.new(post_to_slack)
     end
 
@@ -37,9 +39,10 @@ module Miteru
       end
     end
 
-    def self.execute(auto_download: false, directory_traveling: false, download_to: "/tmp", post_to_slack: false, size: 100, threads: Parallel.processor_count, verbose: false)
+    def self.execute(auto_download: false, ayashige: false, directory_traveling: false, download_to: "/tmp", post_to_slack: false, size: 100, threads: Parallel.processor_count, verbose: false)
       new(
         auto_download: auto_download,
+        ayashige: ayashige,
         directory_traveling: directory_traveling,
         download_to: download_to,
         post_to_slack: post_to_slack,

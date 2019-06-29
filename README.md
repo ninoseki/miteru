@@ -45,6 +45,7 @@ Usage:
 
 Options:
   [--auto-download], [--no-auto-download]              # Enable or disable auto-download of phishing kits
+  [--ayashige], [--no-ayashige]                        # Enable or disable ayashige(ninoseki/ayashige) feed
   [--directory-traveling], [--no-directory-traveling]  # Enable or disable directory traveling
   [--download-to=DOWNLOAD_TO]                          # Directory to download file(s)
                                                        # Default: /tmp
@@ -52,7 +53,6 @@ Options:
   [--size=N]                                           # Number of urlscan.io's results. (Max: 10,000)
                                                        # Default: 100
   [--threads=N]                                        # Number of threads to use
-                                                       # Default: 10
   [--verbose], [--no-verbose]
                                                        # Default: true
 
