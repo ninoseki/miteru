@@ -25,7 +25,7 @@ module Miteru
     end
 
     def index?
-      title == "Index of /"
+      title.to_s.start_with? "Index of"
     end
 
     def kits?
