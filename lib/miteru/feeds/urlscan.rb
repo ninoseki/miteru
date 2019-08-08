@@ -25,7 +25,7 @@ module Miteru
 
         res = JSON.parse(get(url))
         res["results"].map { |result| result.dig("task", "url") }
-      rescue HTTPResponseError => e
+      rescue HTTPResponseError, JSON::ParserError => e
         puts "Failed to load urlscan.io feed (#{e})"
         []
       end
