@@ -41,7 +41,7 @@ module Miteru
     def message
       return "It doesn't contain a phishing kit." unless kits?
 
-      kit_names = kits.map(&:basename).join(", ")
+      kit_names = kits.map(&:filename).join(", ")
       noun = kits.length == 1 ? "a phishing kit" : "phishing kits"
       "It might contain #{noun}: #{kit_names}."
     end

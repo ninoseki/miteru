@@ -1,29 +1,50 @@
 # frozen_string_literal: true
 
 RSpec.describe Miteru::Kit do
-  subject { described_class.new(base_url: "http://test.com", link: "/test.zip") }
+  subject { described_class.new(base_url: base_url, link: link) }
+
+  let(:base_url) { "http://test.com" }
+  let(:extname) { ".zip" }
+  let(:filename) { "test#{extname}" }
+  let(:link) { "/#{filename}" }
 
   describe "#basename" do
     it "returns a base name" do
-      expect(subject.basename).to eq("test.zip")
+      expect(subject.basename).to eq(filename)
+    end
+  end
+
+  describe "#filename" do
+    it do
+      expect(subject.filename).to eq(filename)
     end
   end
 
   describe "#extname" do
     it "returns a base extname" do
-      expect(subject.extname).to eq(".zip")
+      expect(subject.extname).to eq(extname)
     end
   end
 
   describe "#url" do
     it "returns a URL" do
-      expect(subject.url).to eq("http://test.com/test.zip")
+      expect(subject.url).to eq("#{base_url}#{link}")
     end
   end
 
   describe "#valid?" do
     it "returns true" do
       expect(subject.valid?).to eq(true)
+    end
+  end
+
+  context "when given a URL encoded link" do
+    subject { described_class.new(base_url: "http://test.com", link: "/test%201.zip") }
+
+    describe "#filename" do
+      it do
+        expect(subject.filename).to eq("test 1.zip")
+      end
     end
   end
 end
