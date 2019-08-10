@@ -8,18 +8,15 @@ RSpec.describe Miteru::Crawler do
 
   describe ".execute" do
     before do
-      allow(Miteru::Feeds).to receive_message_chain(:new, :suspicious_urls).and_return(["http://#{host}:#{port}/has_kit"])
-      allow(Parallel).to receive(:processor_count).and_return(0)
+      feeds = double("feeds")
+      allow(feeds).to receive(:suspicious_urls).and_return(["http://#{host}:#{port}/has_kit"])
+      allow(Miteru::Feeds).to receive(:new).and_return(feeds)
+
+      allow(Miteru.configuration).to receive(:threads).and_return(0)
     end
 
     it do
       capture(:stdout) { expect { described_class.execute }.not_to raise_error }
-    end
-  end
-
-  describe "#threads" do
-    it do
-      expect(described_class.new.threads).to eq(Parallel.processor_count)
     end
   end
 end

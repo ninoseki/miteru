@@ -5,10 +5,6 @@ require "slack/incoming/webhooks"
 
 module Miteru
   class Notifier
-    def initialize(post_to_slack = false)
-      @post_to_slack = post_to_slack
-    end
-
     def notify(url:, kits:, message:)
       attachement = Attachement.new(url)
 
@@ -25,7 +21,7 @@ module Miteru
     end
 
     def post_to_slack?
-      @post_to_slack && slack_webhook_url?
+      slack_webhook_url? && Miteru.configuration.post_to_slack?
     end
 
     def slack_webhook_url
