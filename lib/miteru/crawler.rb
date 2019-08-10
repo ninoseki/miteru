@@ -6,50 +6,36 @@ require "uri"
 
 module Miteru
   class Crawler
-    attr_reader :ayashige
-    attr_reader :directory_traveling
     attr_reader :downloader
     attr_reader :feeds
-    attr_reader :size
-    attr_reader :threads
-    attr_reader :verbose
 
-    def initialize(auto_download: false, ayashige: false, directory_traveling: false, download_to: "/tmp", post_to_slack: false, size: 100, threads: Parallel.processor_count, verbose: false)
-      @auto_download = auto_download
-      @ayashige = ayashige
-      @directory_traveling = directory_traveling
-      @downloader = Downloader.new(download_to)
-      @size = size
-      @threads = threads
-      @verbose = verbose
+    def initialize
+      @downloader = Downloader.new(Miteru.configuration.download_to)
 
-      @feeds = Feeds.new(size: size, ayashige: ayashige, directory_traveling: directory_traveling)
-      @notifier = Notifier.new(post_to_slack)
+      @feeds = Feeds.new
+      @notifier = Notifier.new
+    end
+
+    def crawl(url)
+      website = Website.new(url)
+      downloader.download_kits(website.kits) if website.has_kits? && auto_download?
+      notify(website) if website.has_kits? || verbose?
+    rescue OpenSSL::SSL::SSLError, HTTP::Error, Addressable::URI::InvalidURIError => _e
+      nil
     end
 
     def execute
-      puts "Loaded #{feeds.suspicious_urls.length} URLs to crawl. (crawling in #{threads} threads)" if verbose
+      threads = Miteru.configuration.threads
+      suspicious_urls = feeds.suspicious_urls
+      puts "Loaded #{suspicious_urls.length} URLs to crawl. (crawling in #{threads} threads)" if verbose?
 
-      Parallel.each(feeds.suspicious_urls, in_threads: threads) do |url|
-        website = Website.new(url)
-        downloader.download_kits(website.kits) if website.has_kits? && auto_download?
-        notify(website) if verbose || website.has_kits?
-      rescue OpenSSL::SSL::SSLError, HTTP::Error, Addressable::URI::InvalidURIError => _e
-        next
+      Parallel.each(suspicious_urls, in_threads: threads) do |url|
+        crawl url
       end
     end
 
-    def self.execute(auto_download: false, ayashige: false, directory_traveling: false, download_to: "/tmp", post_to_slack: false, size: 100, threads: Parallel.processor_count, verbose: false)
-      new(
-        auto_download: auto_download,
-        ayashige: ayashige,
-        directory_traveling: directory_traveling,
-        download_to: download_to,
-        post_to_slack: post_to_slack,
-        size: size,
-        threads: threads,
-        verbose: verbose
-      ).execute
+    def self.execute
+      new.execute
     end
 
     def notify(website)
@@ -57,7 +43,11 @@ module Miteru
     end
 
     def auto_download?
-      @auto_download
+      Miteru.configuration.auto_download?
+    end
+
+    def verbose?
+      Miteru.configuration.verbose?
     end
   end
 end

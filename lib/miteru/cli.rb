@@ -14,7 +14,20 @@ module Miteru
     method_option :verbose, type: :boolean, default: true
     desc "execute", "Execute the crawler"
     def execute
-      Crawler.execute options.map { |k, v| [k.to_sym, v] }.to_h
+      Miteru.configure do |config|
+        config.auto_download = options["auto_download"]
+        config.ayashige = options["ayashige"]
+        config.directory_traveling = options["directory_traveling"]
+        config.download_to = options["download_to"]
+        config.post_to_slack = options["post_to_slack"]
+        config.size = options["size"]
+        config.verbose = options["verbose"]
+
+        threads = options["threads"]
+        config.threads = threads if threads
+      end
+
+      Crawler.execute
     end
   end
 end

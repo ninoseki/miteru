@@ -23,10 +23,12 @@ RSpec.describe Miteru::Feeds do
       end
 
       context "when enabling directory_traveling" do
-        it "returns an Array (length == 3)" do
-          results = subject.new(directory_traveling: true).breakdown("http://test.com/test/test/index.html")
-          expect(results).to be_an(Array)
-          expect(results.length).to eq(3)
+        before do
+          allow(Miteru.configuration).to receive(:directory_traveling?).and_return(true)
+        end
+
+        it do
+          results = subject.new.breakdown("http://test.com/test/test/index.html")
           expect(results).to eq(["http://test.com", "http://test.com/test", "http://test.com/test/test"])
         end
       end

@@ -6,14 +6,13 @@ require_relative "./feeds/urlscan"
 
 module Miteru
   class Feeds
-    def initialize(size: 100, ayashige: false, directory_traveling: false)
-      @feeds = [UrlScan.new(size)]
-      @feeds << Ayashige.new if ayashige
-      @directory_traveling = directory_traveling
+    def initialize
+      @feeds = [UrlScan.new(Miteru.configuration.size)]
+      @feeds << Ayashige.new if Miteru.configuration.ayashige?
     end
 
     def directory_traveling?
-      @directory_traveling
+      Miteru.configuration.directory_traveling?
     end
 
     def suspicious_urls

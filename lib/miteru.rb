@@ -2,6 +2,7 @@
 
 require "miteru/version"
 
+require "miteru/configuration"
 require "miteru/error"
 require "miteru/http_client"
 require "miteru/kit"
