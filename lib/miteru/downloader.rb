@@ -38,7 +38,7 @@ module Miteru
     def download_filename(kit)
       domain = URI(kit.base_url).hostname
 
-      "#{domain}_#{kit.basename}_#{SecureRandom.alphanumeric(10)}#{kit.extname}"
+      "#{domain}_#{kit.filename}_#{SecureRandom.alphanumeric(10)}#{kit.extname}"
     end
 
     def filepath_to_download(filename)

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "cgi"
+
 module Miteru
   class Kit
     VALID_EXTENSIONS = [".zip", ".rar", ".7z", ".tar", ".gz"].freeze
@@ -23,6 +25,10 @@ module Miteru
 
     def basename
       File.basename(link)
+    end
+
+    def filename
+      CGI.unescape basename
     end
 
     def url
