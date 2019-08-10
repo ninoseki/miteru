@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "colorize"
-require "slack/incoming/webhooks"
+require "slack-notifier"
 
 module Miteru
   class Notifier
@@ -9,11 +9,8 @@ module Miteru
       attachement = Attachement.new(url)
 
       if post_to_slack? && !kits.empty?
-        slack = Slack::Incoming::Webhooks.new(slack_webhook_url, channel: slack_channel)
-        slack.post(
-          message,
-          attachments: attachement.to_a
-        )
+        notifier = Slack::Notifier.new(slack_webhook_url, channel: slack_channel)
+        notifier.post(text: message, attachments: attachement.to_a)
       end
 
       message = message.colorize(:light_red) unless kits.empty?
