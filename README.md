@@ -71,12 +71,9 @@ https://dummy4.com: it might contain a phishing kit (dummy.zip).
 ## Using Docker (alternative if you don't install Ruby)
 
 ```bash
-$ git clone https://github.com/ninoseki/miteru.git
-$ cd miteru/docker
-$ docker build -t miteru .
-$ docker run miteru
+$ docker pull ninoseki/miteru
 # ex. auto-download detected phishing kit(s) into host machines's /tmp directory
-$ docker run -v /tmp:/tmp miteru execute --auto-download
+$ docker run --rm -v /tmp:/tmp ninoseki/miteru execute --auto-download
 ```
 
 ## Configuration
