@@ -11,6 +11,7 @@ module Miteru
     URLSCAN_UA = "miteru/#{Miteru::VERSION}"
 
     attr_reader :ssl_context
+
     def initialize
       ctx = OpenSSL::SSL::SSLContext.new
       ctx.verify_mode = OpenSSL::SSL::VERIFY_NONE
@@ -23,10 +24,6 @@ module Miteru
       destination
     end
 
-    def self.download(url, base_dir = "/tmp")
-      new.download(url, base_dir)
-    end
-
     def get(url, options = {})
       options = options.merge default_options
 
@@ -36,16 +33,22 @@ module Miteru
           .get(url, options)
     end
 
-    def self.get(url, options = {})
-      new.get url, options
-    end
-
     def post(url, options = {})
       HTTP.post url, options
     end
 
-    def self.post(url, options = {})
-      new.post url, options
+    class << self
+      def download(url, base_dir = "/tmp")
+        new.download(url, base_dir)
+      end
+
+      def get(url, options = {})
+        new.get url, options
+      end
+
+      def post(url, options = {})
+        new.post url, options
+      end
     end
 
     private

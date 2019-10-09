@@ -60,20 +60,20 @@ module Miteru
     end
   end
 
-  # @return [Miteru::Configuration] Miteru's current configuration
-  def self.configuration
-    @configuration ||= Configuration.new
-  end
+  class << self
+    # @return [Miteru::Configuration] Miteru's current configuration
+    def configuration
+      @configuration ||= Configuration.new
+    end
 
-  # Set Miteru's configuration
-  # @param config [Miteru::Configuration]
-  def self.configuration=(config)
-    @configuration = config
-  end
+    # Set Miteru's configuration
+    # @param config [Miteru::Configuration]
+    attr_writer :configuration
 
-  # Modify Miteru's current configuration
-  # @yieldparam [Miteru::Configuration] config current Miteru config
-  def self.configure
-    yield configuration
+    # Modify Miteru's current configuration
+    # @yieldparam [Miteru::Configuration] config current Miteru config
+    def configure
+      yield configuration
+    end
   end
 end
