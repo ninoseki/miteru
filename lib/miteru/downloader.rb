@@ -7,9 +7,11 @@ require "uri"
 module Miteru
   class Downloader
     attr_reader :base_dir
+    attr_reader :memo
 
     def initialize(base_dir = "/tmp")
       @base_dir = base_dir
+      @memo = {}
       raise ArgumentError, "#{base_dir} is not exist." unless Dir.exist?(base_dir)
     end
 
@@ -24,8 +26,9 @@ module Miteru
       destination = filepath_to_download(filename)
       begin
         downloaded_filepath = HTTPClient.download(kit.url, destination)
-        if duplicated?(downloaded_filepath)
-          puts "Do not download #{kit.url} because there is a duplicate file in the directory (SHA256: #{sha256(downloaded_filepath)})."
+        hash = sha256(downloaded_filepath)
+        if duplicated?(hash)
+          puts "Do not download #{kit.url} because there is a duplicate file in the directory (SHA256: #{hash})."
           FileUtils.rm downloaded_filepath
         else
           puts "Download #{kit.url} as #{downloaded_filepath}"
@@ -46,14 +49,20 @@ module Miteru
     end
 
     def sha256(path)
+      return memo[path] if memo.key?(path)
+
       digest = Digest::SHA256.file(path)
-      digest.hexdigest
+      hash = digest.hexdigest
+      memo[path] = hash
+      hash
     end
 
-    def duplicated?(file_path)
-      base = sha256(file_path)
-      sha256s = Dir.glob("#{base_dir}/*.{zip,rar,7z,tar,gz}").map { |path| sha256(path) }
-      sha256s.select { |sha256| sha256 == base }.length > 1
+    def sha256s
+      Dir.glob("#{base_dir}/*.{zip,rar,7z,tar,gz}").map { |path| sha256(path) }
+    end
+
+    def duplicated?(hash)
+      sha256s.count(hash) > 1
     end
   end
 end
