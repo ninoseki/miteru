@@ -28,15 +28,15 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "coveralls", "~> 0.8"
   spec.add_development_dependency "glint", "~> 0.1"
   spec.add_development_dependency "rake", "~> 13.0"
-  spec.add_development_dependency "rspec", "~> 3.8"
+  spec.add_development_dependency "rspec", "~> 3.9"
   spec.add_development_dependency "vcr", "~> 5.0"
   spec.add_development_dependency "webmock", "~> 3.7"
 
   spec.add_dependency "colorize", "~> 0.8"
   spec.add_dependency "down", "~> 5.0"
-  spec.add_dependency "http", "~> 4.1"
+  spec.add_dependency "http", "~> 4.2"
   spec.add_dependency "oga", "~> 2.15"
-  spec.add_dependency "parallel", "~> 1.18"
+  spec.add_dependency "parallel", "~> 1.19"
   spec.add_dependency "slack-notifier", "~> 2.3"
   spec.add_dependency "thor", "~> 0.20"
 end
