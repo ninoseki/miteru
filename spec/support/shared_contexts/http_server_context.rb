@@ -26,7 +26,7 @@ def server
 
     http.mount_proc("/has_kit/test.zip") do |_, res|
       path = File.expand_path("../../fixtures/test.zip", __dir__)
-      body = File.read(path)
+      body = File.binread(path)
 
       res.status = 200
       res.content_length = body.size
