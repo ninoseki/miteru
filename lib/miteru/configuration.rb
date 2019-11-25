@@ -56,7 +56,7 @@ module Miteru
     end
 
     def verbose?
-      @verbaose
+      @verbose
     end
   end
 
