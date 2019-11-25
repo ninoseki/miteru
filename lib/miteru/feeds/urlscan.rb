@@ -19,7 +19,7 @@ module Miteru
       def urls
         url = url_for("/search/")
         url.query = URI.encode_www_form(
-          q: "PhishTank OR OpenPhish OR CertStream-Suspicious",
+          q: "task.method:automatic",
           size: size
         )
 
