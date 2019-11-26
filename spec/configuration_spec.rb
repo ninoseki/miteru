@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Miteru::Configuration do
+  before { Miteru.configuration = nil }
+
   context "when no input given" do
     it do
       expect(Miteru.configuration).to be_a(described_class)
