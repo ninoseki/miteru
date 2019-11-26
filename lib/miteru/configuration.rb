@@ -36,7 +36,7 @@ module Miteru
       @post_to_slack = false
       @size = 100
       @threads = Parallel.processor_count
-      @verbaose = false
+      @verbose = false
     end
 
     def auto_download?
