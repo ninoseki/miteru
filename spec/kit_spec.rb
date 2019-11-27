@@ -38,6 +38,18 @@ RSpec.describe Miteru::Kit do
     end
   end
 
+  describe "#download_filepath" do
+    it do
+      expect(subject.download_filepath).to start_with("/tmp/test.com_test.zip_")
+    end
+  end
+
+  describe "#filename_with_size" do
+    it do
+      expect(subject.filename_with_size).to eq(filename)
+    end
+  end
+
   context "when given a URL encoded link" do
     subject { described_class.new(base_url: "http://test.com", link: "/test%201.zip") }
 
