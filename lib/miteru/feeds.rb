@@ -7,8 +7,10 @@ require_relative "./feeds/urlscan"
 module Miteru
   class Feeds
     def initialize
-      @feeds = [UrlScan.new(Miteru.configuration.size)]
-      @feeds << Ayashige.new if Miteru.configuration.ayashige?
+      @feeds = [
+        UrlScan.new(Miteru.configuration.size),
+        Miteru.configuration.ayashige? ? Ayashige.new : nil
+      ].compact
     end
 
     def directory_traveling?
