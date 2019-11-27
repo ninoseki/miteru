@@ -22,8 +22,7 @@ module Miteru
     private
 
     def download_kit(kit)
-      filename = download_filename(kit)
-      destination = filepath_to_download(filename)
+      destination = kit.download_filepath
       begin
         downloaded_filepath = HTTPClient.download(kit.url, destination)
         hash = sha256(downloaded_filepath)
@@ -36,12 +35,6 @@ module Miteru
       rescue Down::Error => e
         puts "Failed to download: #{kit.url} (#{e})"
       end
-    end
-
-    def download_filename(kit)
-      domain = URI(kit.base_url).hostname
-
-      "#{domain}_#{kit.filename}_#{SecureRandom.alphanumeric(10)}#{kit.extname}"
     end
 
     def filepath_to_download(filename)

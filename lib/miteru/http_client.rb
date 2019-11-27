@@ -2,7 +2,6 @@
 
 require "down/http"
 require "http"
-require "securerandom"
 require "uri"
 
 module Miteru
