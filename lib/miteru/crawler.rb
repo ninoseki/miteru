@@ -11,7 +11,6 @@ module Miteru
 
     def initialize
       @downloader = Downloader.new(Miteru.configuration.download_to)
-
       @feeds = Feeds.new
       @notifier = Notifier.new
     end
@@ -25,7 +24,6 @@ module Miteru
     end
 
     def execute
-      threads = Miteru.configuration.threads
       suspicious_urls = feeds.suspicious_urls
       puts "Loaded #{suspicious_urls.length} URLs to crawl. (crawling in #{threads} threads)" if verbose?
 
@@ -34,8 +32,8 @@ module Miteru
       end
     end
 
-    def self.execute
-      new.execute
+    def threads
+      @threads ||= Miteru.configuration.threads
     end
 
     def notify(website)
@@ -48,6 +46,12 @@ module Miteru
 
     def verbose?
       Miteru.configuration.verbose?
+    end
+
+    class << self
+      def execute
+        new.execute
+      end
     end
   end
 end
