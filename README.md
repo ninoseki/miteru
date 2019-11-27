@@ -2,7 +2,8 @@
 
 [![Gem Version](https://badge.fury.io/rb/miteru.svg)](https://badge.fury.io/rb/miteru)
 [![Build Status](https://travis-ci.com/ninoseki/miteru.svg?branch=master)](https://travis-ci.com/ninoseki/miteru)
-[![Maintainability](https://api.codeclimate.com/v1/badges/d90e1b5bbdd9663a17d1/maintainability)](https://codeclimate.com/github/ninoseki/miteru/maintainability)
+![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/ninoseki/miteru)
+[![CodeFactor](https://www.codefactor.io/repository/github/ninoseki/miteru/badge)](https://www.codefactor.io/repository/github/ninoseki/miteru)
 [![Coverage Status](https://coveralls.io/repos/github/ninoseki/miteru/badge.svg?branch=master)](https://coveralls.io/github/ninoseki/miteru?branch=master)
 
 Miteru is an experimental phishing kit detection tool.
@@ -13,6 +14,7 @@ Miteru is an experimental phishing kit detection tool.
   - [CertStream-Suspicious feed via urlscan.io](https://urlscan.io/search/#certstream-suspicious)
   - [OpenPhish feed via urlscan.io](https://urlscan.io/search/#OpenPhish)
   - [PhishTank feed via urlscan.io](https://urlscan.io/search/#PhishTank)
+  - [URLhaus feed via urlscan.io](https://urlscan.io/search/#URLHaus)
   - [Ayashige feed](https://github.com/ninoseki/ayashige)
 - It checks each phishy URL whether it enables directory listing and contains a phishing kit (compressed file) or not.
   - Note: compressed file = `*.zip`, `*.rar`, `*.7z`, `*.tar` and `*.gz`.
