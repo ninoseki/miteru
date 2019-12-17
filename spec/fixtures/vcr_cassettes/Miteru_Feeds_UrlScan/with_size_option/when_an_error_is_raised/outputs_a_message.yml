@@ -23,7 +23,7 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Tue, 17 Dec 2019 02:49:23 GMT
+      - Tue, 17 Dec 2019 02:49:31 GMT
       Content-Type:
       - application/json; charset=utf-8
       Transfer-Encoding:
@@ -35,7 +35,7 @@ http_interactions:
       Etag:
       - W/"17fac-CyXQ7t1gqV8s+uXyNjQG1KWtgfQ"
       X-Proxy-Cache:
-      - EXPIRED
+      - HIT
       Content-Security-Policy:
       - 'default-src ''self'' data: www.google-analytics.com ; script-src ''self''
         data: www.google-analytics.com maps.googleapis.com developers.google.com www.google.com
@@ -3143,5 +3143,5 @@ http_interactions:
           "total": 2196963
         }
     http_version: 
-  recorded_at: Tue, 17 Dec 2019 02:49:12 GMT
+  recorded_at: Tue, 17 Dec 2019 02:49:19 GMT
 recorded_with: VCR 5.0.0

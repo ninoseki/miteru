@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Miteru::Feeds::UrlScan, :vcr do
-  subject { Miteru::Feeds::UrlScan }
+  subject { described_class }
 
   context "without 'size' option" do
     it "returns an Array" do
@@ -27,7 +27,7 @@ RSpec.describe Miteru::Feeds::UrlScan, :vcr do
     end
 
     context "when an error is raised" do
-      before { allow(Miteru::HTTPClient).to receive_message_chain(:new, :get).and_raise(Miteru::HTTPResponseError, "test") }
+      before { allow(UrlScan::API).to receive(:new).and_raise(UrlScan::ResponseError, "test") }
 
       it "outputs a message" do
         message = capture(:stdout) { subject.new.urls }
