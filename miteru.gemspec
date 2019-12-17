@@ -39,4 +39,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "parallel", "~> 1.19"
   spec.add_dependency "slack-notifier", "~> 2.3"
   spec.add_dependency "thor", "~> 1.0"
+  spec.add_dependency "urlscan", "~> 0.5"
 end

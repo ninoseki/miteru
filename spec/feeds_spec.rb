@@ -40,6 +40,7 @@ RSpec.describe Miteru::Feeds do
 
     before do
       allow(Miteru::Feeds::UrlScan).to receive_message_chain(:new, :urls).and_return([url])
+      allow(Miteru::Feeds::UrlScanPro).to receive_message_chain(:new, :urls).and_return([url])
       allow(Miteru::Feeds::Ayashige).to receive_message_chain(:new, :urls).and_return([url])
     end
 
