@@ -35,8 +35,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency "colorize", "~> 0.8"
   spec.add_dependency "down", "~> 5.0"
   spec.add_dependency "http", "~> 4.2"
-  spec.add_dependency "oga", "~> 2.15"
+  spec.add_dependency "oga", "~> 3.0"
   spec.add_dependency "parallel", "~> 1.19"
   spec.add_dependency "slack-notifier", "~> 2.3"
-  spec.add_dependency "thor", "~> 0.20"
+  spec.add_dependency "thor", "~> 1.0"
 end
