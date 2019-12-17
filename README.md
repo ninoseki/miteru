@@ -15,6 +15,7 @@ Miteru is an experimental phishing kit detection tool.
   - [OpenPhish feed via urlscan.io](https://urlscan.io/search/#OpenPhish)
   - [PhishTank feed via urlscan.io](https://urlscan.io/search/#PhishTank)
   - [URLhaus feed via urlscan.io](https://urlscan.io/search/#URLHaus)
+  - urlscan.io phish feed (available for Pro users)
   - [Ayashige feed](https://github.com/ninoseki/ayashige)
 - It checks each phishy URL whether it enables directory listing and contains a phishing kit (compressed file) or not.
   - Note: compressed file = `*.zip`, `*.rar`, `*.7z`, `*.tar` and `*.gz`.
@@ -84,6 +85,10 @@ For using `--post-to-slack` feature, you should set the following environment va
 
 - `SLACK_WEBHOOK_URL`: Your Slack Webhook URL.
 - `SLACK_CHANNEL`: Slack channel to post a message (default: "#general").
+
+If you are a urlscan.io Pro user, set your API key as an environment variable `URLSCAN_API_KEY`.
+
+It enables you to subscribe the urlscan.io phish feed.
 
 ## Examples
 
