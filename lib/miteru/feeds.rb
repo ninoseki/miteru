@@ -3,6 +3,7 @@
 require_relative "./feeds/feed"
 require_relative "./feeds/ayashige"
 require_relative "./feeds/urlscan"
+require_relative "./feeds/urlscan_pro"
 
 module Miteru
   class Feeds
@@ -11,6 +12,7 @@ module Miteru
     def initialize
       @feeds = [
         UrlScan.new(Miteru.configuration.size),
+        UrlScanPro.new,
         Miteru.configuration.ayashige? ? Ayashige.new : nil
       ].compact
     end
