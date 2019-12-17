@@ -2,7 +2,7 @@
 
 [![Gem Version](https://badge.fury.io/rb/miteru.svg)](https://badge.fury.io/rb/miteru)
 [![Build Status](https://travis-ci.com/ninoseki/miteru.svg?branch=master)](https://travis-ci.com/ninoseki/miteru)
-![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/ninoseki/miteru)
+[![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/ninoseki/miteru)](https://hub.docker.com/repository/docker/ninoseki/miteru)
 [![CodeFactor](https://www.codefactor.io/repository/github/ninoseki/miteru/badge)](https://www.codefactor.io/repository/github/ninoseki/miteru)
 [![Coverage Status](https://coveralls.io/repos/github/ninoseki/miteru/badge.svg?branch=master)](https://coveralls.io/github/ninoseki/miteru?branch=master)
 
