@@ -24,18 +24,18 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "bundler", "~> 2.0"
+  spec.add_development_dependency "bundler", "~> 2.1"
   spec.add_development_dependency "coveralls", "~> 0.8"
   spec.add_development_dependency "glint", "~> 0.1"
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec", "~> 3.9"
-  spec.add_development_dependency "vcr", "~> 5.0"
-  spec.add_development_dependency "webmock", "~> 3.7"
+  spec.add_development_dependency "vcr", "~> 5.1"
+  spec.add_development_dependency "webmock", "~> 3.8"
 
   spec.add_dependency "colorize", "~> 0.8"
-  spec.add_dependency "down", "~> 5.0"
-  spec.add_dependency "http", "~> 4.2"
-  spec.add_dependency "oga", "~> 3.0"
+  spec.add_dependency "down", "~> 5.1"
+  spec.add_dependency "http", "~> 4.4"
+  spec.add_dependency "oga", "~> 3.2"
   spec.add_dependency "parallel", "~> 1.19"
   spec.add_dependency "slack-notifier", "~> 2.3"
   spec.add_dependency "thor", "~> 1.0"
