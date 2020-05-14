@@ -43,6 +43,7 @@ RSpec.describe Miteru::Feeds do
       allow(Miteru::Feeds::UrlScanPro).to receive_message_chain(:new, :urls).and_return([url])
       allow(Miteru::Feeds::Ayashige).to receive_message_chain(:new, :urls).and_return([url])
       allow(Miteru::Feeds::PhishingDatabase).to receive_message_chain(:new, :urls).and_return([url])
+      allow(Miteru::Feeds::PhishStats).to receive_message_chain(:new, :urls).and_return([url])
     end
 
     it "returns an Array without duplicated" do
