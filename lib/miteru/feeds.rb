@@ -2,6 +2,7 @@
 
 require_relative "./feeds/feed"
 require_relative "./feeds/phishing_database"
+require_relative "./feeds/phishstats"
 require_relative "./feeds/ayashige"
 require_relative "./feeds/urlscan"
 require_relative "./feeds/urlscan_pro"
@@ -13,6 +14,7 @@ module Miteru
     def initialize
       @feeds = [
         PhishingDatabase.new,
+        PhishStats.new,
         UrlScan.new(Miteru.configuration.size),
         UrlScanPro.new,
         Miteru.configuration.ayashige? ? Ayashige.new : nil
