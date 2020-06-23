@@ -29,7 +29,7 @@ RSpec.describe Miteru::Feeds do
 
         it do
           results = subject.new.breakdown("http://test.com/test/test/index.html")
-          expect(results).to eq(["http://test.com", "http://test.com/test", "http://test.com/test/test"])
+          expect(results).to eq(["http://test.com", "http://test.com/test", "http://test.com/test.zip", "http://test.com/test.rar", "http://test.com/test.7z", "http://test.com/test.tar", "http://test.com/test.gz", "http://test.com/test/test", "http://test.com/test/test.zip", "http://test.com/test/test.rar", "http://test.com/test/test.7z", "http://test.com/test/test.tar", "http://test.com/test/test.gz"])
         end
       end
     end
