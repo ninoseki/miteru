@@ -4,6 +4,8 @@ require "oga"
 
 module Miteru
   class Website
+    VALID_EXTENSIONS = [".zip", ".rar", ".7z", ".tar", ".gz"].freeze
+
     attr_reader :url
     def initialize(url)
       @url = url
@@ -14,10 +16,23 @@ module Miteru
     end
 
     def kits
-      @kits ||= links.map do |link|
+      if ext?
+        return [] unless check(url)
+
+        link = url.split("/").last
+        base_url = url.split("/")[0..-2].join("/")
+        kit = Kit.new(base_url: base_url, link: link)
+        return kit.valid? ? [kit] : []
+      end
+
+      links.map do |link|
         kit = Kit.new(base_url: url, link: link.to_s)
         kit.valid? ? kit : nil
       end.compact
+    end
+
+    def ext?
+      VALID_EXTENSIONS.any? { |ext| url.end_with?(ext) }
     end
 
     def ok?
@@ -33,6 +48,8 @@ module Miteru
     end
 
     def has_kits?
+      return kits? if ext?
+
       ok? && index? && kits?
     rescue Addressable::URI::InvalidURIError, ArgumentError, Encoding::CompatibilityError, HTTP::Error, LL::ParserError, OpenSSL::SSL::SSLError => _e
       false
@@ -50,6 +67,13 @@ module Miteru
 
     def response
       @response ||= get
+    end
+
+    def check(url)
+      res = HTTPClient.head(url)
+      res.status.success?
+    rescue StandardError
+      false
     end
 
     def get

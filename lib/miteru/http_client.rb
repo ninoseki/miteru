@@ -23,6 +23,15 @@ module Miteru
       destination
     end
 
+    def head(url, options = {})
+      options = options.merge default_options
+
+      HTTP.follow
+          .timeout(3)
+          .headers(urlscan_url?(url) ? urlscan_headers : default_headers)
+          .head(url, options)
+    end
+
     def get(url, options = {})
       options = options.merge default_options
 
@@ -47,6 +56,10 @@ module Miteru
 
       def post(url, options = {})
         new.post url, options
+      end
+
+      def head(url, options = {})
+        new.head url, options
       end
     end
 
