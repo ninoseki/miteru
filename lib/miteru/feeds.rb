@@ -52,13 +52,15 @@ module Miteru
       urls = (0...segments.length).map do |idx|
         breakdowned_url = "#{base}#{segments[0..idx].join('/')}"
         breakdown = [breakdowned_url]
-        if idx > 0 && idx < segments.length - 1
+        if idx > 0 && idx < segments.length
+          next if segments[idx].nil? || invalid_extension?(segments[idx])
+
           VALID_EXTENSIONS.each do |ext|
             breakdown << "#{base}#{segments[0..idx - 1].join('/')}/#{segments[idx]}#{ext}"
           end
         end
         breakdown
-      end.flatten
+      end.flatten.compact
 
       urls.reject do |breakdowned_url|
         # Reject a url which ends with specific extension names
