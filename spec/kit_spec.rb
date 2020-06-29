@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Miteru::Kit do
-  subject { described_class.new(base_url: base_url, link: link) }
+  subject { described_class.new(base_url + link) }
 
   let(:base_url) { "http://test.com" }
   let(:extname) { ".zip" }
@@ -55,7 +55,7 @@ RSpec.describe Miteru::Kit do
   end
 
   context "when given a URL encoded link" do
-    subject { described_class.new(base_url: "http://test.com", link: "/test%201.zip") }
+    subject { described_class.new "http://test.com/test%201.zip" }
 
     describe "#filename" do
       it do

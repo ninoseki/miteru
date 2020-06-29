@@ -17,8 +17,8 @@ module Miteru
     end
 
     def kits
-      links.map do |link|
-        kit = Kit.new(base_url: url, link: link.to_s)
+      @kits ||= links.map do |link|
+        kit = Kit.new(link)
         kit.valid? ? kit : nil
       end.compact
     end
@@ -36,7 +36,7 @@ module Miteru
     end
 
     def has_kits?
-      ok? && index? && kits?
+      kits?
     rescue Addressable::URI::InvalidURIError, ArgumentError, Encoding::CompatibilityError, HTTP::Error, LL::ParserError, OpenSSL::SSL::SSLError => _e
       false
     end
@@ -50,7 +50,7 @@ module Miteru
     end
 
     def links
-      (href_links + possible_filenames).compact.uniq
+      (href_links + possible_file_links).compact.uniq
     end
 
     private
@@ -74,15 +74,21 @@ module Miteru
     end
 
     def href_links
-      if doc
-        doc.css("a").map { |a| a.get("href") }.compact
+      if doc && ok? && index?
+        doc.css("a").map { |a| a.get("href") }.compact.map do |href|
+          href = href.start_with?("/") ? href : "/#{href}"
+          url + href
+        end
       else
         []
       end
+    rescue Addressable::URI::InvalidURIError, ArgumentError, Encoding::CompatibilityError, HTTP::Error, LL::ParserError, OpenSSL::SSL::SSLError => _e
+      []
     end
 
-    def possible_filenames
+    def possible_file_links
       uri = URI.parse(url)
+
       segments = uri.path.split("/")
       return [] if segments.length.zero?
 
@@ -90,6 +96,7 @@ module Miteru
       VALID_EXTENSIONS.map do |ext|
         new_segments = segments[0..-2] + ["#{last}#{ext}"]
         uri.path = new_segments.join("/")
+        uri.to_s
       end
     end
   end

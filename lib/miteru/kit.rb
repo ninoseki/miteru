@@ -7,11 +7,10 @@ module Miteru
   class Kit
     VALID_EXTENSIONS = Miteru.configuration.valid_extensions
 
-    attr_reader :base_url, :link
+    attr_reader :url
 
-    def initialize(base_url:, link:)
-      @base_url = base_url
-      @link = link.start_with?("/") ? link[1..-1] : link
+    def initialize(url)
+      @url = url
     end
 
     def valid?;
@@ -19,21 +18,17 @@ module Miteru
     end
 
     def extname
-      return ".tar.gz" if link.end_with?("tar.gz")
+      return ".tar.gz" if url.end_with?("tar.gz")
 
-      File.extname(link)
+      File.extname(url)
     end
 
     def basename
-      File.basename(link)
+      File.basename(url)
     end
 
     def filename
       CGI.unescape basename
-    end
-
-    def url
-      "#{base_url}/#{basename}"
     end
 
     def download_filepath
@@ -59,7 +54,7 @@ module Miteru
     end
 
     def hostname
-      URI(base_url).hostname
+      URI(url).hostname
     end
 
     def download_filename

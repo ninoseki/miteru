@@ -19,8 +19,8 @@ RSpec.describe Miteru::Downloader do
     context "when it runs once" do
       it "downloads a file" do
         kits = [
-          Miteru::Kit.new(base_url: url, link: "test.zip"),
-          Miteru::Kit.new(base_url: url, link: "test.tar.gz")
+          Miteru::Kit.new(url + "/test.zip"),
+          Miteru::Kit.new(url + "/test.tar.gz")
         ]
         expect(Dir.glob("#{base_dir}/*.zip").empty?).to be(true)
 
@@ -43,8 +43,8 @@ RSpec.describe Miteru::Downloader do
     context "when it runs multiple times" do
       it "removes duplicated files" do
         kits = [
-          Miteru::Kit.new(base_url: url, link: "test.zip"),
-          Miteru::Kit.new(base_url: url, link: "test.zip")
+          Miteru::Kit.new(url + "/test.zip"),
+          Miteru::Kit.new( url + "/test.zip")
         ]
         expect(Dir.glob("#{base_dir}/*.zip").empty?).to be(true)
 
