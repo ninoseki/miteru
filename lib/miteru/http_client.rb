@@ -18,7 +18,7 @@ module Miteru
     end
 
     def download(url, destination)
-      down = Down::Http.new(default_options) { |client| client.headers(default_headers) }
+      down = Down::Http.new(**default_options) { |client| client.headers(**default_headers) }
       down.download(url, destination: destination)
       destination
     end

@@ -28,6 +28,8 @@ module Miteru
     # @return [Boolean]
     attr_accessor :verbose
 
+    attr_reader :valid_extensions
+
     def initialize
       @auto_download = false
       @ayashige = false
@@ -37,6 +39,8 @@ module Miteru
       @size = 100
       @threads = Parallel.processor_count
       @verbose = false
+
+      @valid_extensions = [".zip", ".rar", ".7z", ".tar", ".gz"].freeze
     end
 
     def auto_download?

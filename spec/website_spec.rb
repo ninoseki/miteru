@@ -16,8 +16,15 @@ RSpec.describe Miteru::Website do
     it do
       expect(website_has_kit.kits).to be_an(Array)
     end
+
     it do
-      expect(website_has_kit.kits.length).to eq(2)
+      expect(website_has_kit.kits.length).to eq(1)
+    end
+  end
+
+  describe "#links" do
+    it do
+      expect(website_has_kit.links).to be_an(Array)
     end
   end
 
@@ -30,7 +37,7 @@ RSpec.describe Miteru::Website do
 
     describe "#message" do
       it do
-        expect(website_has_kit.message).to start_with("It might contain phishing kits")
+        expect(website_has_kit.message).to start_with("It might contain a phishing kit")
       end
     end
   end
