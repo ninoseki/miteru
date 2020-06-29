@@ -14,13 +14,25 @@ def server
       AccessLog: []
     )
 
-    http.mount_proc("/has_kit") do |_, res|
+    http.mount_proc("/has_kit") do |req, res|
+      status = req.path == "/has_kit" ? 200 : 404
+
       path = File.expand_path("../../fixtures/index.html", __dir__)
       body = File.read(path)
 
-      res.status = 200
+      res.status = status
       res.content_length = body.size
       res.content_type = 'text/plain'
+      res.body = body
+    end
+
+    http.mount_proc("/has_kit/test.tar.gz") do |_, res|
+      path = File.expand_path("../../fixtures/test.tar.gz", __dir__)
+      body = File.binread(path)
+
+      res.status = 200
+      res.content_length = body.size
+      res.content_type = 'application/zip'
       res.body = body
     end
 
@@ -30,14 +42,16 @@ def server
 
       res.status = 200
       res.content_length = body.size
-      res.content_type = 'application/zip'
+      res.content_type = 'application/gzip'
       res.body = body
     end
 
     http.mount_proc("/no_kit") do |_, res|
+      status = req.path == "/has_kit" ? 200 : 404
+
       body = "None"
 
-      res.status = 200
+      res.status = status
       res.content_length = body.size
       res.content_type = 'text/plain'
       res.body = body

@@ -10,7 +10,6 @@ require_relative "./feeds/urlscan_pro"
 module Miteru
   class Feeds
     IGNORE_EXTENSIONS = %w(.htm .html .php .asp .aspx .exe .txt).freeze
-    VALID_EXTENSIONS = [".zip", ".rar", ".7z", ".tar", ".gz"].freeze
 
     def initialize
       @feeds = [
@@ -49,18 +48,7 @@ module Miteru
       segments = uri.path.split("/")
       return [base] if segments.length.zero?
 
-      urls = (0...segments.length).map do |idx|
-        breakdowned_url = "#{base}#{segments[0..idx].join('/')}"
-        breakdown = [breakdowned_url]
-        if idx > 0 && idx < segments.length
-          next if segments[idx].nil? || invalid_extension?(segments[idx])
-
-          VALID_EXTENSIONS.each do |ext|
-            breakdown << "#{base}#{segments[0..idx - 1].join('/')}/#{segments[idx]}#{ext}"
-          end
-        end
-        breakdown
-      end.flatten.compact
+      urls = (0...segments.length).map { |idx| "#{base}#{segments[0..idx].join('/')}" }
 
       urls.reject do |breakdowned_url|
         # Reject a url which ends with specific extension names

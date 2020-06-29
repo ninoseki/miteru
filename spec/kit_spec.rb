@@ -8,6 +8,10 @@ RSpec.describe Miteru::Kit do
   let(:filename) { "test#{extname}" }
   let(:link) { "/#{filename}" }
 
+  before do
+    allow(subject).to receive(:reachable?).and_return(true)
+  end
+
   describe "#basename" do
     it "returns a base name" do
       expect(subject.basename).to eq(filename)

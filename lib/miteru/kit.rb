@@ -5,7 +5,7 @@ require "securerandom"
 
 module Miteru
   class Kit
-    VALID_EXTENSIONS = [".zip", ".rar", ".7z", ".tar", ".gz"].freeze
+    VALID_EXTENSIONS = Miteru.configuration.valid_extensions
 
     attr_reader :base_url, :link
 
@@ -14,8 +14,8 @@ module Miteru
       @link = link.start_with?("/") ? link[1..-1] : link
     end
 
-    def valid?
-      VALID_EXTENSIONS.include? extname
+    def valid?;
+      valid_ext? && reachable?
     end
 
     def extname
@@ -68,6 +68,17 @@ module Miteru
 
     def base_dir
       @base_dir ||= Miteru.configuration.download_to
+    end
+
+    def valid_ext?
+      VALID_EXTENSIONS.include? extname
+    end
+
+    def reachable?
+      res = HTTPClient.head(url)
+      res.status.success?
+    rescue StandardError
+      false
     end
   end
 end

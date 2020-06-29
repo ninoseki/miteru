@@ -4,9 +4,10 @@ require "oga"
 
 module Miteru
   class Website
-    VALID_EXTENSIONS = [".zip", ".rar", ".7z", ".tar", ".gz"].freeze
+    VALID_EXTENSIONS = Miteru.configuration.valid_extensions
 
     attr_reader :url
+
     def initialize(url)
       @url = url
     end
@@ -16,23 +17,10 @@ module Miteru
     end
 
     def kits
-      if ext?
-        return [] unless check(url)
-
-        link = url.split("/").last
-        base_url = url.split("/")[0..-2].join("/")
-        kit = Kit.new(base_url: base_url, link: link)
-        return kit.valid? ? [kit] : []
-      end
-
       links.map do |link|
         kit = Kit.new(base_url: url, link: link.to_s)
         kit.valid? ? kit : nil
       end.compact
-    end
-
-    def ext?
-      VALID_EXTENSIONS.any? { |ext| url.end_with?(ext) }
     end
 
     def ok?
@@ -48,8 +36,6 @@ module Miteru
     end
 
     def has_kits?
-      return kits? if ext?
-
       ok? && index? && kits?
     rescue Addressable::URI::InvalidURIError, ArgumentError, Encoding::CompatibilityError, HTTP::Error, LL::ParserError, OpenSSL::SSL::SSLError => _e
       false
@@ -63,17 +49,14 @@ module Miteru
       "It might contain #{noun}: #{filename_with_sizes}."
     end
 
+    def links
+      (href_links + possible_filenames).compact.uniq
+    end
+
     private
 
     def response
       @response ||= get
-    end
-
-    def check(url)
-      res = HTTPClient.head(url)
-      res.status.success?
-    rescue StandardError
-      false
     end
 
     def get
@@ -90,11 +73,23 @@ module Miteru
       nil
     end
 
-    def links
+    def href_links
       if doc
         doc.css("a").map { |a| a.get("href") }.compact
       else
         []
+      end
+    end
+
+    def possible_filenames
+      uri = URI.parse(url)
+      segments = uri.path.split("/")
+      return [] if segments.length.zero?
+
+      last = segments.last
+      VALID_EXTENSIONS.map do |ext|
+        new_segments = segments[0..-2] + ["#{last}#{ext}"]
+        uri.path = new_segments.join("/")
       end
     end
   end
