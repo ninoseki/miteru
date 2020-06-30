@@ -9,7 +9,7 @@ RSpec.describe Miteru::Kit do
   let(:link) { "/#{filename}" }
 
   before do
-    allow(subject).to receive(:reachable_and_archive_file?).and_return(true)
+    allow(subject).to receive(:reachable_and_valid_mime_type?).and_return(true)
   end
 
   describe "#basename" do
