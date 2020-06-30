@@ -30,6 +30,8 @@ module Miteru
 
     attr_reader :valid_extensions
 
+    attr_reader :valid_mime_types
+
     def initialize
       @auto_download = false
       @ayashige = false
@@ -41,6 +43,7 @@ module Miteru
       @verbose = false
 
       @valid_extensions = [".zip", ".rar", ".7z", ".tar", ".gz"].freeze
+      @valid_mime_types = ["application/zip", "application/vnd.rar", "application/x-7z-compressed", "application/x-tar", "application/gzip"]
     end
 
     def auto_download?

@@ -6,6 +6,7 @@ require "securerandom"
 module Miteru
   class Kit
     VALID_EXTENSIONS = Miteru.configuration.valid_extensions
+    VALID_MIME_TYPES = Miteru.configuration.valid_mime_types
 
     attr_reader :url
 
@@ -14,7 +15,7 @@ module Miteru
     end
 
     def valid?;
-      valid_ext? && reachable_and_archive_file?
+      valid_ext? && reachable_and_valid_mime_type?
     end
 
     def extname
@@ -73,13 +74,14 @@ module Miteru
       response.status.success?
     end
 
-    def archive_file?(response)
-      !response.content_type.mime_type.to_s.start_with? "text/"
+    def valid_mime_type?(response)
+      mime_type = response.content_type.mime_type.to_s
+      VALID_MIME_TYPES.include? mime_type
     end
 
-    def reachable_and_archive_file?
+    def reachable_and_valid_mime_type?
       res = HTTPClient.head(url)
-      reachable?(res) && archive_file?(res)
+      reachable?(res) && valid_mime_type?(res)
     rescue StandardError
       false
     end
