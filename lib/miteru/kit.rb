@@ -14,7 +14,7 @@ module Miteru
     end
 
     def valid?;
-      valid_ext? && reachable?
+      valid_ext? && reachable_and_archive_file?
     end
 
     def extname
@@ -69,9 +69,17 @@ module Miteru
       VALID_EXTENSIONS.include? extname
     end
 
-    def reachable?
+    def reachable?(response)
+      response.status.success?
+    end
+
+    def archive_file?(response)
+      !response.content_type.mime_type.to_s.start_with? "text/"
+    end
+
+    def reachable_and_archive_file?
       res = HTTPClient.head(url)
-      res.status.success?
+      reachable?(res) && archive_file?(res)
     rescue StandardError
       false
     end
