@@ -80,7 +80,7 @@ module Miteru
     def reachable_and_archive_file?
       res = HTTPClient.head(url)
       reachable?(res) && archive_file?(res)
-    rescue StandardError => e
+    rescue StandardError
       false
     end
   end
