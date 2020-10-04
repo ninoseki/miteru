@@ -1,16 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe Miteru::Kit do
+  include_context "http_server"
+
   subject { described_class.new(base_url + link) }
 
-  let(:base_url) { "http://test.com" }
+  let(:base_url) { "http://#{host}:#{port}" }
   let(:extname) { ".zip" }
   let(:filename) { "test#{extname}" }
-  let(:link) { "/#{filename}" }
-
-  before do
-    allow(subject).to receive(:reachable_and_valid_mime_type?).and_return(true)
-  end
+  let(:link) { "/has_kit/#{filename}" }
 
   describe "#basename" do
     it "returns a base name" do
@@ -44,7 +42,7 @@ RSpec.describe Miteru::Kit do
 
   describe "#download_filepath" do
     it do
-      expect(subject.download_filepath).to include("/tmp/test.com_test.zip_")
+      expect(subject.download_filepath).to include("/tmp/#{host}_#{filename}_")
     end
   end
 
@@ -55,11 +53,21 @@ RSpec.describe Miteru::Kit do
   end
 
   context "when given a URL encoded link" do
-    subject { described_class.new "http://test.com/test%201.zip" }
+    subject { described_class.new "#{base_url}/test%201.zip" }
 
     describe "#filename" do
       it do
         expect(subject.filename).to eq("test 1.zip")
+      end
+    end
+  end
+
+  context "when given an index.html" do
+    subject { described_class.new "#{base_url}/index.html" }
+
+    describe "#valid?" do
+      it do
+        expect(subject.valid?).to eq(false)
       end
     end
   end
