@@ -30,14 +30,14 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec", "~> 3.9"
   spec.add_development_dependency "vcr", "~> 6.0"
-  spec.add_development_dependency "webmock", "~> 3.8"
+  spec.add_development_dependency "webmock", "~> 3.9"
 
   spec.add_dependency "colorize", "~> 0.8"
-  spec.add_dependency "down", "~> 5.1"
+  spec.add_dependency "down", "~> 5.2"
   spec.add_dependency "http", "~> 4.4"
-  spec.add_dependency "oga", "~> 3.2"
+  spec.add_dependency "oga", "~> 3.3"
   spec.add_dependency "parallel", "~> 1.19"
   spec.add_dependency "slack-notifier", "~> 2.3"
   spec.add_dependency "thor", "~> 1.0"
-  spec.add_dependency "urlscan", "~> 0.5"
+  spec.add_dependency "urlscan", "~> 0.6"
 end
