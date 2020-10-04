@@ -10,12 +10,23 @@ module Miteru
 
     attr_reader :url
 
+    attr_reader :status
+    attr_reader :content_length
+    attr_reader :mime_type
+
     def initialize(url)
       @url = url
+
+      @content_length = nil
+      @mime_type = nil
+      @status = nil
     end
 
     def valid?;
-      valid_ext? && reachable_and_valid_mime_type?
+      # make a HEAD request for the validation
+      before_validation
+
+      valid_ext? && reachable? && valid_mime_type? && valid_content_length?
     end
 
     def extname
@@ -70,20 +81,25 @@ module Miteru
       VALID_EXTENSIONS.include? extname
     end
 
-    def reachable?(response)
-      response.status.success?
+    def before_validation
+      res = HTTPClient.head(url)
+      @content_length = res.content_length
+      @mime_type = res.content_type.mime_type.to_s
+      @status = res.status
+    rescue StandardError
+      # do nothing
     end
 
-    def valid_mime_type?(response)
-      mime_type = response.content_type.mime_type.to_s
+    def reachable?
+      status&.success?
+    end
+
+    def valid_mime_type?
       VALID_MIME_TYPES.include? mime_type
     end
 
-    def reachable_and_valid_mime_type?
-      res = HTTPClient.head(url)
-      reachable?(res) && valid_mime_type?(res)
-    rescue StandardError
-      false
+    def valid_content_length?
+      content_length.to_i > 0
     end
   end
 end
