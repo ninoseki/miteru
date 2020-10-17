@@ -29,5 +29,7 @@ module Miteru
 
       Crawler.execute
     end
+
+    default_command :execute
   end
 end
