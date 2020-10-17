@@ -6,7 +6,7 @@ require "uri"
 module Miteru
   class Feeds
     class PhishingDatabase < Feed
-      URL = "https://raw.githubusercontent.com/mitchellkrogza/Phishing.Database/master/phishing-links-NEW-today.txt"
+      URL = "https://raw.githubusercontent.com/mitchellkrogza/Phishing.Database/master/phishing-links-ACTIVE-NOW.txt"
 
       def urls
         body = get(URL)
