@@ -31,5 +31,11 @@ module Miteru
     end
 
     default_command :execute
+
+    class << self
+      def exit_on_failure?
+        true
+      end
+    end
   end
 end

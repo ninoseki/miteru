@@ -12,4 +12,10 @@ RSpec.describe Miteru::CLI do
       capture(:stdout) { described_class.start %w(execute) }
     end
   end
+
+  describe ".exit_on_failure?" do
+    it do
+      expect(described_class.exit_on_failure?).to eq(true)
+    end
+  end
 end
