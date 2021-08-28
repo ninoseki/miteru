@@ -17,10 +17,10 @@ module Miteru
     end
 
     def kits
-      @kits ||= links.map do |link|
+      @kits ||= links.filter_map do |link|
         kit = Kit.new(link)
         kit.valid? ? kit : nil
-      end.compact
+      end
     end
 
     def ok?
@@ -75,7 +75,7 @@ module Miteru
 
     def href_links
       if doc && ok? && index?
-        doc.css("a").map { |a| a.get("href") }.compact.map do |href|
+        doc.css("a").filter_map { |a| a.get("href") }.map do |href|
           href = href.start_with?("/") ? href : "/#{href}"
           url + href
         end

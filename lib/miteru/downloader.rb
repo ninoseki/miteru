@@ -6,8 +6,7 @@ require "uri"
 
 module Miteru
   class Downloader
-    attr_reader :base_dir
-    attr_reader :memo
+    attr_reader :base_dir, :memo
 
     def initialize(base_dir = "/tmp")
       @base_dir = base_dir

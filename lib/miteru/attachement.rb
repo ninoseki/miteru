@@ -5,6 +5,7 @@ require "uri"
 module Miteru
   class Attachement
     attr_reader :url
+
     def initialize(url)
       @url = url
     end

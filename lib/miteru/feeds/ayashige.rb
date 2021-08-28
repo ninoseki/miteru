@@ -7,7 +7,7 @@ module Miteru
   class Feeds
     class Ayashige < Feed
       HOST = "ayashige.herokuapp.com"
-      URL = "https://#{HOST}"
+      URL = "https://#{HOST}".freeze
 
       def urls
         url = url_for("/feed")

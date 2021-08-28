@@ -6,8 +6,7 @@ require "uri"
 
 module Miteru
   class Crawler
-    attr_reader :downloader
-    attr_reader :feeds
+    attr_reader :downloader, :feeds
 
     def initialize
       @downloader = Downloader.new(Miteru.configuration.download_to)

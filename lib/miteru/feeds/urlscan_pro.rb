@@ -27,7 +27,7 @@ module Miteru
 
         res = api.pro.phishfeed
         results = res["results"] || []
-        results.map { |result| result.dig("page_url") }
+        results.map { |result| result["page_url"] }
       rescue ArgumentError => _e
         []
       end

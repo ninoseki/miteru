@@ -8,11 +8,7 @@ module Miteru
     VALID_EXTENSIONS = Miteru.configuration.valid_extensions
     VALID_MIME_TYPES = Miteru.configuration.valid_mime_types
 
-    attr_reader :url
-
-    attr_reader :status
-    attr_reader :content_length
-    attr_reader :mime_type
+    attr_reader :url, :status, :content_length, :mime_type
 
     def initialize(url)
       @url = url

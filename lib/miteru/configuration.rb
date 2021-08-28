@@ -28,9 +28,7 @@ module Miteru
     # @return [Boolean]
     attr_accessor :verbose
 
-    attr_reader :valid_extensions
-
-    attr_reader :valid_mime_types
+    attr_reader :valid_extensions, :valid_mime_types
 
     def initialize
       @auto_download = false
