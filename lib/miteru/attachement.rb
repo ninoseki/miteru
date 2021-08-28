@@ -31,7 +31,7 @@ module Miteru
       {
         type: "button",
         text: "Lookup on VirusTotal",
-        url: _vt_link,
+        url: _vt_link
       }
     end
 
@@ -41,7 +41,7 @@ module Miteru
       {
         type: "button",
         text: "Lookup on urlscan.io",
-        url: _urlscan_link,
+        url: _urlscan_link
       }
     end
 

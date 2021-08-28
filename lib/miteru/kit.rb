@@ -22,7 +22,7 @@ module Miteru
       @status = nil
     end
 
-    def valid?;
+    def valid?
       # make a HEAD request for the validation
       before_validation
 

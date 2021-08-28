@@ -9,7 +9,7 @@ RSpec.describe Miteru::CLI do
     end
 
     it "does not raise any error" do
-      capture(:stdout) { described_class.start %w(execute) }
+      capture(:stdout) { described_class.start %w[execute] }
     end
   end
 

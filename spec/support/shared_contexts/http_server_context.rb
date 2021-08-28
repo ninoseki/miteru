@@ -22,7 +22,7 @@ def server
 
       res.status = status
       res.content_length = body.size
-      res.content_type = 'text/plain'
+      res.content_type = "text/plain"
       res.body = body
     end
 
@@ -32,7 +32,7 @@ def server
 
       res.status = 200
       res.content_length = body.size
-      res.content_type = 'application/zip'
+      res.content_type = "application/zip"
       res.body = body
     end
 
@@ -42,7 +42,7 @@ def server
 
       res.status = 200
       res.content_length = body.size
-      res.content_type = 'application/gzip'
+      res.content_type = "application/gzip"
       res.body = body
     end
 
@@ -53,7 +53,7 @@ def server
 
       res.status = status
       res.content_length = body.size
-      res.content_type = 'text/plain'
+      res.content_type = "text/plain"
       res.body = body
     end
 
