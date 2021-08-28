@@ -4,10 +4,9 @@ RSpec.describe Miteru::Feeds::Ayashige, :vcr do
   subject { Miteru::Feeds::Ayashige }
 
   describe "#urls" do
-    it "returns an Array" do
+    it do
       results = subject.new.urls
       expect(results).to be_an(Array)
-      results.all? { |url| url.start_with?(/^http|^https/) }
     end
   end
 end

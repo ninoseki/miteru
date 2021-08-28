@@ -11,7 +11,7 @@ RSpec.describe Miteru::Kit do
   let(:link) { "/has_kit/#{filename}" }
 
   describe "#basename" do
-    it "returns a base name" do
+    it do
       expect(subject.basename).to eq(filename)
     end
   end
@@ -23,19 +23,19 @@ RSpec.describe Miteru::Kit do
   end
 
   describe "#extname" do
-    it "returns a base extname" do
+    it do
       expect(subject.extname).to eq(extname)
     end
   end
 
   describe "#url" do
-    it "returns a URL" do
+    it do
       expect(subject.url).to eq("#{base_url}#{link}")
     end
   end
 
   describe "#valid?" do
-    it "returns true" do
+    it do
       expect(subject.valid?).to eq(true)
     end
   end

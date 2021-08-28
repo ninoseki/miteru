@@ -5,7 +5,7 @@ RSpec.describe Miteru::Feeds do
 
   describe "#breakdown" do
     context "when given an url without path" do
-      it "returns an Array (length == 1)" do
+      it do
         results = subject.new.breakdown("http://test.com")
         expect(results).to be_an(Array)
         expect(results.length).to eq(1)
@@ -14,7 +14,7 @@ RSpec.describe Miteru::Feeds do
 
     context "when given an url with path" do
       context "when disabling directory_traveling" do
-        it "returns an Array (length == 1)" do
+        it do
           results = subject.new.breakdown("http://test.com/test/test/index.html")
           expect(results).to be_an(Array)
           expect(results.length).to eq(1)
@@ -46,7 +46,7 @@ RSpec.describe Miteru::Feeds do
       allow(Miteru::Feeds::PhishStats).to receive_message_chain(:new, :urls).and_return([url])
     end
 
-    it "returns an Array without duplicated" do
+    it "returns a unique array" do
       results = subject.new.suspicious_urls
       expect(results).to be_an(Array)
       expect(results.length).to eq(1)
