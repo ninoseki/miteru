@@ -44,7 +44,7 @@ RSpec.describe Miteru::Downloader do
       it "removes duplicated files" do
         kits = [
           Miteru::Kit.new(url + "/test.zip"),
-          Miteru::Kit.new( url + "/test.zip")
+          Miteru::Kit.new(url + "/test.zip")
         ]
         expect(Dir.glob("#{base_dir}/*.zip").empty?).to be(true)
 

@@ -27,18 +27,18 @@ module Miteru
       options = options.merge default_options
 
       HTTP.follow
-          .timeout(3)
-          .headers(urlscan_url?(url) ? urlscan_headers : default_headers)
-          .head(url, options)
+        .timeout(3)
+        .headers(urlscan_url?(url) ? urlscan_headers : default_headers)
+        .head(url, options)
     end
 
     def get(url, options = {})
       options = options.merge default_options
 
       HTTP.follow
-          .timeout(write: 2, connect: 5, read: 10)
-          .headers(urlscan_url?(url) ? urlscan_headers : default_headers)
-          .get(url, options)
+        .timeout(write: 2, connect: 5, read: 10)
+        .headers(urlscan_url?(url) ? urlscan_headers : default_headers)
+        .get(url, options)
     end
 
     def post(url, options = {})
