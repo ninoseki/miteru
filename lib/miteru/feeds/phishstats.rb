@@ -11,7 +11,7 @@ module Miteru
       def urls
         json = JSON.parse(get(URL))
         json.map do |entry|
-          entry.dig("url")
+          entry["url"]
         end
       rescue HTTPResponseError, HTTP::Error, JSON::ParserError => e
         puts "Failed to load PhishStats feed (#{e})"
