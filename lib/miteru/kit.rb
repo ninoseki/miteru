@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
 require "cgi"
-require "securerandom"
+require "uuidtools"
+require "uri"
 
 module Miteru
   class Kit
     VALID_EXTENSIONS = Miteru.configuration.valid_extensions
     VALID_MIME_TYPES = Miteru.configuration.valid_mime_types
 
-    attr_reader :url, :status, :content_length, :mime_type
+    attr_reader :url, :status, :content_length, :mime_type, :headers
 
     def initialize(url)
       @url = url
@@ -16,6 +17,7 @@ module Miteru
       @content_length = nil
       @mime_type = nil
       @status = nil
+      @headers = nil
     end
 
     def valid?
@@ -32,21 +34,21 @@ module Miteru
     end
 
     def basename
-      File.basename(url)
+      @basename ||= File.basename(url)
     end
 
     def filename
-      CGI.unescape basename
+      @filename ||= CGI.unescape(basename)
     end
 
-    def download_filepath
-      "#{base_dir}/#{download_filename}"
+    def filepath_to_download
+      "#{base_dir}/#{filename_to_download}"
     end
 
     def filesize
-      return nil unless File.exist?(download_filepath)
+      return nil unless File.exist?(filepath_to_download)
 
-      File.size download_filepath
+      File.size filepath_to_download
     end
 
     def filename_with_size
@@ -55,18 +57,22 @@ module Miteru
       "#{filename}(#{filesize / 1024}KB)"
     end
 
-    private
-
     def id
-      @id ||= SecureRandom.hex(10)
+      @id ||= UUIDTools::UUID.random_create.to_s
     end
 
     def hostname
-      URI(url).hostname
+      @hostname ||= URI(url).hostname
     end
 
-    def download_filename
-      "#{hostname}_#{filename}_#{id}#{extname}"
+    def decoded_url
+      @decoded_url ||= URI.decode_www_form_component(url)
+    end
+
+    private
+
+    def filename_to_download
+      "#{id}#{extname}"
     end
 
     def base_dir
@@ -82,6 +88,7 @@ module Miteru
       @content_length = res.content_length
       @mime_type = res.content_type.mime_type.to_s
       @status = res.status
+      @headers = res.headers.to_h
     rescue StandardError
       # do nothing
     end

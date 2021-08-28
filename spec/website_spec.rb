@@ -37,7 +37,7 @@ RSpec.describe Miteru::Website do
 
     describe "#message" do
       it do
-        expect(website_has_kit.message).to start_with("It might contain a phishing kit")
+        expect(website_has_kit.message).to start_with("it might contain a phishing kit")
       end
     end
   end
@@ -51,7 +51,7 @@ RSpec.describe Miteru::Website do
 
     describe "#message" do
       it do
-        expect(website_no_kit.message).to eq("It doesn't contain a phishing kit.")
+        expect(website_no_kit.message).to eq("it doesn't contain a phishing kit.")
       end
     end
   end

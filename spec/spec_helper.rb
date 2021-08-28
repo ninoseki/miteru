@@ -10,6 +10,16 @@ SimpleCov.start do
 end
 Coveralls.wear!
 
+def ci_env?
+  # CI=true and TRAVIS=true in Travis CI
+  ENV["CI"] || ENV["TRAVIS"]
+end
+
+# Use in-memory SQLite in local test
+unless ci_env?
+  ENV["MITERU_DATABASE"] = ":memory:"
+end
+
 require "miteru"
 require "vcr"
 

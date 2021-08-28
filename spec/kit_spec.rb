@@ -40,9 +40,9 @@ RSpec.describe Miteru::Kit do
     end
   end
 
-  describe "#download_filepath" do
+  describe "#filepath_to_download" do
     it do
-      expect(subject.download_filepath).to include("/tmp/#{host}_#{filename}_")
+      expect(subject.filepath_to_download).to include("/tmp/#{subject.id}#{subject.extname}")
     end
   end
 
