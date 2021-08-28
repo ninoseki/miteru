@@ -12,7 +12,12 @@ RSpec.describe Miteru::Downloader do
       Miteru.configuration.download_to = base_dir
     end
 
-    after { WebMock.enable! }
+    after do
+      records = Miteru::Record.all
+      records.each(&:delete)
+
+      WebMock.enable!
+    end
 
     let(:url) { "#{base_url}/has_kit" }
 
@@ -22,6 +27,9 @@ RSpec.describe Miteru::Downloader do
           Miteru::Kit.new(url + "/test.zip"),
           Miteru::Kit.new(url + "/test.tar.gz")
         ]
+        # make validation to set attrs
+        kits.each(&:valid?)
+
         expect(Dir.glob("#{base_dir}/*.zip").empty?).to be(true)
 
         out = capture(:stdout) { subject.download_kits(kits) }
@@ -46,9 +54,12 @@ RSpec.describe Miteru::Downloader do
           Miteru::Kit.new(url + "/test.zip"),
           Miteru::Kit.new(url + "/test.zip")
         ]
+        # make validation to set attrs
+        kits.each(&:valid?)
+
         expect(Dir.glob("#{base_dir}/*.zip").empty?).to be(true)
 
-        capture(:stdout) { subject.download_kits(kits) }
+        _out = capture(:stdout) { subject.download_kits(kits) }
 
         download_files = Dir.glob("#{base_dir}/*.zip")
         expect(download_files.empty?).to be(false)

@@ -42,11 +42,11 @@ module Miteru
     end
 
     def message
-      return "It doesn't contain a phishing kit." unless kits?
+      return "it doesn't contain a phishing kit." unless kits?
 
       filename_with_sizes = kits.map(&:filename_with_size).join(", ")
       noun = kits.length == 1 ? "a phishing kit" : "phishing kits"
-      "It might contain #{noun}: #{filename_with_sizes}."
+      "it might contain #{noun}: #{filename_with_sizes}."
     end
 
     def links

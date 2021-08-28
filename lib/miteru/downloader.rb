@@ -11,7 +11,7 @@ module Miteru
     def initialize(base_dir = "/tmp")
       @base_dir = base_dir
       @memo = {}
-      raise ArgumentError, "#{base_dir} is not exist." unless Dir.exist?(base_dir)
+      raise ArgumentError, "#{base_dir} doesn't exist." unless Dir.exist?(base_dir)
     end
 
     def download_kits(kits)
@@ -21,23 +21,24 @@ module Miteru
     private
 
     def download_kit(kit)
-      destination = kit.download_filepath
+      destination = kit.filepath_to_download
       begin
-        downloaded_filepath = HTTPClient.download(kit.url, destination)
-        hash = sha256(downloaded_filepath)
+        downloaded_as = HTTPClient.download(kit.url, destination)
+        hash = sha256(downloaded_as)
+
+        # Remove a downloaded file if it is not unique
         if duplicated?(hash)
-          puts "Do not download #{kit.url} because there is a duplicate file in the directory (SHA256: #{hash})."
-          FileUtils.rm downloaded_filepath
-        else
-          puts "Download #{kit.url} as #{downloaded_filepath}"
+          puts "Don't download #{kit.url}. The same hash is already recorded. (SHA256: #{hash})."
+          FileUtils.rm downloaded_as
+          return
         end
+
+        # Record a kit in DB
+        Record.create_by_kit_and_hash(kit, hash)
+        puts "Download #{kit.url} as #{downloaded_as}"
       rescue Down::Error => e
         puts "Failed to download: #{kit.url} (#{e})"
       end
-    end
-
-    def filepath_to_download(filename)
-      "#{base_dir}/#{filename}"
     end
 
     def sha256(path)
@@ -49,12 +50,8 @@ module Miteru
       hash
     end
 
-    def sha256s
-      Dir.glob("#{base_dir}/*.{zip,rar,7z,tar,gz}").map { |path| sha256(path) }
-    end
-
     def duplicated?(hash)
-      sha256s.count(hash) > 1
+      !Record.unique_hash?(hash)
     end
   end
 end

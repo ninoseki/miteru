@@ -28,7 +28,14 @@ module Miteru
     # @return [Boolean]
     attr_accessor :verbose
 
-    attr_reader :valid_extensions, :valid_mime_types
+    # @return [String]
+    attr_accessor :database
+
+    # @return [Array<String>]
+    attr_reader :valid_extensions
+
+    # @return [Array<String>]
+    attr_reader :valid_mime_types
 
     def initialize
       @auto_download = false
@@ -39,6 +46,7 @@ module Miteru
       @size = 100
       @threads = Parallel.processor_count
       @verbose = false
+      @database = ENV["MITERU_DATABASE"] || "miteru.db"
 
       @valid_extensions = [".zip", ".rar", ".7z", ".tar", ".gz"].freeze
       @valid_mime_types = ["application/zip", "application/vnd.rar", "application/x-7z-compressed", "application/x-tar", "application/gzip"]
