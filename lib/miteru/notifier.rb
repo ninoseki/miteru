@@ -11,7 +11,7 @@ module Miteru
 
       if post_to_slack? && kits.any?
         notifier = Slack::Notifier.new(slack_webhook_url, channel: slack_channel)
-        notifier.post(text: message, attachments: attachement.to_a)
+        notifier.post(text: message.capitalize, attachments: attachement.to_a)
       end
 
       message = message.colorize(:light_red) if kits.any?
