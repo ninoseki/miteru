@@ -7,6 +7,11 @@
 
 Miteru is an experimental phishing kit detection tool.
 
+## Disclaimer
+
+This tool is for research purposes only. The use of this tool is your responsibility.
+I take no responsibility and/or liability for how you choose to use this tool.
+
 ## How it works
 
 - It collects phishy URLs from the following feeds:
