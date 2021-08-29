@@ -22,12 +22,19 @@ module Miteru
 
     def download_kit(kit)
       destination = kit.filepath_to_download
+
       begin
         downloaded_as = HTTPClient.download(kit.url, destination)
-        hash = sha256(downloaded_as)
+      rescue Down::Error => e
+        puts "Failed to download: #{kit.url} (#{e})"
+        return
+      end
 
+      hash = sha256(downloaded_as)
+
+      ActiveRecord::Base.connection_pool.with_connection do
         # Remove a downloaded file if it is not unique
-        if duplicated?(hash)
+        unless Record.unique_hash?(hash)
           puts "Don't download #{kit.url}. The same hash is already recorded. (SHA256: #{hash})."
           FileUtils.rm downloaded_as
           return
@@ -36,8 +43,6 @@ module Miteru
         # Record a kit in DB
         Record.create_by_kit_and_hash(kit, hash)
         puts "Download #{kit.url} as #{downloaded_as}"
-      rescue Down::Error => e
-        puts "Failed to download: #{kit.url} (#{e})"
       end
     end
 
@@ -48,10 +53,6 @@ module Miteru
       hash = digest.hexdigest
       memo[path] = hash
       hash
-    end
-
-    def duplicated?(hash)
-      !Record.unique_hash?(hash)
     end
   end
 end
