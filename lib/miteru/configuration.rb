@@ -31,6 +31,12 @@ module Miteru
     # @return [String]
     attr_accessor :database
 
+    # @return [String, nil]
+    attr_accessor :slack_webhook_url
+
+    # @return [String]
+    attr_accessor :slack_channel
+
     # @return [Array<String>]
     attr_reader :valid_extensions
 
@@ -47,6 +53,9 @@ module Miteru
       @threads = Parallel.processor_count
       @verbose = false
       @database = ENV["MITERU_DATABASE"] || "miteru.db"
+
+      @slack_webhook_url = ENV["SLACK_WEBHOOK_URL"]
+      @slack_channel = ENV["SLACK_CHANNEL"] || "#general"
 
       @valid_extensions = [".zip", ".rar", ".7z", ".tar", ".gz"].freeze
       @valid_mime_types = ["application/zip", "application/vnd.rar", "application/x-7z-compressed", "application/x-tar", "application/gzip"]
@@ -70,6 +79,10 @@ module Miteru
 
     def verbose?
       @verbose
+    end
+
+    def slack_webhook_url?
+      @slack_webhook_url
     end
   end
 
