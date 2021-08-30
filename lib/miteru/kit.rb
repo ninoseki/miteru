@@ -45,8 +45,12 @@ module Miteru
       "#{base_dir}/#{filename_to_download}"
     end
 
+    def downloaded?
+      File.exist?(filepath_to_download)
+    end
+
     def filesize
-      return nil unless File.exist?(filepath_to_download)
+      return nil unless downloaded?
 
       File.size filepath_to_download
     end
@@ -54,7 +58,8 @@ module Miteru
     def filename_with_size
       return filename unless filesize
 
-      "#{filename}(#{filesize / 1024}KB)"
+      kb = (filesize.to_f / 1024.0).ceil
+      "#{filename}(#{kb}KB)"
     end
 
     def id

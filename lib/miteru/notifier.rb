@@ -7,7 +7,7 @@ module Miteru
   class Notifier
     def notify(url:, kits:, message:)
       attachement = Attachement.new(url)
-      kits = kits.select(&:filesize)
+      kits = kits.select(&:downloaded?)
 
       if notifiable? && kits.any?
         notifier = Slack::Notifier.new(Miteru.configuration.slack_webhook_url, channel: Miteru.configuration.slack_channel)
