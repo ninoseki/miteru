@@ -7,13 +7,13 @@ module Miteru
   class Feeds
     class Ayashige < Feed
       HOST = "ayashige.herokuapp.com"
-      URL = "https://#{HOST}".freeze
+      URL = "https://#{HOST}"
 
       def urls
-        url = url_for("/feed")
+        url = url_for("/api/v1/domains/")
         res = JSON.parse(get(url))
 
-        domains = res.map { |item| item["domain"] }
+        domains = res.map { |item| item["fqdn"] }
         domains.map do |domain|
           [
             "https://#{domain}",
