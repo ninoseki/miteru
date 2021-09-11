@@ -9,10 +9,27 @@ module Miteru
     VALID_EXTENSIONS = Miteru.configuration.valid_extensions
     VALID_MIME_TYPES = Miteru.configuration.valid_mime_types
 
-    attr_reader :url, :status, :content_length, :mime_type, :headers
+    # @return [String]
+    attr_reader :url
 
-    def initialize(url)
+    # @return [String]
+    attr_reader :source
+
+    # @return [Integer, nil]
+    attr_reader :status
+
+    # @return [Integer, nil]
+    attr_reader :content_length
+
+    # @return [String, nil]
+    attr_reader :mime_type
+
+    # @return [Hash, nil]
+    attr_reader :headers
+
+    def initialize(url, source)
       @url = url
+      @source = source
 
       @content_length = nil
       @mime_type = nil

@@ -3,53 +3,26 @@
 RSpec.describe Miteru::Feeds do
   subject { described_class }
 
-  describe "#breakdown" do
-    context "when given an url without path" do
-      it do
-        results = subject.new.breakdown("http://test.com")
-        expect(results).to be_an(Array)
-        expect(results.length).to eq(1)
-      end
-    end
-
-    context "when given an url with path" do
-      context "when disabling directory_traveling" do
-        it do
-          results = subject.new.breakdown("http://test.com/test/test/index.html")
-          expect(results).to be_an(Array)
-          expect(results.length).to eq(1)
-          expect(results.first).to eq("http://test.com")
-        end
-      end
-
-      context "when enabling directory_traveling" do
-        before do
-          allow(Miteru.configuration).to receive(:directory_traveling?).and_return(true)
-        end
-
-        it do
-          results = subject.new.breakdown("http://test.com/test/test/index.html")
-          expect(results).to eq(["http://test.com", "http://test.com/test", "http://test.com/test/test"])
-        end
-      end
-    end
-  end
-
-  describe "#suspicious_urls" do
+  describe "#suspicious_enrtries" do
     let(:url) { "http://sameurl.com" }
 
     before do
-      allow(Miteru::Feeds::UrlScan).to receive_message_chain(:new, :urls).and_return([url])
-      allow(Miteru::Feeds::UrlScanPro).to receive_message_chain(:new, :urls).and_return([url])
-      allow(Miteru::Feeds::Ayashige).to receive_message_chain(:new, :urls).and_return([url])
-      allow(Miteru::Feeds::PhishingDatabase).to receive_message_chain(:new, :urls).and_return([url])
-      allow(Miteru::Feeds::PhishStats).to receive_message_chain(:new, :urls).and_return([url])
+      entries = [
+        Miteru::Entry.new(url, "dummy")
+      ]
+      allow(Miteru::Feeds::UrlScan).to receive_message_chain(:new, :entries).and_return(entries)
+      allow(Miteru::Feeds::UrlScanPro).to receive_message_chain(:new, :entries).and_return(entries)
+      allow(Miteru::Feeds::Ayashige).to receive_message_chain(:new, :entries).and_return(entries)
+      allow(Miteru::Feeds::PhishingDatabase).to receive_message_chain(:new, :entries).and_return(entries)
+      allow(Miteru::Feeds::PhishStats).to receive_message_chain(:new, :entries).and_return(entries)
     end
 
     it "returns a unique array" do
-      results = subject.new.suspicious_urls
+      results = subject.new.suspicious_entries
+
       expect(results).to be_an(Array)
       expect(results.length).to eq(1)
+      expect(results.first.url).to eq(url)
     end
   end
 end

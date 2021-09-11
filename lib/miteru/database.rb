@@ -19,6 +19,12 @@ class InitialSchema < ActiveRecord::Migration[6.1]
   end
 end
 
+class V11Schema < ActiveRecord::Migration[6.1]
+  def change
+    add_column :records, :source, :string, if_not_exists: true
+  end
+end
+
 def adapter
   return "postgresql" if Miteru.configuration.database.start_with?("postgresql://", "postgres://")
   return "mysql2" if Miteru.configuration.database.start_with?("mysql2://")
@@ -44,6 +50,7 @@ module Miteru
         ActiveRecord::Migration.verbose = false
 
         InitialSchema.migrate(:up)
+        V11Schema.migrate(:up)
       rescue StandardError => _e
         # Do nothing
       end
@@ -57,6 +64,7 @@ module Miteru
         return unless ActiveRecord::Base.connected?
 
         InitialSchema.migrate(:down)
+        V11Schema.migrate(:down)
       end
     end
   end
