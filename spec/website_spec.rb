@@ -3,8 +3,8 @@
 RSpec.describe Miteru::Website do
   include_context "http_server"
 
-  let(:website_has_kit) { described_class.new "http://#{host}:#{port}/has_kit" }
-  let(:website_no_kit) { described_class.new "http://#{host}:#{port}/no_kit" }
+  let(:website_has_kit) { described_class.new("http://#{host}:#{port}/has_kit", "dummy") }
+  let(:website_no_kit) { described_class.new("http://#{host}:#{port}/no_kit", "dummy") }
 
   describe "#title" do
     it do

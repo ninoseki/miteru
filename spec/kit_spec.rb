@@ -3,7 +3,7 @@
 RSpec.describe Miteru::Kit do
   include_context "http_server"
 
-  subject { described_class.new(base_url + link) }
+  subject { described_class.new(base_url + link, "dummy") }
 
   let(:base_url) { "http://#{host}:#{port}" }
   let(:extname) { ".zip" }
@@ -53,7 +53,7 @@ RSpec.describe Miteru::Kit do
   end
 
   context "when given a URL encoded link" do
-    subject { described_class.new "#{base_url}/test%201.zip" }
+    subject { described_class.new("#{base_url}/test%201.zip", "dummy") }
 
     describe "#filename" do
       it do
@@ -63,7 +63,7 @@ RSpec.describe Miteru::Kit do
   end
 
   context "when given an index.html" do
-    subject { described_class.new "#{base_url}/index.html" }
+    subject { described_class.new("#{base_url}/index.html", "dummy") }
 
     describe "#valid?" do
       it do

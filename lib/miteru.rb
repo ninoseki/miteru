@@ -7,6 +7,8 @@ require "miteru/database"
 
 require "miteru/record"
 
+require "miteru/mixin"
+
 require "miteru/error"
 require "miteru/http_client"
 require "miteru/kit"

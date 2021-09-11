@@ -24,8 +24,8 @@ RSpec.describe Miteru::Downloader do
     context "when it runs once" do
       it "downloads a file" do
         kits = [
-          Miteru::Kit.new(url + "/test.zip"),
-          Miteru::Kit.new(url + "/test.tar.gz")
+          Miteru::Kit.new(url + "/test.zip", "dummy"),
+          Miteru::Kit.new(url + "/test.tar.gz", "dummy")
         ]
         # make validation to set attrs
         kits.each(&:valid?)
@@ -51,8 +51,8 @@ RSpec.describe Miteru::Downloader do
     context "when it runs multiple times" do
       it "removes duplicated files" do
         kits = [
-          Miteru::Kit.new(url + "/test.zip"),
-          Miteru::Kit.new(url + "/test.zip")
+          Miteru::Kit.new(url + "/test.zip", "dummy"),
+          Miteru::Kit.new(url + "/test.zip", "dummy")
         ]
         # make validation to set attrs
         kits.each(&:valid?)

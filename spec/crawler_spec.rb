@@ -9,7 +9,7 @@ RSpec.describe Miteru::Crawler do
   describe ".execute" do
     before do
       feeds = double("feeds")
-      allow(feeds).to receive(:suspicious_urls).and_return(["http://#{host}:#{port}/has_kit"])
+      allow(feeds).to receive(:suspicious_entries).and_return([Miteru::Entry.new("http://#{host}:#{port}/has_kit", "dummy")])
       allow(Miteru::Feeds).to receive(:new).and_return(feeds)
 
       allow(Miteru.configuration).to receive(:threads).and_return(0)

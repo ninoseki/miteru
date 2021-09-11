@@ -6,10 +6,15 @@ module Miteru
   class Website
     VALID_EXTENSIONS = Miteru.configuration.valid_extensions
 
+    # @return [String]
     attr_reader :url
 
-    def initialize(url)
+    # @return [String]
+    attr_reader :source
+
+    def initialize(url, source)
       @url = url
+      @source = source
     end
 
     def title
@@ -18,7 +23,7 @@ module Miteru
 
     def kits
       @kits ||= links.filter_map do |link|
-        kit = Kit.new(link)
+        kit = Kit.new(link, source)
         kit.valid? ? kit : nil
       end
     end

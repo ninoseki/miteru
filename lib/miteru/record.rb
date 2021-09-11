@@ -30,6 +30,7 @@ module Miteru
       def create_by_kit_and_hash(kit, hash)
         record = new(
           hash: hash,
+          source: kit.source,
           hostname: kit.hostname,
           url: kit.decoded_url,
           headers: kit.headers,

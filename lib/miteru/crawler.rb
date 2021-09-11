@@ -14,8 +14,8 @@ module Miteru
       @notifier = Notifier.new
     end
 
-    def crawl(url)
-      website = Website.new(url)
+    def crawl(entry)
+      website = Website.new(entry.url, entry.source)
       downloader.download_kits(website.kits) if website.has_kits? && auto_download?
       notify(website) if website.has_kits? || verbose?
     rescue OpenSSL::SSL::SSLError, HTTP::Error, Addressable::URI::InvalidURIError => _e
@@ -23,11 +23,11 @@ module Miteru
     end
 
     def execute
-      suspicious_urls = feeds.suspicious_urls
-      puts "Loaded #{suspicious_urls.length} URLs to crawl. (crawling in #{threads} threads)" if verbose?
+      suspicious_entries = feeds.suspicious_entries
+      puts "Loaded #{suspicious_entries.length} URLs to crawl. (crawling in #{threads} threads)" if verbose?
 
-      Parallel.each(suspicious_urls, in_threads: threads) do |url|
-        crawl url
+      Parallel.each(suspicious_entries, in_threads: threads) do |entry|
+        crawl entry
       end
     end
 
