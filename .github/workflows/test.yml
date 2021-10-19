@@ -52,8 +52,6 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get -yqq install libpq-dev libmysqlclient-dev
-          gem install bundler
-          bundle install
 
       - name: Test with PostgreSQL
         env:
