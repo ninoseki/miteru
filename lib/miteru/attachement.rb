@@ -47,7 +47,7 @@ module Miteru
     end
 
     def defanged_url
-      @defanged_url ||= url.to_s.gsub /\./, "[.]"
+      @defanged_url ||= url.to_s.gsub(/\./, "[.]")
     end
 
     def domain

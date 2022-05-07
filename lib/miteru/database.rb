@@ -2,7 +2,7 @@
 
 require "active_record"
 
-class InitialSchema < ActiveRecord::Migration[6.1]
+class InitialSchema < ActiveRecord::Migration[7.0]
   def change
     create_table :records, if_not_exists: true do |t|
       t.string :hash, null: false, index: { unique: true }
@@ -19,7 +19,7 @@ class InitialSchema < ActiveRecord::Migration[6.1]
   end
 end
 
-class V11Schema < ActiveRecord::Migration[6.1]
+class V11Schema < ActiveRecord::Migration[7.0]
   def change
     add_column :records, :source, :string, if_not_exists: true
   end
