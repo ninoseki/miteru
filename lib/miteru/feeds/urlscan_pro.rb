@@ -12,7 +12,7 @@ module Miteru
       def urls
         urls_from_pro_feed
       rescue ::UrlScan::ResponseError => e
-        puts "Failed to load urlscan.io pro feed (#{e})"
+        Miteru.logger.error "Failed to load urlscan.io pro feed (#{e})"
         []
       end
 

@@ -18,7 +18,7 @@ module Miteru
         end
 
         message = kits.any? ? website.message.colorize(:light_red) : website.message
-        puts "#{website.url}: #{message}"
+        Miteru.logger.info "#{website.url}: #{message}"
       end
 
       def notifiable?

@@ -23,7 +23,7 @@ module Miteru
 
     def execute
       suspicious_entries = feeds.suspicious_entries
-      puts "Loaded #{suspicious_entries.length} URLs to crawl. (crawling in #{threads} threads)" if verbose?
+      Miteru.logger.info "Loaded #{suspicious_entries.length} URLs to crawl. (crawling in #{threads} threads)" if verbose?
 
       Parallel.each(suspicious_entries, in_threads: threads) do |entry|
         crawl entry

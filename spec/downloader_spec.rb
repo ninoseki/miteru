@@ -7,9 +7,19 @@ RSpec.describe Miteru::Downloader do
   describe "#download_kits" do
     subject { described_class.new(base_dir) }
 
+    let(:sio) { StringIO.new }
+
+    let(:logger) do
+      SemanticLogger.default_level = :info
+      SemanticLogger.add_appender(io: sio, formatter: :color)
+      SemanticLogger["Miteru"]
+    end
+
     before do
       WebMock.disable!
       Miteru.configuration.download_to = base_dir
+
+      allow(Miteru).to receive(:logger).and_return(logger)
     end
 
     after do
@@ -32,7 +42,13 @@ RSpec.describe Miteru::Downloader do
 
         expect(Dir.glob("#{base_dir}/*.zip").empty?).to be(true)
 
-        out = capture(:stdout) { subject.download_kits(kits) }
+        subject.download_kits(kits)
+
+        # read logger output
+        SemanticLogger.flush
+        sio.rewind
+        out = sio.read
+
         lines = out.split("\n")
         expect(lines.length).to eq(2)
         expect(lines.first.end_with?(".zip")).to be(true)
@@ -59,7 +75,7 @@ RSpec.describe Miteru::Downloader do
 
         expect(Dir.glob("#{base_dir}/*.zip").empty?).to be(true)
 
-        _out = capture(:stdout) { subject.download_kits(kits) }
+        subject.download_kits(kits)
 
         download_files = Dir.glob("#{base_dir}/*.zip")
         expect(download_files.empty?).to be(false)
