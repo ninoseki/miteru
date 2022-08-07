@@ -40,6 +40,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "activerecord", "~> 7.0"
   spec.add_dependency "colorize", "~> 0.8"
+  spec.add_dependency "dotenv", "2.8.1"
   spec.add_dependency "down", "~> 5.3"
   spec.add_dependency "http", "~> 5.1"
   spec.add_dependency "memist", "2.0.2"

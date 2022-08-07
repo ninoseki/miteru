@@ -26,6 +26,9 @@ require "miteru/attachement"
 require "miteru/crawler"
 require "miteru/cli"
 
+# Load .env
+require "dotenv/load"
+
 module Miteru
   class << self
     include Memist::Memoizable
