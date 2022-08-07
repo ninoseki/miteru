@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require "memist"
+require "semantic_logger"
+
 require "miteru/version"
 
 require "miteru/configuration"
@@ -23,4 +26,14 @@ require "miteru/attachement"
 require "miteru/crawler"
 require "miteru/cli"
 
-module Miteru; end
+module Miteru
+  class << self
+    include Memist::Memoizable
+    def logger
+      SemanticLogger.default_level = :info
+      SemanticLogger.add_appender(io: $stderr, formatter: :color)
+      SemanticLogger["Miteru"]
+    end
+    memoize :logger
+  end
+end

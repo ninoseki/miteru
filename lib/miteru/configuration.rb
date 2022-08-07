@@ -49,6 +49,9 @@ module Miteru
     # @return [Array<String>]
     attr_reader :valid_mime_types
 
+    # @return [Integer]
+    attr_reader :file_maxsize
+
     def initialize
       @auto_download = false
       @ayashige = false
@@ -59,6 +62,7 @@ module Miteru
       @threads = Parallel.processor_count
       @verbose = false
       @database = ENV.fetch("MITERU_DATABASE", "miteru.db")
+      @file_maxsize = ENV.fetch("FILE_MAXSIZE", 1024 * 1024 * 100).to_i
 
       @slack_webhook_url = ENV.fetch("SLACK_WEBHOOK_URL", nil)
       @slack_channel = ENV.fetch("SLACK_CHANNEL", "#general")
