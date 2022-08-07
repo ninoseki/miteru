@@ -11,7 +11,6 @@ module Miteru
     def initialize
       @downloader = Downloader.new(Miteru.configuration.download_to)
       @feeds = Feeds.new
-      @notifier = Notifier.new
     end
 
     def crawl(entry)
@@ -36,7 +35,9 @@ module Miteru
     end
 
     def notify(website)
-      @notifier.notify(url: website.url, kits: website.kits, message: website.message)
+      Parallel.each(notifiers) do |notifier|
+        notifier.notify website
+      end
     end
 
     def auto_download?
@@ -45,6 +46,12 @@ module Miteru
 
     def verbose?
       Miteru.configuration.verbose?
+    end
+
+    private
+
+    def notifiers
+      @notifiers ||= [Notifiers::Slack.new, Notifiers::UrlScan.new].select(&:notifiable?)
     end
 
     class << self

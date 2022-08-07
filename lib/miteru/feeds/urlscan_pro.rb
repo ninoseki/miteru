@@ -6,7 +6,7 @@ module Miteru
   class Feeds
     class UrlScanPro < Feed
       def api
-        @api ||= ::UrlScan::API.new
+        @api ||= ::UrlScan::API.new(Miteru.configuration.urlscan_api_key)
       end
 
       def urls
@@ -19,7 +19,7 @@ module Miteru
       private
 
       def api_key?
-        ENV.key? "URLSCAN_API_KEY"
+        Miteru.configuration.urlscan_api_key?
       end
 
       def urls_from_pro_feed
