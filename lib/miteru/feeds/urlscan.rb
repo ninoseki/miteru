@@ -13,7 +13,7 @@ module Miteru
       end
 
       def api
-        @api ||= ::UrlScan::API.new
+        @api ||= ::UrlScan::API.new(Miteru.configuration.urlscan_api_key)
       end
 
       def urls

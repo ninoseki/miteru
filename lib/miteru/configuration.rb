@@ -37,6 +37,12 @@ module Miteru
     # @return [String]
     attr_accessor :slack_channel
 
+    # @return [String]
+    attr_accessor :urlscan_api_key
+
+    # @return [String]
+    attr_accessor :urlscan_submit_visibility
+
     # @return [Array<String>]
     attr_reader :valid_extensions
 
@@ -52,10 +58,13 @@ module Miteru
       @size = 100
       @threads = Parallel.processor_count
       @verbose = false
-      @database = ENV["MITERU_DATABASE"] || "miteru.db"
+      @database = ENV.fetch("MITERU_DATABASE", "miteru.db")
 
-      @slack_webhook_url = ENV["SLACK_WEBHOOK_URL"]
-      @slack_channel = ENV["SLACK_CHANNEL"] || "#general"
+      @slack_webhook_url = ENV.fetch("SLACK_WEBHOOK_URL", nil)
+      @slack_channel = ENV.fetch("SLACK_CHANNEL", "#general")
+
+      @urlscan_api_key = ENV.fetch("URLSCAN_API_KEY", nil)
+      @urlscan_submit_visibility = ENV.fetch("URLSCAN_SUBMIT_VISIBILITY", "public")
 
       @valid_extensions = [".zip", ".rar", ".7z", ".tar", ".gz"].freeze
       @valid_mime_types = ["application/zip", "application/vnd.rar", "application/x-7z-compressed", "application/x-tar", "application/gzip"]
@@ -82,7 +91,11 @@ module Miteru
     end
 
     def slack_webhook_url?
-      @slack_webhook_url
+      !@slack_webhook_url.nil?
+    end
+
+    def urlscan_api_key?
+      !@urlscan_api_key.nil?
     end
   end
 
