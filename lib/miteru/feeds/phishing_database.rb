@@ -12,7 +12,7 @@ module Miteru
         body = get(URL)
         body.to_s.lines.map(&:chomp)
       rescue HTTPResponseError, HTTP::Error, JSON::ParserError => e
-        puts "Failed to load phishing database feed (#{e})"
+        info "Failed to load phishing database feed (#{e})"
         []
       end
     end

@@ -14,7 +14,7 @@ module Miteru
           entry["url"]
         end
       rescue HTTPResponseError, HTTP::Error, JSON::ParserError => e
-        puts "Failed to load PhishStats feed (#{e})"
+        Miteru.logger.error "Failed to load PhishStats feed (#{e})"
         []
       end
 

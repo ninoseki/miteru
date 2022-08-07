@@ -9,6 +9,7 @@ Gem::Specification.new do |spec|
   spec.version = Miteru::VERSION
   spec.authors = ["Manabu Niseki"]
   spec.email = ["manabu.niseki@gmail.com"]
+  spec.metadata["rubygems_mfa_required"] = "true"
 
   spec.summary = "An experimental phishing kit detector"
   spec.description = "An experimental phishing kit detector"
@@ -41,8 +42,10 @@ Gem::Specification.new do |spec|
   spec.add_dependency "colorize", "~> 0.8"
   spec.add_dependency "down", "~> 5.3"
   spec.add_dependency "http", "~> 5.1"
+  spec.add_dependency "memist", "2.0.2"
   spec.add_dependency "oga", "~> 3.4"
   spec.add_dependency "parallel", "~> 1.22"
+  spec.add_dependency "semantic_logger", "4.11.0"
   spec.add_dependency "slack-notifier", "~> 2.4"
   spec.add_dependency "sqlite3", "~> 1.4"
   spec.add_dependency "thor", "~> 1.2"

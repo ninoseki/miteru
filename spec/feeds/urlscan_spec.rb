@@ -3,6 +3,14 @@
 RSpec.describe Miteru::Feeds::UrlScan, :vcr do
   subject { described_class }
 
+  let(:sio) { StringIO.new }
+
+  let(:logger) do
+    SemanticLogger.default_level = :info
+    SemanticLogger.add_appender(io: sio, formatter: :color)
+    SemanticLogger["Miteru"]
+  end
+
   context "without 'size' option" do
     it do
       results = subject.new.urls
@@ -27,11 +35,20 @@ RSpec.describe Miteru::Feeds::UrlScan, :vcr do
     end
 
     context "when an error is raised" do
-      before { allow(UrlScan::API).to receive(:new).and_raise(UrlScan::ResponseError, "test") }
+      before do
+        allow(UrlScan::API).to receive(:new).and_raise(UrlScan::ResponseError, "test")
+        allow(Miteru).to receive(:logger).and_return(logger)
+      end
 
       it do
-        message = capture(:stdout) { subject.new.urls }
-        expect(message).to eq("Failed to load urlscan.io feed (test)\n")
+        subject.new.urls
+
+        # read logger output
+        SemanticLogger.flush
+        sio.rewind
+        out = sio.read
+
+        expect(out).to include("Failed to load urlscan.io feed (test)\n")
       end
     end
   end

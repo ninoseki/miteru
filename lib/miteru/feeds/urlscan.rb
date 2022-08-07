@@ -19,7 +19,7 @@ module Miteru
       def urls
         urls_from_community_feed
       rescue ::UrlScan::ResponseError => e
-        puts "Failed to load urlscan.io feed (#{e})"
+        Miteru.logger.error "Failed to load urlscan.io feed (#{e})"
         []
       end
 

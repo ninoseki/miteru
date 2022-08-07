@@ -21,7 +21,7 @@ module Miteru
           ]
         end.flatten
       rescue HTTPResponseError, HTTP::Error, JSON::ParserError => e
-        puts "Failed to load ayashige feed (#{e})"
+        Miteru.logger.error "Failed to load ayashige feed (#{e})"
         []
       end
 
