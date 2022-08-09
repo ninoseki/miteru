@@ -26,7 +26,7 @@ module Miteru
       end
 
       def notifier
-        Slack::Notifier.new(Miteru.configuration.slack_webhook_url, channel: Miteru.configuration.slack_channel)
+        ::Slack::Notifier.new(Miteru.configuration.slack_webhook_url, channel: Miteru.configuration.slack_channel)
       end
     end
   end
