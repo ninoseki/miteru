@@ -31,9 +31,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'fuubar', '~> 2.5'
   spec.add_development_dependency 'mysql2', '~> 0.5'
   spec.add_development_dependency 'pg', '~> 1.5'
-
   spec.add_development_dependency 'rake', '~> 13.1'
   spec.add_development_dependency 'rspec', '~> 3.12'
+  spec.add_development_dependency 'simplecov-lcov', '~> 0.8'
   spec.add_development_dependency 'standard', '~> 1.33'
   spec.add_development_dependency 'test-prof', '~> 1.3'
   spec.add_development_dependency 'vcr', '~> 6.2'
