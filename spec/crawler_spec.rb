@@ -1,22 +1,15 @@
 # frozen_string_literal: true
 
 RSpec.describe Miteru::Crawler do
-  include_context "http_server"
-  include_context "download_kits"
+  include_context "with fake HTTP server"
+  include_context "with mocked logger"
 
-  before { allow(ENV).to receive(:[]).with("SLACK_WEBHOOK_URL").and_return(nil) }
+  subject(:crawler) { described_class.new }
+  let!(:website) { Miteru::Website.new("#{server.base_url}/has_kit", source: "dummy") }
 
-  describe ".execute" do
-    before do
-      feeds = double("feeds")
-      allow(feeds).to receive(:suspicious_entries).and_return([Miteru::Entry.new("http://#{host}:#{port}/has_kit", "dummy")])
-      allow(Miteru::Feeds).to receive(:new).and_return(feeds)
-
-      allow(Miteru.configuration).to receive(:threads).and_return(0)
-    end
-
+  describe "#call" do
     it do
-      capture(:stdout) { expect { described_class.execute }.not_to raise_error }
+      expect { crawler.call(website) }.not_to raise_error
     end
   end
 end

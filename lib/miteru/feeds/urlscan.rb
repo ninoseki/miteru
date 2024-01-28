@@ -1,35 +1,63 @@
 # frozen_string_literal: true
 
-require "urlscan"
-
 module Miteru
   class Feeds
-    class UrlScan < Feed
-      attr_reader :size
+    class UrlScan < Base
+      #
+      # @param [String] base_url
+      #
+      def initialize(base_url = "https://urlscan.io")
+        super(base_url)
 
-      def initialize(size = 100)
-        @size = size
-        raise ArgumentError, "size must be less than 10,000" if size > 10_000
-      end
-
-      def api
-        @api ||= ::UrlScan::API.new(Miteru.configuration.urlscan_api_key)
+        @headers = {"api-key": api_key}
       end
 
       def urls
-        urls_from_community_feed
-      rescue ::UrlScan::ResponseError => e
-        Miteru.logger.error "Failed to load urlscan.io feed (#{e})"
-        []
+        search_with_pagination.flat_map do |json|
+          (json["results"] || []).map { |result| result.dig("task", "url") }
+        end.uniq
       end
 
       private
 
-      def urls_from_community_feed
-        res = api.search("task.method:automatic", size: size)
+      def size
+        10_000
+      end
 
-        results = res["results"] || []
-        results.map { |result| result.dig("task", "url") }
+      # @return [<Type>] <description>
+      #
+      def api_key
+        Miteru.config.urlscan_api_key
+      end
+
+      def q
+        "task.method:automatic AND date:#{Miteru.config.urlscan_date_condition}"
+      end
+
+      #
+      # @param [String, nil] search_after
+      #
+      # @return [Hash]
+      #
+      def search(search_after: nil)
+        get_json("/api/v1/search/", params: {q:, size:, search_after:}.compact)
+      end
+
+      def search_with_pagination
+        search_after = nil
+
+        Enumerator.new do |y|
+          loop do
+            res = search(search_after:)
+
+            y.yield res
+
+            has_more = res["has_more"]
+            break unless has_more
+
+            search_after = res["results"].last["sort"].join(",")
+          end
+        end
       end
     end
   end

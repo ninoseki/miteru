@@ -1,36 +1,51 @@
 # frozen_string_literal: true
 
-require "urlscan"
-
 module Miteru
   module Notifiers
     class UrlScan < Base
       #
-      # Notifiy to urlscan.io
+      # @param [Miteru::Website] website
       #
-      # @param [Miteru::Website website
-      #
-      def notify(website)
+      def call(website)
+        return unless callable?
+
         kits = website.kits.select(&:downloaded?)
-        return unless notifiable? && kits.any?
+        return unless kits.any?
 
         kits.each { |kit| submit(kit.url) }
       end
 
-      def notifiable?
-        Miteru.configuration.urlscan_api_key?
+      def callable?
+        !Miteru.config.urlscan_api_key.nil?
       end
 
       private
 
-      def api
-        @api ||= ::UrlScan::API.new(Miteru.configuration.urlscan_api_key)
+      #
+      # @return [::HTTP::Client]
+      #
+      def http
+        @http ||= HTTP::Factory.build(headers:, timeout:)
+      end
+
+      def headers
+        {"api-key": Miteru.config.urlscan_api_key}
+      end
+
+      def timeout
+        Miteru.config.timeout
+      end
+
+      def tags
+        %w[miteru phishkit]
+      end
+
+      def visibility
+        Miteru.config.urlscan_submit_visibility
       end
 
       def submit(url)
-        api.submit(url, tags: ["miteru", "phishkit"], visibility: Miteru.configuration.urlscan_submit_visibility)
-      rescue StandardError
-        # do nothing
+        http.post("/api/v1/scan/", json: {tags:, visibility:, url:})
       end
     end
   end

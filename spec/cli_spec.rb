@@ -1,17 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe Miteru::CLI do
+RSpec.describe Miteru::CLI::App do
   subject { described_class.new }
-
-  describe "#execute" do
-    before do
-      allow(Miteru::Feeds).to receive_message_chain(:new, :suspicious_entries).and_return([Miteru::Entry.new("http://#{host}:#{port}/has_kit", "dummy")])
-    end
-
-    it "does not raise any error" do
-      capture(:stdout) { described_class.start %w[execute] }
-    end
-  end
 
   describe ".exit_on_failure?" do
     it do

@@ -3,16 +3,20 @@
 require "oga"
 
 module Miteru
-  class Website
-    VALID_EXTENSIONS = Miteru.configuration.valid_extensions
-
+  class Website < Service
     # @return [String]
     attr_reader :url
 
     # @return [String]
     attr_reader :source
 
-    def initialize(url, source)
+    #
+    # @param [String] url
+    # @param [String] source
+    #
+    def initialize(url, source:)
+      super()
+
       @url = url
       @source = source
     end
@@ -22,86 +26,82 @@ module Miteru
     end
 
     def kits
-      @kits ||= links.filter_map do |link|
-        kit = Kit.new(link, source)
-        kit.valid? ? kit : nil
-      end
-    end
-
-    def ok?
-      response.code == 200
+      @kits ||= links.map { |link| Kit.new(link, source:) }.select(&:valid?)
     end
 
     def index?
       title.to_s.start_with? "Index of"
     end
 
-    def kits?
-      !kits.empty?
-    end
-
     def has_kits?
-      kits?
-    rescue Addressable::URI::InvalidURIError, ArgumentError, Encoding::CompatibilityError, HTTP::Error, LL::ParserError, OpenSSL::SSL::SSLError => _e
-      false
-    end
-
-    def message
-      return "it doesn't contain a phishing kit." unless kits?
-
-      filename_with_sizes = kits.map(&:filename_with_size).join(", ")
-      noun = kits.length == 1 ? "a phishing kit" : "phishing kits"
-      "it might contain #{noun}: #{filename_with_sizes}."
+      @has_kits ||= lambda do
+        Try[Addressable::URI::InvalidURIError, Encoding::CompatibilityError, ::HTTP::Error, LL::ParserError,
+          OpenSSL::SSL::SSLError, StatusError, ArgumentError] do
+          !kits.empty?
+        end.recover do
+          false
+        end.value!
+      end.call
     end
 
     def links
       (href_links + possible_file_links).compact.uniq
     end
 
+    #
+    # @return [String]
+    #
+    def truncated_url
+      url.truncate(64)
+    end
+
     private
+
+    def timeout
+      Miteru.config.http_timeout
+    end
+
+    def http
+      @http ||= HTTP::Factory.build(timeout:)
+    end
+
+    def get
+      http.get url
+    end
 
     def response
       @response ||= get
     end
 
-    def get
-      HTTPClient.get url
-    end
-
     def doc
-      @doc ||= parse_html(response.body.to_s)
-    end
-
-    def parse_html(html)
-      Oga.parse_html(html)
-    rescue ArgumentError, Encoding::CompatibilityError, LL::ParserError => _e
-      nil
+      Oga.parse_html response.body.to_s
     end
 
     def href_links
-      if doc && ok? && index?
+      Try[Addressable::URI::InvalidURIError, Encoding::CompatibilityError, ::HTTP::Error, LL::ParserError,
+        OpenSSL::SSL::SSLError, StatusError, ArgumentError] do
         doc.css("a").filter_map { |a| a.get("href") }.map do |href|
           href = href.start_with?("/") ? href : "/#{href}"
           url + href
         end
-      else
-        []
-      end
-    rescue Addressable::URI::InvalidURIError, ArgumentError, Encoding::CompatibilityError, HTTP::Error, LL::ParserError, OpenSSL::SSL::SSLError => _e
-      []
+      end.recover { [] }.value!
+    end
+
+    def file_extensions
+      Miteru.config.file_extensions
     end
 
     def possible_file_links
-      uri = URI.parse(url)
+      parsed = URI.parse(url)
 
-      segments = uri.path.split("/")
-      return [] if segments.length.zero?
+      segments = parsed.path.split("/")
+      return [] if segments.empty?
 
       last = segments.last
-      VALID_EXTENSIONS.map do |ext|
+      file_extensions.map do |ext|
         new_segments = segments[0..-2] + ["#{last}#{ext}"]
-        uri.path = new_segments.join("/")
-        uri.to_s
+        parsed.path = new_segments.join("/")
+        parsed.to_s
       end
     end
   end

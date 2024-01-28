@@ -1,0 +1,13 @@
+[Unit]
+Description=Miteru Sidekiq
+After=network.target
+
+[Service]
+Type=simple
+User=ninoseki
+WorkingDirectory=/opt/jsac_mihari_workshop
+ExecStart=/usr/bin/npx
+Restart=on-failure
+
+[Install]
+WantedBy = multi-user.target

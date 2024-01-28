@@ -1,63 +1,47 @@
 # frozen_string_literal: true
 
-require "colorize"
-require "parallel"
-require "uri"
-
 module Miteru
-  class Crawler
-    attr_reader :downloader, :feeds
+  class Crawler < Service
+    #
+    # @param [Miteru::Website] website
+    #
+    def call(website)
+      Try[OpenSSL::SSL::SSLError, ::HTTP::Error, Addressable::URI::InvalidURIError] do
+        Miteru.logger.info("Website:#{website.truncated_url} has #{website.kits.length} kit(s).")
+        return unless website.has_kits?
 
-    def initialize
-      @downloader = Downloader.new(Miteru.configuration.download_to)
-      @feeds = Feeds.new
-    end
+        notify website
 
-    def crawl(entry)
-      website = Website.new(entry.url, entry.source)
-      downloader.download_kits(website.kits) if website.has_kits? && auto_download?
-      notify(website) if website.has_kits? || verbose?
-    rescue OpenSSL::SSL::SSLError, HTTP::Error, Addressable::URI::InvalidURIError => _e
-      nil
-    end
+        return unless auto_download?
 
-    def execute
-      suspicious_entries = feeds.suspicious_entries
-      Miteru.logger.info "Loaded #{suspicious_entries.length} URLs to crawl. (crawling in #{threads} threads)" if verbose?
+        website.kits.each do |kit|
+          downloader = Downloader.new(kit)
+          result = downloader.result
 
-      Parallel.each(suspicious_entries, in_threads: threads) do |entry|
-        crawl entry
-      end
-    end
-
-    def threads
-      @threads ||= Miteru.configuration.threads
-    end
-
-    def notify(website)
-      Parallel.each(notifiers) do |notifier|
-        notifier.notify website
-      end
-    end
-
-    def auto_download?
-      Miteru.configuration.auto_download?
-    end
-
-    def verbose?
-      Miteru.configuration.verbose?
+          if result.success?
+            Miteru.logger.info("Kit:#{kit.truncated_url} downloaded as #{result.value!}")
+          else
+            Miteru.logger.warn("Kit:#{kit.truncated_url} failed to download - #{result.failure}")
+          end
+        end
+      end.recover { nil }.value!
     end
 
     private
 
-    def notifiers
-      @notifiers ||= [Notifiers::Slack.new, Notifiers::UrlScan.new].select(&:notifiable?)
+    def auto_download?
+      Miteru.config.auto_download
     end
 
-    class << self
-      def execute
-        new.execute
-      end
+    def notify(website)
+      Parallel.each(notifiers) { |notifier| notifier.call(website) }
+    end
+
+    #
+    # @return [Array<Miteru::Notifiers::Base>]
+    #
+    def notifiers
+      @notifiers ||= Miteru.notifiers.map(&:new)
     end
   end
 end

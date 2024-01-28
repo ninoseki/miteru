@@ -3,7 +3,7 @@
 
 $LOAD_PATH.unshift("#{__dir__}/../lib")
 
-require "miteru"
+require 'miteru'
 
-ARGV.unshift(Miteru::CLI.default_task) unless Miteru::CLI.all_tasks.key?(ARGV[0])
-Miteru::CLI.start(ARGV)
+ARGV.unshift(Miteru::CLI::App.default_task) unless Miteru::CLI::App.all_tasks.key?(ARGV[0])
+Miteru::CLI::App.start(ARGV)

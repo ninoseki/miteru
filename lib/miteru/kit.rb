@@ -1,14 +1,7 @@
 # frozen_string_literal: true
 
-require "cgi"
-require "uuidtools"
-require "uri"
-
 module Miteru
-  class Kit
-    VALID_EXTENSIONS = Miteru.configuration.valid_extensions
-    VALID_MIME_TYPES = Miteru.configuration.valid_mime_types
-
+  class Kit < Service
     # @return [String]
     attr_reader :url
 
@@ -27,7 +20,11 @@ module Miteru
     # @return [Hash, nil]
     attr_reader :headers
 
-    def initialize(url, source)
+    #
+    # @param [String] url
+    # @param [String] source
+    #
+    def initialize(url, source:)
       @url = url
       @source = source
 
@@ -91,6 +88,13 @@ module Miteru
       @decoded_url ||= URI.decode_www_form_component(url)
     end
 
+    #
+    # @return [String]
+    #
+    def truncated_url
+      url.truncate(64)
+    end
+
     private
 
     def filename_to_download
@@ -98,21 +102,25 @@ module Miteru
     end
 
     def base_dir
-      @base_dir ||= Miteru.configuration.download_to
+      @base_dir ||= Miteru.config.download_to
     end
 
     def valid_ext?
-      VALID_EXTENSIONS.include? extname
+      Miteru.config.file_extensions.include? extname
+    end
+
+    def http
+      HTTP::Factory.build
     end
 
     def before_validation
-      res = HTTPClient.head(url)
-      @content_length = res.content_length
-      @mime_type = res.content_type.mime_type.to_s
-      @status = res.status
-      @headers = res.headers.to_h
-    rescue StandardError
-      # do nothing
+      Try[StandardError] do
+        res = http.head(url)
+        @content_length = res.content_length
+        @mime_type = res.content_type.mime_type.to_s
+        @status = res.status
+        @headers = res.headers.to_h
+      end.recover { nil }.value!
     end
 
     def reachable?
@@ -120,11 +128,11 @@ module Miteru
     end
 
     def valid_mime_type?
-      VALID_MIME_TYPES.include? mime_type
+      Miteru.config.file_mime_types.include? mime_type
     end
 
     def valid_content_length?
-      content_length.to_i > 0
+      content_length.to_i.positive?
     end
   end
 end

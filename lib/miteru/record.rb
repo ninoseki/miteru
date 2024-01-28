@@ -1,35 +1,27 @@
 # frozen_string_literal: true
 
-require "active_record"
-
 module Miteru
   class Record < ActiveRecord::Base
     class << self
       #
-      # Check uniqueness of a record by a hash
-      #
-      # @param [String] hash
+      # @param [String] sha256
       #
       # @return [Boolean] true if it is unique. Otherwise false.
       #
-      def unique_hash?(hash)
-        record = find_by(hash: hash)
-        return true if record.nil?
-
-        false
+      def unique_sha256?(sha256)
+        !where(sha256:).exists?
       end
 
       #
       # Create a new record based on a kit
       #
       # @param [Miteru::Kit] kit
-      # @param [String] hash
+      # @param [String] sha256
       #
       # @return [Miteru::Record]
       #
-      def create_by_kit_and_hash(kit, hash)
+      def create_by_kit_and_hash(kit, sha256:)
         record = new(
-          hash: hash,
           source: kit.source,
           hostname: kit.hostname,
           url: kit.decoded_url,
@@ -37,11 +29,12 @@ module Miteru
           filename: kit.filename,
           filesize: kit.filesize,
           mime_type: kit.mime_type,
-          downloaded_as: kit.filepath_to_download
+          downloaded_as: kit.filepath_to_download,
+          sha256:
         )
         record.save
         record
-      rescue TypeError, ActiveRecord::RecordNotUnique => _e
+      rescue TypeError, ActiveRecord::RecordNotUnique
         nil
       end
     end
