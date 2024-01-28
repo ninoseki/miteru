@@ -6,10 +6,17 @@ module Miteru
       Miteru.logger.info("#{websites.length} websites loaded in total.") if verbose?
 
       if Miteru.sidekiq?
-        websites.each { |website| Jobs::CrawleJob.perform_async(website.url, website.source) }
+
+        websites.each do |website|
+          Jobs::CrawleJob.perform_async(website.url, website.source)
+          Miteru.logger.info("Website:#{website.truncated_url} crawler job queued") if verbose?
+        end
       else
         Miteru.logger.info("Use #{threads} thread(s).") if verbose?
-        Parallel.each(websites, in_threads: threads) { |website| crawl(website) }
+        Parallel.each(websites, in_threads: threads) do |website|
+          Miteru.logger.info("Website:#{website.truncated_url} crawling started") if verbose?
+          crawl(website)
+        end
       end
     end
 
