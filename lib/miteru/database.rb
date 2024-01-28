@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require "active_record"
-
-class InitialSchema < ActiveRecord::Migration[7.0]
+class V2Schema < ActiveRecord::Migration[7.0]
   def change
     create_table :records, if_not_exists: true do |t|
-      t.string :hash, null: false, index: { unique: true }
+      t.string :sha256, null: false, index: {unique: true}
       t.string :hostname, null: false
       t.json :headers, null: false
       t.text :filename, null: false
@@ -13,61 +11,75 @@ class InitialSchema < ActiveRecord::Migration[7.0]
       t.integer :filesize, null: false
       t.string :mime_type, null: false
       t.text :url, null: false
+      t.string :source, null: false
 
       t.timestamps
     end
   end
 end
 
-class V11Schema < ActiveRecord::Migration[7.0]
-  def change
-    add_column :records, :source, :string, if_not_exists: true
-  end
-end
-
-def adapter
-  return "postgresql" if Miteru.configuration.database.start_with?("postgresql://", "postgres://")
-  return "mysql2" if Miteru.configuration.database.start_with?("mysql2://")
-
-  "sqlite3"
+#
+# @return [Array<ActiveRecord::Migration>] schemas
+#
+def schemas
+  [V2Schema]
 end
 
 module Miteru
   class Database
     class << self
+      #
+      # DB migration
+      #
+      # @param [Symbol] direction
+      #
+      def migrate(direction)
+        schemas.each { |schema| schema.migrate direction }
+      end
+
+      #
+      # Establish DB connection
+      #
       def connect
-        case adapter
-        when "postgresql", "mysql2"
-          ActiveRecord::Base.establish_connection(Miteru.configuration.database)
-        else
-          ActiveRecord::Base.establish_connection(
-            adapter: adapter,
-            database: Miteru.configuration.database
-          )
-        end
+        return if connected?
 
-        # ActiveRecord::Base.logger = Logger.new STDOUT
-        ActiveRecord::Migration.verbose = false
-
-        InitialSchema.migrate(:up)
-        V11Schema.migrate(:up)
-      rescue StandardError => _e
-        # Do nothing
+        ActiveRecord::Base.establish_connection Miteru.config.database_url.to_s
+        ActiveRecord::Base.logger = Logger.new($stdout) if Miteru.development?
       end
 
+      #
+      # @return [Boolean]
+      #
+      def connected?
+        ActiveRecord::Base.connected?
+      end
+
+      #
+      # Close DB connection(s)
+      #
       def close
-        ActiveRecord::Base.clear_active_connections!
-        ActiveRecord::Base.connection.close
+        return unless connected?
+
+        ActiveRecord::Base.connection_handler.clear_active_connections!
       end
 
-      def destroy!
-        return unless ActiveRecord::Base.connected?
+      def with_db_connection
+        Miteru::Database.connect unless connected?
+        yield
+      rescue ActiveRecord::StatementInvalid
+        Miteru.logger.error("DB migration is not yet complete. Please run 'miteru db migrate'.")
+      ensure
+        Miteru::Database.close
+      end
 
-        InitialSchema.migrate(:down)
-        V11Schema.migrate(:down)
+      private
+
+      def adapter
+        return "postgresql" if %w[postgresql postgres].include?(Miteru.config.database_url.scheme)
+        return "mysql2" if Miteru.config.database_url.scheme == "mysql2"
+
+        "sqlite3"
       end
     end
   end
 end
-
-Miteru::Database.connect

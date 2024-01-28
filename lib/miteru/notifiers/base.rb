@@ -2,13 +2,20 @@
 
 module Miteru
   module Notifiers
-    class Base
-      def notify(website)
+    class Base < Service
+      def call(website)
         raise NotImplementedError
       end
 
-      def notifiable?
+      def callable?
         raise NotImplementedError
+      end
+
+      class << self
+        def inherited(child)
+          super
+          Miteru.notifiers << child
+        end
       end
     end
   end

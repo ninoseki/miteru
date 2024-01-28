@@ -54,3 +54,6 @@ Gemfile.lock
 
 # SQLite database
 *.db
+
+# .env
+.env

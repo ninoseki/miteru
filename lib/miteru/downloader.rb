@@ -2,65 +2,76 @@
 
 require "digest"
 require "fileutils"
-require "uri"
+
+require "down/http"
 
 module Miteru
-  class Downloader
-    attr_reader :base_dir, :memo
+  class Downloader < Service
+    prepend MemoWise
 
-    def initialize(base_dir = "/tmp")
+    # @return [String]
+    attr_reader :base_dir
+
+    # @return [Miteru::Kit]
+    attr_reader :kit
+
+    #
+    # <Description>
+    #
+    # @param [Miteru::Kit] kit
+    # @param [String] base_dir
+    #
+    def initialize(kit, base_dir: Miteru.config.download_to)
+      super()
+      @kit = kit
       @base_dir = base_dir
-      @memo = {}
-      raise ArgumentError, "#{base_dir} doesn't exist." unless Dir.exist?(base_dir)
     end
 
-    def download_kits(kits)
-      kits.each { |kit| download_kit kit }
+    #
+    # @return [String]
+    #
+    def call
+      destination = kit.filepath_to_download
+
+      # downloader.download(kit.url, destination:, max_size:)
+      downloader.download(kit.url, destination:, max_size:)
+
+      unless Record.unique_sha256?(sha256(destination))
+        FileUtils.rm destination
+        raise UniquenessError, "Kit:#{sha256(destination)} is registered already."
+      end
+
+      # Record a kit in DB
+      Record.create_by_kit_and_hash(kit, sha256: sha256(destination))
+      Miteru.logger.info "Download #{kit.url} as #{destination}"
+
+      destination
     end
 
     private
 
-    def download_kit(kit)
-      destination = kit.filepath_to_download
+    def timeout
+      Miteru.config.download_timeout
+    end
 
-      begin
-        downloaded_as = HTTPClient.download(kit.url, destination)
-      rescue Down::Error => e
-        Miteru.logger.error "Failed to download: #{kit.url} (#{e})"
-        return
+    def downloader
+      Down::Http.new(ssl_context:) { |client| client.timeout(timeout) }
+    end
+
+    def ssl_context
+      OpenSSL::SSL::SSLContext.new.tap do |ctx|
+        ctx.verify_mode = OpenSSL::SSL::VERIFY_NONE
       end
+    end
 
-      # check filesize
-      size = File.size downloaded_as
-      if size > Miteru.configuration.file_maxsize
-        Miteru.logger.info "#{kit.url}'s filesize exceeds the limit: #{size}"
-        FileUtils.rm downloaded_as
-        return
-      end
-
-      hash = sha256(downloaded_as)
-
-      ActiveRecord::Base.connection_pool.with_connection do
-        # Remove a downloaded file if it is not unique
-        unless Record.unique_hash?(hash)
-          Miteru.logger.info "Don't download #{kit.url}. The same hash is already recorded. (SHA256: #{hash})."
-          FileUtils.rm downloaded_as
-          return
-        end
-
-        # Record a kit in DB
-        Record.create_by_kit_and_hash(kit, hash)
-        Miteru.logger.info "Download #{kit.url} as #{downloaded_as}"
-      end
+    def max_size
+      Miteru.config.file_max_size
     end
 
     def sha256(path)
-      return memo[path] if memo.key?(path)
-
       digest = Digest::SHA256.file(path)
-      hash = digest.hexdigest
-      memo[path] = hash
-      hash
+      digest.hexdigest
     end
+    memo_wise :sha256
   end
 end

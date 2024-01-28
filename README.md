@@ -5,32 +5,22 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/ninoseki/miteru/badge)](https://www.codefactor.io/repository/github/ninoseki/miteru)
 [![Coverage Status](https://coveralls.io/repos/github/ninoseki/miteru/badge.svg?branch=master)](https://coveralls.io/github/ninoseki/miteru?branch=master)
 
-Miteru is an experimental phishing kit detection tool.
+A phishing kit collector for scavengers.
 
 ## Disclaimer
 
 This tool is for research purposes only. The use of this tool is your responsibility.
 I take no responsibility and/or liability for how you choose to use this tool.
 
-## How it works
+## How It Works
 
 - It collects phishy URLs from the following feeds:
-  - [CertStream-Suspicious feed via urlscan.io](https://urlscan.io/search/#task.source%3Acertstream-suspicious)
-  - [OpenPhish feed via urlscan.io](https://urlscan.io/search/#task.source%3Aopenphish)
-  - [PhishTank feed via urlscan.io](https://urlscan.io/search/#task.source%3Aphishtank)
-  - [URLhaus feed via urlscan.io](https://urlscan.io/search/#task.source%3Aurlhaus)
-  - urlscan.io phish feed (available for Pro users)
-  - [Ayashige feed](https://github.com/ninoseki/ayashige)
-  - [Phishing Database feed](https://github.com/mitchellkrogza/Phishing.Database)
-  - [PhishStats feed](https://phishstats.info/)
-- It checks each phishy URL whether it enables directory listing and contains a phishing kit (compressed file) or not.
+  - urlscan.io's automatic submissions. (`task.method:automatic`)
+  - urlscan.io phish feed. (available for Pro users)
+  - [mitchellkrogza/Phishing.Database](https://github.com/mitchellkrogza/Phishing.Database)'s `phishing-links-ACTIVE-NOW.txt`.
+  - [ninoseki/ayashige](https://github.com/ninoseki/ayashige) feed.
+- It checks each phishy URL whether it enables directory listing and contains phishing kits (compressed files) or not.
   - Note: Supported compressed files are: `*.zip`, `*.rar`, `*.7z`, `*.tar` and `*.gz`.
-
-## Features
-
-- [x] Phishing kit detection & collection
-- [x] Slack notification
-- [x] Threading
 
 ## Docs
 

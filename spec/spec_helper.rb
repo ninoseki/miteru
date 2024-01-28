@@ -3,29 +3,71 @@
 require "bundler/setup"
 
 require "simplecov"
-require "coveralls"
-SimpleCov.formatter = Coveralls::SimpleCov::Formatter
-SimpleCov.start do
-  add_filter "/spec"
-end
-Coveralls.wear!
-
-def ci_env?
-  # CI=true and TRAVIS=true in Travis CI
-  ENV["CI"] || ENV["TRAVIS"]
-end
-
-# Use in-memory SQLite in local test
-unless ci_env?
-  ENV["MITERU_DATABASE"] = ":memory:"
-end
-
-require "miteru"
 require "vcr"
 
-require_relative "./support/shared_contexts/download_kits_context"
-require_relative "./support/shared_contexts/http_server_context"
-require_relative "./support/helpers/helpers"
+def ci_env?
+  # CI=true in GitHub Actions
+  ENV["CI"]
+end
+
+# setup simplecov formatter for coveralls
+class InceptionFormatter
+  def format(result)
+    Coveralls::SimpleCov::Formatter.new.format(result)
+  end
+end
+
+def formatter
+  if ENV["CI"] || ENV["COVERALLS_REPO_TOKEN"]
+    if ENV["GITHUB_ACTIONS"]
+      SimpleCov::Formatter::MultiFormatter.new([InceptionFormatter, SimpleCov::Formatter::LcovFormatter])
+    else
+      InceptionFormatter
+    end
+  else
+    SimpleCov::Formatter::HTMLFormatter
+  end
+end
+
+def setup_formatter
+  if ENV["GITHUB_ACTIONS"]
+    require "simplecov-lcov"
+
+    SimpleCov::Formatter::LcovFormatter.config do |c|
+      c.report_with_single_file = true
+      c.single_report_path = "coverage/lcov.info"
+    end
+  end
+  SimpleCov.formatter = formatter
+end
+
+setup_formatter
+
+SimpleCov.start do
+  add_filter do |source_file|
+    source_file.filename.include?("spec") && !source_file.filename.include?("fixture")
+  end
+  add_filter %r{/.bundle/}
+end
+
+require "coveralls"
+
+# Use in-memory SQLite in local test
+ENV["DATABASE_URL"] = "sqlite3::memory:" unless ci_env?
+
+require "miteru"
+
+require "test_prof/recipes/rspec/let_it_be"
+
+require_relative "support/shared_contexts/fake_http_server_context"
+require_relative "support/shared_contexts/mocked_logger_context"
+
+VCR.configure do |config|
+  config.cassette_library_dir = "spec/fixtures/vcr_cassettes"
+  config.configure_rspec_metadata!
+  config.ignore_localhost = true
+  config.filter_sensitive_data("<CENSORED/>") { ENV["URLSCAN_API_KEY"] }
+end
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -38,18 +80,16 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
-  config.shared_context_metadata_behavior = :apply_to_host_groups
+  config.order = "random"
 
-  config.include Spec::Support::Helpers
+  config.before(:suite) do
+    Miteru::Database.connect
 
-  config.include_context "download_kits"
-  config.include_context "http_server"
-end
+    ActiveRecord::Migration.verbose = false
+    Miteru::Database.migrate :up
+  end
 
-VCR.configure do |config|
-  config.cassette_library_dir = "spec/fixtures/vcr_cassettes"
-  config.configure_rspec_metadata!
-  config.hook_into :webmock
-  config.ignore_localhost = true
-  config.filter_sensitive_data("<CENSORED/>") { ENV["URLSCAN_API_KEY"] }
+  config.after(:suite) do
+    Miteru::Database.close
+  end
 end

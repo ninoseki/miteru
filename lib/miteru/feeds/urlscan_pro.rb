@@ -1,35 +1,37 @@
 # frozen_string_literal: true
 
-require "urlscan"
-
 module Miteru
   class Feeds
-    class UrlScanPro < Feed
-      def api
-        @api ||= ::UrlScan::API.new(Miteru.configuration.urlscan_api_key)
+    class UrlScanPro < Base
+      #
+      # @param [String] base_url
+      #
+      def initialize(base_url = "https://urlscan.io")
+        super(base_url)
+
+        @headers = {"api-key": api_key}
       end
 
       def urls
-        urls_from_pro_feed
-      rescue ::UrlScan::ResponseError => e
-        Miteru.logger.error "Failed to load urlscan.io pro feed (#{e})"
-        []
+        (json["results"] || []).map { |result| result["page_url"] }
       end
 
       private
 
-      def api_key?
-        Miteru.configuration.urlscan_api_key?
+      def api_key
+        Miteru.config.urlscan_api_key
       end
 
-      def urls_from_pro_feed
-        return [] unless api_key?
+      def q
+        "date:#{Miteru.config.urlscan_date_condition}"
+      end
 
-        res = api.pro.phishfeed
-        results = res["results"] || []
-        results.map { |result| result["page_url"] }
-      rescue ArgumentError => _e
-        []
+      def format
+        "json"
+      end
+
+      def json
+        get_json("/api/v1/pro/phishfeed", params: {q:, format:})
       end
     end
   end
