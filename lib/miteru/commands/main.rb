@@ -15,7 +15,7 @@ module Miteru
             method_option :download_to, type: :string, default: "/tmp", desc: "Directory to download phishing kits"
             method_option :threads, type: :numeric, desc: "Number of threads to use", default: Parallel.processor_count
             method_option :verbose, type: :boolean, default: true
-            desc "execute", "Excecute the crawler"
+            desc "execute", "Execute the crawler"
             around :with_db_connection
             def execute
               Miteru.config.tap do |config|
