@@ -52,8 +52,10 @@ Gemfile.lock
 ## RSpec
 .rspec_status
 
-# SQLite database
+# SQLite
 *.db
+*.db-shm
+*.db-wal
 
 # .env
 .env
