@@ -33,15 +33,8 @@ module Miteru
       title.to_s.start_with? "Index of"
     end
 
-    def has_kits?
-      @has_kits ||= lambda do
-        Try[Addressable::URI::InvalidURIError, Encoding::CompatibilityError, ::HTTP::Error, LL::ParserError,
-          OpenSSL::SSL::SSLError, StatusError, ArgumentError] do
-          !kits.empty?
-        end.recover do
-          false
-        end.value!
-      end.call
+    def kits?
+      kits.any?
     end
 
     def links
@@ -81,8 +74,9 @@ module Miteru
       Try[Addressable::URI::InvalidURIError, Encoding::CompatibilityError, ::HTTP::Error, LL::ParserError,
         OpenSSL::SSL::SSLError, StatusError, ArgumentError] do
         doc.css("a").filter_map { |a| a.get("href") }.map do |href|
-          href = href.start_with?("/") ? href : "/#{href}"
-          url + href
+          normalized_href = href.start_with?("/") ? href : "/#{href}"
+          normalized_url = url.end_with?("/") ? url.delete_suffix("/") : url
+          normalized_url + normalized_href
         end
       end.recover { [] }.value!
     end

@@ -11,6 +11,10 @@ module Miteru
         raise NotImplementedError
       end
 
+      def name
+        @name ||= self.class.to_s.split("::").last
+      end
+
       class << self
         def inherited(child)
           super

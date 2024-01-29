@@ -40,6 +40,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'webmock', '~> 3.19'
 
   spec.add_dependency 'activerecord', '7.1.3'
+  spec.add_dependency 'addressable', '2.8.6'
   spec.add_dependency 'anyway_config', '2.6.2'
   spec.add_dependency 'colorize', '1.1.0'
   spec.add_dependency 'dotenv', '2.8.1'

@@ -9,10 +9,7 @@ module Miteru
       def call(website)
         return unless callable?
 
-        kits = website.kits.select(&:downloaded?)
-        return unless kits.any?
-
-        kits.each { |kit| submit(kit.url) }
+        website.kits.each { |kit| submit(kit.url) }
       end
 
       def callable?
@@ -33,7 +30,7 @@ module Miteru
       end
 
       def timeout
-        Miteru.config.timeout
+        Miteru.config.api_timeout
       end
 
       def tags
@@ -45,7 +42,7 @@ module Miteru
       end
 
       def submit(url)
-        http.post("/api/v1/scan/", json: {tags:, visibility:, url:})
+        http.post("https://urlscan.io/api/v1/scan/", json: {tags:, visibility:, url:})
       end
     end
   end

@@ -8,7 +8,7 @@ module Miteru
     def call(website)
       Try[OpenSSL::SSL::SSLError, ::HTTP::Error, Addressable::URI::InvalidURIError] do
         Miteru.logger.info("Website:#{website.truncated_url} has #{website.kits.length} kit(s).")
-        return unless website.has_kits?
+        return unless website.kits?
 
         notify website
 
@@ -17,11 +17,10 @@ module Miteru
         website.kits.each do |kit|
           downloader = Downloader.new(kit)
           result = downloader.result
-
           if result.success?
-            Miteru.logger.info("Kit:#{kit.truncated_url} downloaded as #{result.value!}")
+            Miteru.logger.info("Kit:#{kit.truncated_url} downloaded as #{result.value!}.")
           else
-            Miteru.logger.warn("Kit:#{kit.truncated_url} failed to download - #{result.failure}")
+            Miteru.logger.warn("Kit:#{kit.truncated_url} failed to download - #{result.failure}.")
           end
         end
       end.recover { nil }.value!
@@ -33,8 +32,18 @@ module Miteru
       Miteru.config.auto_download
     end
 
+    #
+    # @param [Miteru::Website] website
+    #
     def notify(website)
-      Parallel.each(notifiers) { |notifier| notifier.call(website) }
+      notifiers.each do |notifier|
+        result = notifier.result(website)
+        if result.success?
+          Miteru.logger.info("Notifier:#{notifier.name} succeeded.")
+        else
+          Miteru.logger.warn("Notifier:#{notifier.name} failed - #{result.failure}.")
+        end
+      end
     end
 
     #
