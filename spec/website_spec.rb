@@ -25,11 +25,9 @@ RSpec.describe Miteru::Website do
     end
   end
 
-  context "when giving a url which contains a phishing kit" do
-    describe "#has_kits?" do
-      it do
-        expect(website.has_kits?).to be(true)
-      end
+  describe "#kits?" do
+    it do
+      expect(website.kits?).to be(true)
     end
   end
 end

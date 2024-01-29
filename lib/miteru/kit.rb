@@ -25,6 +25,8 @@ module Miteru
     # @param [String] source
     #
     def initialize(url, source:)
+      super()
+
       @url = url
       @source = source
 
@@ -37,7 +39,6 @@ module Miteru
     def valid?
       # make a HEAD request for the validation
       before_validation
-
       valid_ext? && reachable? && valid_mime_type? && valid_content_length?
     end
 
@@ -110,7 +111,7 @@ module Miteru
     end
 
     def http
-      HTTP::Factory.build
+      HTTP::Factory.build(raise_exception: false)
     end
 
     def before_validation

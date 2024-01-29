@@ -14,7 +14,14 @@ module Miteru
       #
       def perform(url, source)
         website = Miteru::Website.new(url, source:)
-        with_db_connection { Crawler.call(website) }
+        with_db_connection do
+          result = Crawler.result(website)
+          if result.success?
+            Miteru.logger.info("Crawler:#{website.truncated_url} succeeded.")
+          else
+            Miteru.logger.info("Crawler:#{website.truncated_url} failed - #{result.failure}.")
+          end
+        end
       end
     end
   end
