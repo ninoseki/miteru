@@ -40,7 +40,14 @@ module Miteru
             Miteru.logger.warn("Feed:#{feed.source} failed - #{result.failure}")
           end
         end
-      end.flatten
+      end.flatten.uniq(&:url)
+    end
+
+    #
+    # @return [Array<Miteru::Feeds::Base>]
+    #
+    def feeds
+      Miteru.feeds.map(&:new)
     end
 
     private
@@ -51,13 +58,6 @@ module Miteru
 
     def verbose?
       Miteru.config.verbose
-    end
-
-    #
-    # @return [Array<Miteru::Feeds::Base>]
-    #
-    def feeds
-      Miteru.feeds.map(&:new)
     end
   end
 end
