@@ -1,7 +1,7 @@
 # Miteru
 
 [![Gem Version](https://badge.fury.io/rb/miteru.svg)](https://badge.fury.io/rb/miteru)
-[![Ruby CI](https://github.com/ninoseki/miteru/actions/workflows/test.yml/badge.svg)](https://github.com/ninoseki/miteru/actions/workflows/test.yml)
+[![Ruby CI](https://github.com/ninoseki/miteru/actions/workflows/ruby.yml/badge.svg)](https://github.com/ninoseki/miteru/actions/workflows/ruby.yml)
 [![CodeFactor](https://www.codefactor.io/repository/github/ninoseki/miteru/badge)](https://www.codefactor.io/repository/github/ninoseki/miteru)
 [![Coverage Status](https://coveralls.io/repos/github/ninoseki/miteru/badge.svg?branch=master)](https://coveralls.io/github/ninoseki/miteru?branch=master)
 
@@ -14,12 +14,12 @@ I take no responsibility and/or liability for how you choose to use this tool.
 
 ## How It Works
 
-- It collects phishy URLs from the following feeds:
-  - urlscan.io's automatic submissions. (`task.method:automatic`)
+- Collect phishy URLs from the following feeds:
+  - urlscan.io's automatic submissions. (`task.method:automatic AND NOT task.source:urlscan-observe`)
   - urlscan.io phish feed. (available for Pro users)
   - [mitchellkrogza/Phishing.Database](https://github.com/mitchellkrogza/Phishing.Database)'s `phishing-links-ACTIVE-NOW.txt`.
   - [ninoseki/ayashige](https://github.com/ninoseki/ayashige) feed.
-- It checks each phishy URL whether it enables directory listing and contains phishing kits (compressed files) or not.
+- Check each phishy URL whether it enables directory listing and contains phishing kits (compressed files) or not.
   - Note: Supported compressed files are: `*.zip`, `*.rar`, `*.7z`, `*.tar` and `*.gz`.
 
 ## Docs
