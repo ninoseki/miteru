@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "down/http"
-
 RSpec.describe Miteru::Downloader do
   include_context "with fake HTTP server"
   include_context "with mocked logger"
