@@ -27,7 +27,8 @@ module Miteru
       threads: Parallel.processor_count,
       urlscan_api_key: nil,
       urlscan_submit_visibility: "public",
-      urlscan_date_condition: ">now-1h",
+      urlscan_date_condition: "date:>now-1h",
+      urlscan_base_condition: "task.method:automatic AND NOT task.source:urlscan-observe",
       verbose: false
     )
 
@@ -89,6 +90,9 @@ module Miteru
     #   @return [String]
 
     # @!attribute [r] urlscan_date_condition
+    #   @return [String]
+
+    # @!attribute [r] urlscan_base_condition
     #   @return [String]
 
     def database_url=(val)

@@ -23,7 +23,7 @@ module Miteru
       end
 
       def q
-        "date:#{Miteru.config.urlscan_date_condition}"
+        Miteru.config.urlscan_date_condition
       end
 
       def format

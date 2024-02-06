@@ -31,7 +31,7 @@ module Miteru
       end
 
       def q
-        "task.method:automatic AND date:#{Miteru.config.urlscan_date_condition}"
+        "#{base_condition} AND #{date_condition}"
       end
 
       #
@@ -58,6 +58,14 @@ module Miteru
             search_after = res["results"].last["sort"].join(",")
           end
         end
+      end
+
+      def base_condition
+        Miteru.config.urlscan_base_condition
+      end
+
+      def date_condition
+        Miteru.config.urlscan_date_condition
       end
     end
   end
