@@ -3,9 +3,6 @@
 module Miteru
   class Feeds
     class Ayashige < Base
-      HOST = "ayashige.herokuapp.com"
-      URL = "https://#{HOST}".freeze
-
       def initialize(base_url = "https://ayashige.herokuapp.com")
         super(base_url)
       end

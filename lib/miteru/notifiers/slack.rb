@@ -87,7 +87,7 @@ module Miteru
       end
 
       def callable?
-        !Miteru.config.slack_webhook_url.nil?
+        !slack_webhook_url.nil?
       end
 
       private
