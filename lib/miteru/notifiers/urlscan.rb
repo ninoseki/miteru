@@ -9,7 +9,7 @@ module Miteru
       def call(website)
         return unless callable?
 
-        website.kits.each { |kit| submit(kit.url) }
+        website.kits.each { |kit| submit(kit.url, source: website.source) }
       end
 
       def callable?
@@ -41,8 +41,12 @@ module Miteru
         Miteru.config.urlscan_submit_visibility
       end
 
-      def submit(url)
-        http.post("https://urlscan.io/api/v1/scan/", json: {tags:, visibility:, url:})
+      #
+      # @param [String] url
+      # @param [String] source
+      #
+      def submit(url, source:)
+        http.post("https://urlscan.io/api/v1/scan/", json: {tags: tags + ["source:#{source}"], visibility:, url:})
       end
     end
   end
