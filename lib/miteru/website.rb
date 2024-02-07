@@ -48,6 +48,14 @@ module Miteru
       url.truncate(64)
     end
 
+    def defanged_truncated_url
+      truncated_url.to_s.gsub(".", "[.]")
+    end
+
+    def info
+      "#{defanged_truncated_url} has #{kits.length} kit(s) (Source: #{source})"
+    end
+
     private
 
     def timeout

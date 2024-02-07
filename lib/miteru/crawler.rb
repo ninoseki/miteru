@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "colorize"
+
 module Miteru
   class Crawler < Service
     #
@@ -7,7 +9,10 @@ module Miteru
     #
     def call(website)
       Try[OpenSSL::SSL::SSLError, ::HTTP::Error, Addressable::URI::InvalidURIError] do
-        Miteru.logger.info("Website:#{website.truncated_url} has #{website.kits.length} kit(s).")
+        info = "Website:#{website.info}."
+        info = info.colorize(:red) if website.kits?
+
+        Miteru.logger.info(info)
         return unless website.kits?
 
         notify website

@@ -30,4 +30,10 @@ RSpec.describe Miteru::Website do
       expect(website.kits?).to be(true)
     end
   end
+
+  describe "#info" do
+    it do
+      expect(website.info).to be_a(String)
+    end
+  end
 end

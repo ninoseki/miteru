@@ -5,6 +5,7 @@ require "slack-notifier"
 module Miteru
   module Notifiers
     class SlackAttachment
+      # @return [String]
       attr_reader :url
 
       def initialize(url)
@@ -14,7 +15,7 @@ module Miteru
       def to_a
         [
           {
-            text: defanged_url,
+            text:,
             fallback: "VT & urlscan.io links",
             actions:
           }
@@ -47,16 +48,16 @@ module Miteru
         }
       end
 
-      def defanged_url
-        @defanged_url ||= url.to_s.gsub(".", "[.]")
-      end
-
       def domain
         @domain ||= [].tap do |out|
           out << URI(url).hostname
         rescue URI::Error => _e
           out << nil
         end.first
+      end
+
+      def text
+        domain.to_s.gsub(".", "[.]")
       end
 
       def _urlscan_link
@@ -82,12 +83,11 @@ module Miteru
         return unless callable?
 
         attachment = SlackAttachment.new(website.url)
-        kits = website.kits.select(&:downloaded?)
-        notifier.post(text: website.message.capitalize, attachments: attachment.to_a) if kits.any?
+        notifier.post(text: website.info, attachments: attachment.to_a) if website.kits?
       end
 
       def callable?
-        !slack_webhook_url.nil?
+        !webhook_url.nil?
       end
 
       private
