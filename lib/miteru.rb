@@ -33,6 +33,9 @@ require "miteru/concerns/database_connectable"
 require "miteru/concerns/error_unwrappable"
 
 # Core classes
+require "miteru/service"
+
+require "miteru/cache"
 require "miteru/config"
 require "miteru/http"
 
@@ -93,6 +96,14 @@ module Miteru
       env == "development"
     end
 
+    def cache?
+      !Miteru.config.cache_redis_url.nil?
+    end
+
+    def cache
+      @cache ||= Cache.new(Miteru.config.cache_redis_url)
+    end
+
     #
     # @return [Boolean]
     #
@@ -117,8 +128,6 @@ module Miteru
 end
 
 # Services
-require "miteru/service"
-
 require "miteru/crawler"
 require "miteru/downloader"
 require "miteru/kit"

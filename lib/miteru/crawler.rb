@@ -11,27 +11,43 @@ module Miteru
       Try[OpenSSL::SSL::SSLError, ::HTTP::Error, Addressable::URI::InvalidURIError] do
         info = "Website:#{website.info}."
         info = info.colorize(:red) if website.kits?
-
         Miteru.logger.info(info)
-        return unless website.kits?
-
-        notify website
-
-        return unless auto_download?
 
         website.kits.each do |kit|
           downloader = Downloader.new(kit)
           result = downloader.result
-          if result.success?
-            Miteru.logger.info("Kit:#{kit.truncated_url} downloaded as #{result.value!}.")
-          else
+
+          unless result.success?
             Miteru.logger.warn("Kit:#{kit.truncated_url} failed to download - #{result.failure}.")
+            next
           end
+
+          destination = result.value!
+          Miteru.logger.info("Kit:#{kit.truncated_url} downloaded as #{destination}.")
+          # Remove downloaded file if auto_download is not allowed
+          FileUtils.rm(destination, force: true) unless auto_download?
+          # Notify the website
+          notify website
         end
+
+        # Cache the website
+        cache.set(website.url, website.source, ex: cache_ex) if cache?
       end.recover { nil }.value!
     end
 
     private
+
+    def cache?
+      Miteru.cache?
+    end
+
+    def cache
+      Miteru.cache
+    end
+
+    def cache_ex
+      Miteru.config.cache_ex
+    end
 
     def auto_download?
       Miteru.config.auto_download

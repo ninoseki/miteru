@@ -3,16 +3,16 @@
 module Miteru
   class Orchestrator < Service
     def call
-      Miteru.logger.info("#{websites.length} websites loaded in total.") if verbose?
+      Miteru.logger.info("#{non_cached_websites.length} websites loaded in total.") if verbose?
 
       if Miteru.sidekiq?
-        websites.each do |website|
+        non_cached_websites.each do |website|
           Jobs::CrawleJob.perform_async(website.url, website.source)
           Miteru.logger.info("Website:#{website.truncated_url} crawler job queued.") if verbose?
         end
       else
         Miteru.logger.info("Use #{threads} thread(s).") if verbose?
-        Parallel.each(websites, in_threads: threads) do |website|
+        Parallel.each(non_cached_websites, in_threads: threads) do |website|
           Miteru.logger.info("Website:#{website.truncated_url} crawling started.") if verbose?
 
           result = Crawler.result(website)
@@ -26,7 +26,7 @@ module Miteru
     end
 
     #
-    # @return [Array<Miteru::Websites>]
+    # @return [Array<Miteru::Website>]
     #
     def websites
       @websites ||= [].tap do |out|
@@ -43,6 +43,12 @@ module Miteru
       end.flatten.uniq(&:url)
     end
 
+    def non_cached_websites
+      return websites unless cache?
+
+      websites.reject { |website| cache.cached?(website.url) }
+    end
+
     #
     # @return [Array<Miteru::Feeds::Base>]
     #
@@ -51,6 +57,14 @@ module Miteru
     end
 
     private
+
+    def cache?
+      Miteru.cache?
+    end
+
+    def cache
+      Miteru.cache
+    end
 
     def threads
       Miteru.config.threads
