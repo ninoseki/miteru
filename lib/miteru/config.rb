@@ -22,6 +22,9 @@ module Miteru
       sentry_dsn: nil,
       sentry_trace_sample_rate: 0.25,
       sidekiq_redis_url: nil,
+      cache_redis_url: nil,
+      cache_ex: nil,
+      cache_prefix: "miteru:cache",
       slack_channel: "#general",
       slack_webhook_url: nil,
       threads: Parallel.processor_count,
@@ -39,6 +42,15 @@ module Miteru
     #   @return [Float]
 
     # @!attribute [r] sidekiq_redis_url
+    #   @return [String, nil]
+
+    # @!attribute [r] cache_redis_url
+    #   @return [String, nil]
+
+    # @!attribute [r] cache_ex
+    #   @return [Integer, nil]
+
+    # @!attribute [r] cache_prefix
     #   @return [String]
 
     # @!attribute [r] http_timeout

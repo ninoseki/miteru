@@ -11,6 +11,8 @@ class DummyFeed < Miteru::Feeds::Base
 end
 
 RSpec.describe Miteru::Orchestrator do
+  include_context "with mocked logger"
+
   subject(:orchestrator) { described_class.new }
 
   before do
