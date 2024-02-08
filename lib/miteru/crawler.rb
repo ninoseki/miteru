@@ -57,7 +57,7 @@ module Miteru
     # @param [Miteru::Website] website
     #
     def notify(website)
-      [].each do |notifier|
+      notifiers.each do |notifier|
         result = notifier.result(website)
         if result.success?
           Miteru.logger.info("Notifier:#{notifier.name} succeeded.")
