@@ -31,6 +31,7 @@ require "miteru/errors"
 # Concerns
 require "miteru/concerns/database_connectable"
 require "miteru/concerns/error_unwrappable"
+require "miteru/concerns/url_truncatable"
 
 # Core classes
 require "miteru/service"

@@ -43,7 +43,7 @@ module Miteru
 
       # Record a kit in DB
       Record.create_by_kit_and_hash(kit, sha256: sha256(destination))
-      Miteru.logger.info "Download #{kit.url} as #{destination}"
+      logger.info "Download #{kit.url} as #{destination}"
 
       destination
     end

@@ -4,6 +4,8 @@ require "oga"
 
 module Miteru
   class Website < Service
+    include Concerns::UrlTruncatable
+
     # @return [String]
     attr_reader :url
 
@@ -39,17 +41,6 @@ module Miteru
 
     def links
       (href_links + possible_file_links).compact.uniq
-    end
-
-    #
-    # @return [String]
-    #
-    def truncated_url
-      url.truncate(64)
-    end
-
-    def defanged_truncated_url
-      truncated_url.to_s.gsub(".", "[.]")
     end
 
     def info

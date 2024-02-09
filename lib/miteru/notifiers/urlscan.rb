@@ -4,12 +4,12 @@ module Miteru
   module Notifiers
     class UrlScan < Base
       #
-      # @param [Miteru::Website] website
+      # @param [Miteru::Kit] kit
       #
-      def call(website)
+      def call(kit)
         return unless callable?
 
-        website.kits.each { |kit| submit(kit.url, source: website.source) }
+        submit(kit.decoded_url, source: kit.source)
       end
 
       def callable?

@@ -3,24 +3,31 @@
 module Miteru
   class Orchestrator < Service
     def call
-      Miteru.logger.info("#{non_cached_websites.length} websites loaded in total.") if verbose?
+      logger.info("#{non_cached_websites.length} websites loaded in total.") if verbose?
 
-      if Miteru.sidekiq?
-        non_cached_websites.each do |website|
-          Jobs::CrawleJob.perform_async(website.url, website.source)
-          Miteru.logger.info("Website:#{website.truncated_url} crawler job queued.") if verbose?
-        end
+      if sidekiq?
+        sidekiq_call
       else
-        Miteru.logger.info("Use #{threads} thread(s).") if verbose?
-        Parallel.each(non_cached_websites, in_threads: threads) do |website|
-          Miteru.logger.info("Website:#{website.truncated_url} crawling started.") if verbose?
+        parallel_call
+      end
+    end
 
-          result = Crawler.result(website)
-          if result.success?
-            Miteru.logger.info("Crawler:#{website.truncated_url} succeeded.")
-          else
-            Miteru.logger.info("Crawler:#{website.truncated_url} failed - #{result.failure}.")
-          end
+    def sidekiq_call
+      non_cached_websites.each do |website|
+        Jobs::CrawleJob.perform_async(website.url, website.source)
+        logger.info("Website:#{website.truncated_url} crawler job queued.") if verbose?
+      end
+    end
+
+    def parallel_call
+      logger.info("Use #{threads} thread(s).") if verbose?
+      Parallel.each(non_cached_websites, in_threads: threads) do |website|
+        logger.info("Website:#{website.truncated_url} crawling started.") if verbose?
+        result = Crawler.result(website)
+        if result.success?
+          logger.info("Crawler:#{website.truncated_url} succeeded.")
+        else
+          logger.info("Crawler:#{website.truncated_url} failed - #{result.failure}.")
         end
       end
     end
@@ -34,44 +41,33 @@ module Miteru
           result = feed.result
           if result.success?
             websites = result.value!
-            Miteru.logger.info("Feed:#{feed.source} has #{websites.length} websites.") if verbose?
+            logger.info("Feed:#{feed.source} has #{websites.length} websites.") if verbose?
             out << websites
           else
-            Miteru.logger.warn("Feed:#{feed.source} failed - #{result.failure}")
+            logger.warn("Feed:#{feed.source} failed - #{result.failure}")
           end
         end
       end.flatten.uniq(&:url)
     end
 
+    #
+    # @return [Array<Miteru::Website>]
+    #
     def non_cached_websites
-      return websites unless cache?
-
-      websites.reject { |website| cache.cached?(website.url) }
+      @non_cached_websites ||= [].tap do |out|
+        out << if cache?
+          websites.reject { |website| cache.cached?(website.url) }
+        else
+          websites
+        end
+      end.flatten.uniq(&:url)
     end
 
     #
     # @return [Array<Miteru::Feeds::Base>]
     #
     def feeds
-      Miteru.feeds.map(&:new)
-    end
-
-    private
-
-    def cache?
-      Miteru.cache?
-    end
-
-    def cache
-      Miteru.cache
-    end
-
-    def threads
-      Miteru.config.threads
-    end
-
-    def verbose?
-      Miteru.config.verbose
+      @feeds ||= Miteru.feeds.map(&:new)
     end
   end
 end
