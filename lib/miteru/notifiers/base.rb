@@ -3,7 +3,7 @@
 module Miteru
   module Notifiers
     class Base < Service
-      def call(website)
+      def call(kit)
         raise NotImplementedError
       end
 

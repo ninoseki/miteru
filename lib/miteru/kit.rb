@@ -2,6 +2,8 @@
 
 module Miteru
   class Kit < Service
+    include Concerns::UrlTruncatable
+
     # @return [String]
     attr_reader :url
 
@@ -83,17 +85,6 @@ module Miteru
 
     def hostname
       @hostname ||= URI(url).hostname
-    end
-
-    def decoded_url
-      @decoded_url ||= URI.decode_www_form_component(url)
-    end
-
-    #
-    # @return [String]
-    #
-    def truncated_url
-      url.truncate(64)
     end
 
     private

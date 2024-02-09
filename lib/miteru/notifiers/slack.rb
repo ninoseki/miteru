@@ -77,13 +77,13 @@ module Miteru
       #
       # Notifiy to Slack
       #
-      # @param [Miteru::Website] website
+      # @param [Miteru::Kit] kit
       #
-      def call(website)
+      def call(kit)
         return unless callable?
 
-        attachment = SlackAttachment.new(website.url)
-        notifier.post(text: website.info, attachments: attachment.to_a) if website.kits?
+        attachment = SlackAttachment.new(kit.url)
+        notifier.post(text: kit.defanged_truncated_url, attachments: attachment.to_a)
       end
 
       def callable?
