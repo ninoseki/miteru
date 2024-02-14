@@ -43,6 +43,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "addressable", "2.8.6"
   spec.add_dependency "anyway_config", "2.6.3"
   spec.add_dependency "colorize", "1.1.0"
+  spec.add_dependency "dotenv", "3.0.0"
   spec.add_dependency "down", "5.4.1"
   spec.add_dependency "dry-files", "1.1.0"
   spec.add_dependency "dry-monads", "1.6.0"
