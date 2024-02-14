@@ -75,7 +75,7 @@ module Miteru
 
     class Slack < Base
       #
-      # Notifiy to Slack
+      # Notify to Slack
       #
       # @param [Miteru::Kit] kit
       #
@@ -83,7 +83,7 @@ module Miteru
         return unless callable?
 
         attachment = SlackAttachment.new(kit.url)
-        notifier.post(text: kit.defanged_truncated_url, attachments: attachment.to_a)
+        notifier.post(text: kit.basename, attachments: attachment.to_a)
       end
 
       def callable?
