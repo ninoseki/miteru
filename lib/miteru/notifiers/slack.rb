@@ -83,7 +83,7 @@ module Miteru
         return unless callable?
 
         attachment = SlackAttachment.new(kit.url)
-        notifier.post(text: kit.basename, attachments: attachment.to_a)
+        notifier.post(text: kit.filename_with_size, attachments: attachment.to_a)
       end
 
       def callable?
