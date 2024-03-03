@@ -75,8 +75,7 @@ module Miteru
     def filename_with_size
       return filename unless filesize
 
-      kb = (filesize.to_f / 1024.0).ceil
-      "#{filename}(#{kb}KB)"
+      "#{filename} (#{filesize.kilobytes}KB)"
     end
 
     def id
