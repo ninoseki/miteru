@@ -50,6 +50,13 @@ RSpec.describe Miteru::Kit do
     it do
       expect(kit.filename_with_size).to eq(filename)
     end
+
+    context "with filesize" do
+      before { allow(kit).to receive(:filesize).and_return(1024 * 1024) }
+      it do
+        expect(kit.filename_with_size).to eq("#{filename} (1 MB)")
+      end
+    end
   end
 
   context "when given a URL encoded link" do
