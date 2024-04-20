@@ -49,8 +49,6 @@ module Miteru
       end
     end
 
-    private
-
     def notifiers
       @notifiers ||= Miteru.notifiers.map(&:new)
     end
