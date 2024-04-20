@@ -148,6 +148,7 @@ require "miteru/feeds/base"
 
 require "miteru/feeds/ayashige"
 require "miteru/feeds/phishing_database"
+require "miteru/feeds/tweetfeed"
 require "miteru/feeds/urlscan_pro"
 require "miteru/feeds/urlscan"
 
