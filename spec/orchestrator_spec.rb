@@ -2,7 +2,7 @@
 
 class DummyFeed < Miteru::Feeds::Base
   def initialize(base_url = "http://example.com")
-    super(base_url)
+    super
   end
 
   def urls

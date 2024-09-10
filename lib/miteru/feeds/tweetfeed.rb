@@ -4,7 +4,7 @@ module Miteru
   class Feeds
     class TweetFeed < Base
       def initialize(base_url = "https://api.tweetfeed.live")
-        super(base_url)
+        super
       end
 
       def urls
