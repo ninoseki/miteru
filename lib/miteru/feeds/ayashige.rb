@@ -4,7 +4,7 @@ module Miteru
   class Feeds
     class Ayashige < Base
       def initialize(base_url = "https://ayashige.herokuapp.com")
-        super(base_url)
+        super
       end
 
       def urls

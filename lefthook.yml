@@ -5,5 +5,6 @@ pre-commit:
       run: bundle exec standardrb --fix {staged_files}
       stage_fixed: true
     actionlint:
-      glob: ".github/workflows/*.yaml"
+      root: ".github/workflows"
+      glob: "*.{yaml,yml}"
       run: actionlint

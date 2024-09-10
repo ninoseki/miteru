@@ -10,7 +10,7 @@ module Miteru
         def included(thor)
           thor.class_eval do
             desc "sidekiq", "Start Sidekiq"
-            method_option :env, type: :string, default: "production", desc: "Environment"
+            method_option :env, type: :string, default: "production", desc: "Environment", aliases: "-e"
             method_option :concurrency, type: :numeric, default: 5, desc: "Sidekiq concurrency", aliases: "-c"
             def sidekiq
               require "sidekiq/cli"

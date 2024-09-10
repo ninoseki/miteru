@@ -14,14 +14,20 @@ module Miteru
       download_to: "/tmp",
       file_max_size: 1024 * 1024 * 100,
       file_extensions: [".zip", ".rar", ".7z", ".tar", ".gz"],
-      file_mime_types: ["application/zip", "application/vnd.rar", "application/x-7z-compressed", "application/x-tar",
-        "application/gzip"],
+      file_mime_types: [
+        "application/zip",
+        "application/vnd.rar",
+        "application/x-7z-compressed",
+        "application/x-tar",
+        "application/gzip"
+      ],
       api_timeout: 60,
       http_timeout: 60,
       download_timeout: 60,
       sentry_dsn: nil,
       sentry_trace_sample_rate: 0.25,
       sidekiq_redis_url: nil,
+      sidekiq_job_retry: 0,
       cache_redis_url: nil,
       cache_ex: nil,
       cache_prefix: "miteru:cache",
@@ -43,6 +49,39 @@ module Miteru
 
     # @!attribute [r] sidekiq_redis_url
     #   @return [String, nil]
+
+    # @!attribute [r] sidekiq_job_retry
+    #   @return [Integer]
+
+    # @!attribute [r] cache_redis_url
+    #   @return [String, nil]
+
+    # @!attribute [r] cache_ex
+    #   @return [Integer, nil]
+
+    # @!attribute [r] cache_prefix
+    #   @return [String]
+
+    # @!attribute [r] http_timeout
+    #   @return [Integer]
+
+    # @!attribute [r] api_timeout
+    #   @return [Integer]
+
+    # @!attribute [r] download_timeout
+    #   @return [Integer]
+
+    # @!attribute [rw] auto_download
+    #   @return [Boolean]
+
+    # @!attribute [rw] directory_traveling
+    #   @return [Boolean]
+
+    # @!attribute [rw] download_to
+    #   @return [String]
+
+    # @!attribute [rw] threads
+    #   @return [Integer]
 
     # @!attribute [r] cache_redis_url
     #   @return [String, nil]

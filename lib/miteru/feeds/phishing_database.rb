@@ -4,7 +4,7 @@ module Miteru
   class Feeds
     class PhishingDatabase < Base
       def initialize(base_url = "https://raw.githubusercontent.com")
-        super(base_url)
+        super
       end
 
       def urls

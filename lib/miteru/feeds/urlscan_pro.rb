@@ -7,7 +7,7 @@ module Miteru
       # @param [String] base_url
       #
       def initialize(base_url = "https://urlscan.io")
-        super(base_url)
+        super
 
         @headers = {"api-key": api_key}
       end
