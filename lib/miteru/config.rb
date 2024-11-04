@@ -28,6 +28,8 @@ module Miteru
       sentry_trace_sample_rate: 0.25,
       sidekiq_redis_url: nil,
       sidekiq_job_retry: 0,
+      sidekiq_batch_size: 50,
+      sidekiq_job_timeout: 600,
       cache_redis_url: nil,
       cache_ex: nil,
       cache_prefix: "miteru:cache",
@@ -51,6 +53,12 @@ module Miteru
     #   @return [String, nil]
 
     # @!attribute [r] sidekiq_job_retry
+    #   @return [Integer]
+
+    # @!attribute [r] sidekiq_batch_size
+    #   @return [Integer]
+
+    # @!attribute [r] sidekiq_job_timeout
     #   @return [Integer]
 
     # @!attribute [r] cache_redis_url
