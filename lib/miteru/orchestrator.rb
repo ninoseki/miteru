@@ -13,10 +13,8 @@ module Miteru
     end
 
     def sidekiq_call
-      non_cached_websites.each do |website|
-        Jobs::CrawleJob.perform_async(website.url, website.source)
-        logger.info("Website:#{website.truncated_url} crawler job queued.") if verbose?
-      end
+      array_of_args = non_cached_websites.map { |website| [website.url, website.source] }
+      Jobs::CrawleJob.perform_bulk(array_of_args, batch_size: Miteru.config.sidekiq_batch_size)
     end
 
     def parallel_call
