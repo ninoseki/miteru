@@ -26,7 +26,7 @@ module Miteru
       download_timeout: 60,
       sentry_dsn: nil,
       sentry_trace_sample_rate: 0.25,
-      sidekiq_redis_url: nil,
+      sidekiq_redis_url: "redis://localhost:6379",
       sidekiq_job_retry: 0,
       sidekiq_batch_size: 50,
       sidekiq_job_timeout: 600,
@@ -35,7 +35,6 @@ module Miteru
       cache_prefix: "miteru:cache",
       slack_channel: "#general",
       slack_webhook_url: nil,
-      threads: Parallel.processor_count,
       urlscan_api_key: nil,
       urlscan_submit_visibility: "public",
       urlscan_date_condition: "date:>now-1h",
@@ -50,7 +49,7 @@ module Miteru
     #   @return [Float]
 
     # @!attribute [r] sidekiq_redis_url
-    #   @return [String, nil]
+    #   @return [String]
 
     # @!attribute [r] sidekiq_job_retry
     #   @return [Integer]
@@ -87,9 +86,6 @@ module Miteru
 
     # @!attribute [rw] download_to
     #   @return [String]
-
-    # @!attribute [rw] threads
-    #   @return [Integer]
 
     # @!attribute [r] cache_redis_url
     #   @return [String, nil]

@@ -35,7 +35,7 @@ jobs:
           --health-retries=3
     strategy:
       matrix:
-        ruby: [3.1, 3.2, 3.3]
+        ruby: [3.2, 3.3]
     steps:
       - uses: actions/checkout@v4
       - name: Set up Ruby
@@ -49,10 +49,8 @@ jobs:
       - name: Test with PostgreSQL
         env:
           MITERU_DATABASE: postgresql://postgres:postgres@localhost:5432/test
-        run: |
-          bundle exec rake
+        run: bundle exec rake
       - name: Test with MySQL
         env:
           MITERU_DATABASE: mysql2://mysql:mysql@127.0.0.1:3306/test
-        run: |
-          bundle exec rake
+        run: bundle exec rake

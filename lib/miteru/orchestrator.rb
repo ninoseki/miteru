@@ -4,30 +4,8 @@ module Miteru
   class Orchestrator < Service
     def call
       logger.info("#{non_cached_websites.length} websites loaded in total.") if verbose?
-
-      if sidekiq?
-        sidekiq_call
-      else
-        parallel_call
-      end
-    end
-
-    def sidekiq_call
       array_of_args = non_cached_websites.map { |website| [website.url, website.source] }
       Jobs::CrawleJob.perform_bulk(array_of_args, batch_size: Miteru.config.sidekiq_batch_size)
-    end
-
-    def parallel_call
-      logger.info("Use #{threads} thread(s).") if verbose?
-      Parallel.each(non_cached_websites, in_threads: threads) do |website|
-        logger.info("Website:#{website.truncated_url} crawling started.") if verbose?
-        result = Crawler.result(website)
-        if result.success?
-          logger.info("Crawler:#{website.truncated_url} succeeded.")
-        else
-          logger.info("Crawler:#{website.truncated_url} failed - #{result.failure}.")
-        end
-      end
     end
 
     #
