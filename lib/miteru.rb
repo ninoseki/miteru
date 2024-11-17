@@ -9,7 +9,6 @@ require "uuidtools"
 # Core 3rd party libraries
 require "colorize"
 require "memo_wise"
-require "parallel"
 require "semantic_logger"
 require "sentry-ruby"
 
@@ -106,13 +105,6 @@ module Miteru
 
     def cache
       @cache ||= Cache.new(Miteru.config.cache_redis_url)
-    end
-
-    #
-    # @return [Boolean]
-    #
-    def sidekiq?
-      !Miteru.config.sidekiq_redis_url.nil?
     end
 
     def sentry?

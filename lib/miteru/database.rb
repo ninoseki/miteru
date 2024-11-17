@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class V2Schema < ActiveRecord::Migration[7.2]
+class V2Schema < ActiveRecord::Migration[8.0]
   def change
     create_table :records, if_not_exists: true do |t|
       t.string :sha256, null: false, index: {unique: true}
