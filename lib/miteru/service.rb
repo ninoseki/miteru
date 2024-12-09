@@ -42,10 +42,6 @@ module Miteru
       Miteru.cache?
     end
 
-    def sidekiq?
-      Miteru.sidekiq?
-    end
-
     #
     # @return [Miteru::Cache]
     #

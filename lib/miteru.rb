@@ -54,8 +54,6 @@ module Miteru
     # @return [SematicLogger]
     #
     def logger
-      SemanticLogger.sync! unless sidekiq?
-
       SemanticLogger.default_level = :info
       SemanticLogger.add_appender(io: $stderr, formatter: :color)
       SemanticLogger["Miteru"]
