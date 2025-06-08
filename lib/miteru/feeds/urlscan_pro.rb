@@ -13,7 +13,9 @@ module Miteru
       end
 
       def urls
-        (json["results"] || []).map { |result| result["page_url"] }
+        iterate.flat_map do |res|
+          (res["results"] || []).map { |result| result.dig("page", "url") }
+        end.uniq
       end
 
       private
@@ -23,15 +25,28 @@ module Miteru
       end
 
       def q
-        Miteru.config.urlscan_date_condition
+        ["verdicts.urlscan.malicious:true", Miteru.config.urlscan_date_condition].join(" AND ")
       end
 
-      def format
-        "json"
+      def size
+        10
       end
 
-      def json
-        get_json("/api/v1/pro/phishfeed", params: {q:, format:})
+      def iterate
+        search_after = nil
+
+        Enumerator.new do |y|
+          loop do
+            got = get_json("/api/v1/search/", params: {size:, search_after:, q:}.compact)
+
+            y.yield got
+
+            results = got["results"] || []
+            break if results.empty? || results.size < size
+
+            search_after = results.last["sort"].join(",")
+          end
+        end
       end
     end
   end
