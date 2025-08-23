@@ -22,7 +22,7 @@ module Miteru
             if result.success?
               Miteru.logger.info("Crawler:#{website.truncated_url} succeeded.")
             else
-              Miteru.logger.info("Crawler:#{website.truncated_url} failed - #{result.failure}.")
+              Miteru.logger.info("Crawler:#{website.truncated_url} failed", failure: result.failure)
             end
           end
         end
