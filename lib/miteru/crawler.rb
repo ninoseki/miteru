@@ -9,19 +9,19 @@ module Miteru
     #
     def call(website)
       Try[OpenSSL::SSL::SSLError, ::HTTP::Error, Addressable::URI::InvalidURIError] do
-        info = "Website:#{website.info}."
-        info = info.colorize(:red) if website.kits?
-        logger.info(info)
+        log_message = "Website:#{website.defanged_truncated_url}"
+        log_message.colorize(:red) if website.kits?
+        logger.info(log_message, kits: website.kits.length, source: website.source)
 
         website.kits.each do |kit|
           downloader = Downloader.new(kit)
           result = downloader.result
           unless result.success?
-            logger.warn("Kit:#{kit.truncated_url} failed to download - #{result.failure}.")
+            logger.warn("Kit:#{kit.truncated_url} failed to download.", failure: result.failure)
             next
           end
           destination = result.value!
-          logger.info("Kit:#{kit.truncated_url} downloaded as #{destination}.")
+          logger.info("Kit:#{kit.truncated_url} downloaded.", dest: destination)
           # Remove downloaded file if auto_download is not allowed
           FileUtils.rm(destination, force: true) unless auto_download?
           # Notify the kit
@@ -44,7 +44,7 @@ module Miteru
         if result.success?
           logger.info("Notifier:#{notifier.name} succeeded.")
         else
-          logger.warn("Notifier:#{notifier.name} failed - #{result.failure}.")
+          logger.warn("Notifier:#{notifier.name} failed.", failure: result.failure)
         end
       end
     end

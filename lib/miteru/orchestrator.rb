@@ -17,10 +17,10 @@ module Miteru
           result = feed.result
           if result.success?
             websites = result.value!
-            logger.info("Feed:#{feed.source} has #{websites.length} websites.") if verbose?
+            logger.info("Feed:#{feed.source} downloaded.", websites: websites.length) if verbose?
             out << websites
           else
-            logger.warn("Feed:#{feed.source} failed - #{result.failure}")
+            logger.warn("Feed:#{feed.source} failed.", failure: result.failure)
           end
         end
       end.flatten.uniq(&:url)
