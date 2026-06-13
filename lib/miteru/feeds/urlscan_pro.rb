@@ -25,11 +25,11 @@ module Miteru
       end
 
       def q
-        ["verdicts.urlscan.malicious:true", Miteru.config.urlscan_date_condition].join(" AND ")
+        ["(verdicts.urlscan.malicious:true OR labels:content.opendir)", Miteru.config.urlscan_date_condition].join(" AND ")
       end
 
       def size
-        10
+        10_000
       end
 
       def iterate
